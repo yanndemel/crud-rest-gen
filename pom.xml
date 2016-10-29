@@ -68,4 +68,9 @@
 			<url>https://cloud2.octo.com/nexus/content/repositories/releases/</url>
 		</repository>
 	</distributionManagement>
+	<scm>
+		<url>https://github.com/yanndemel/crud-rest-gen</url>
+		<connection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</developerConnection>
+	</scm>
 </project>
