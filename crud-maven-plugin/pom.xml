@@ -97,6 +97,12 @@
 							<goal>helpmojo</goal>
 						</goals>
 					</execution>
+					<execution>
+						<id>report-goal</id>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>
@@ -141,4 +147,13 @@
 			</build>
 		</profile>
 	</profiles>
+	<reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-plugin</artifactId>
+        <version>3.5</version>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>

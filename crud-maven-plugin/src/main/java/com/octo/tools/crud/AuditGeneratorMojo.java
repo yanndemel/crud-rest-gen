@@ -57,6 +57,9 @@ public class AuditGeneratorMojo extends AbstractMojo {
 	@Parameter(defaultValue = "${project}")
     private MavenProject project;
 	
+	/**
+     * Name of the persistent unit defined in the persistence.xml
+     */
 	@Parameter(property = "persistentUnitName", required = true)
 	private String persistentUnitName;
 

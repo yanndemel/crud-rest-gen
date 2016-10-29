@@ -47,13 +47,12 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.hibernate.envers.DefaultRevisionEntity;
 
 import com.octo.tools.crud.utils.ReflectionUtils;
 import com.octo.tools.crud.utils.StringUtils;
 
 /**
- * Goal which generates an Angular
+ * Goal which generates all RestRepositoryResources from the JPA entities of the model
  *
  */
 @Mojo(name = "crudapi", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
@@ -63,6 +62,9 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 	@Parameter(defaultValue = "${project}")
     private MavenProject project;
 	
+	/**
+     * Name of the persistent unit defined in the persistence.xml
+     */
 	@Parameter(property = "persistentUnitName", required = true)
 	private String persistentUnitName;
 

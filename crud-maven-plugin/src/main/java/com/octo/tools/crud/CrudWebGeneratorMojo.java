@@ -21,12 +21,11 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import com.octo.tools.crudweb.CrudGenerator;
 
 /**
- * Goal which generates an Angular 
+ * Goal which generates an Angular JS Administration application from the JPA entities of the model
  *
  */
 @Mojo( name = "crudweb", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
@@ -34,6 +33,9 @@ public class CrudWebGeneratorMojo
     extends AbstractMojo
 {
 	
+	/**
+     * Name of the persistent unit defined in the persistence.xml
+     */
 	@Parameter( property = "persistentUnitName", required = true )
     private String persistentUnitName;
 	
