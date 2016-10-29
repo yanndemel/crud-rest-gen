@@ -1,0 +1,96 @@
+#set( $_= "$" )
+##--------------------------------------------------------------------------------------------------------
+'use strict';
+
+var uncapitalize = function(s) {
+	return s.substring(0,1).toLowerCase() + s.substring(1);
+}
+
+var capitalize = function(s) {
+	return s.substring(0,1).toUpperCase() + s.substring(1);
+}
+
+var plural = function(name) {
+	if(name == null || name == "") {
+		return name;
+	}
+	var entities1 = name.endsWith("y") ? name.substring(0, name.length - 1) + "ies"
+			: name.endsWith("s") ? name + "es" : name + "s";
+	return uncapitalize(entities1);
+}
+
+var decimalAdjust = function(type, value, exp) {
+	// Si la valeur de exp n'est pas définie ou vaut zéro...
+	if (typeof exp === 'undefined' || +exp === 0) {
+		return Math[type](value);
+	}
+	value = +value;
+	exp = +exp;
+	// Si la valeur n'est pas un nombre 
+	// ou si exp n'est pas un entier...
+	if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
+		return NaN;
+	}
+	// Décalage
+	value = value.toString().split('e');
+	value = Math[type]
+			(+(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp)));
+	// Décalage inversé
+	value = value.toString().split('e');
+	return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
+};
+
+var floor10 = function(value, exp) {
+	return decimalAdjust('floor', value, exp);
+};
+
+// Declare app level module which depends on filters, and services
+var myApp = angular.module('myApp', [
+   'ngRoute'
+  ,'ngResource' 
+  ,'spring-data-rest'
+   ,'myApp.services'
+  ,'messageHandler.module'
+, 'errorCatcher.module'
+#foreach($entity in ${entities})
+  ,'${entity.uncapitName}.module'
+#end
+]);
+
+myApp.run(function(${_}rootScope) {
+    ${_}rootScope.modifiedItems = [];
+});
+
+myApp.run(function (${_}rootScope, ${_}location) {
+
+	var history = [];
+    
+    ${_}rootScope.${_}on('${_}routeChangeSuccess', function() {
+		console.log("---->"+${_}location.${_}${_}path);
+        history.push(${_}location.${_}${_}path);
+    });
+
+    ${_}rootScope.goBack = function () {
+        var prevUrl = history.length >= 1 ? history.splice(-2)[0] : "/";
+		console.log("Going back to "+prevUrl);
+        ${_}location.path(prevUrl);
+    };
+
+});
+
+/**
+ * Main configuration
+ */
+myApp.config(['${_}routeProvider', function(${_}routeProvider) {
+  ${_}routeProvider.when('/', {templateUrl: 'admin/partials/welcome.html'});
+  ${_}routeProvider.otherwise({redirectTo: '/'});
+}]);
+
+
+myApp.controller('MainCtrl', ['${_}scope',
+	function(${_}scope) {
+	
+		${_}scope.initialise = function() {}
+		
+	}]);
+

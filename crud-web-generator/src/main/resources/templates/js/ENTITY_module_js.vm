@@ -1,0 +1,21 @@
+#set( $_= "$" )
+##--------------------------------------------------------------------------------------------------------
+'use strict';
+
+/* Module for ${entity.name} */
+const ${entity.name}_ENDPOINT = '${entity.pluralName}';
+const ${entity.name}_ADMIN_URL = '/${entity.uncapitName}';
+const ${entity.name}_ENTITY = "${entity.name}";
+
+var ${entity.uncapitName}Module = angular.module('${entity.uncapitName}.module', ['myApp']);
+
+/**
+ * Module for ${entity.uncapitName}
+ */
+${entity.uncapitName}Module.config(['${_}routeProvider', function(${_}routeProvider) {
+    // Pages routes
+    ${_}routeProvider.when( ${entity.name}_ADMIN_URL,    {templateUrl: 'admin/partials/'+${entity.name}_ENTITY.toLowerCase()+'/'+${entity.name}_ENTITY.toLowerCase()+'_list.html', controller: ${entity.name}_ENTITY+'Ctrl'});
+	${_}routeProvider.when( ${entity.name}_ADMIN_URL + '/select', {templateUrl: 'admin/partials/'+${entity.name}_ENTITY.toLowerCase()+'/'+${entity.name}_ENTITY.toLowerCase()+'_list.html', controller: ${entity.name}_ENTITY+'Ctrl'});
+    ${_}routeProvider.when( ${entity.name}_ADMIN_URL + '/new', {templateUrl: 'admin/partials/'+${entity.name}_ENTITY.toLowerCase()+'/'+${entity.name}_ENTITY.toLowerCase()+'_form.html', controller: ${entity.name}_ENTITY+'Ctrl'});
+    ${_}routeProvider.when( ${entity.name}_ADMIN_URL + '/:id', {templateUrl: 'admin/partials/'+${entity.name}_ENTITY.toLowerCase()+'/'+${entity.name}_ENTITY.toLowerCase()+'_form.html', controller: ${entity.name}_ENTITY+'Ctrl'});	
+}]);

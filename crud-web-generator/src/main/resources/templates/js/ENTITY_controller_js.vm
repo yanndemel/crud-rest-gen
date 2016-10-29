@@ -1,0 +1,221 @@
+#set( $_= "$" )
+##---------------------------------------------------------------------------------------------------------
+'use strict';
+
+/**
+ * Controller for ${entity.name}
+ **/
+${entity.uncapitName}Module.controller(${entity.name}_ENTITY + 'Ctrl', ['Item', 'CommonServices', '${_}scope', '${_}rootScope', '${_}routeParams', 
+																	'${_}http', '${_}location', 'MessageHandler', 'restURL', 
+function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}http, ${_}location, MessageHandler, restURL) {
+	
+    var remaningCallbacks = 0;
+	${_}scope.items = [];
+
+	// edition mode
+    ${_}scope.mode = null;
+    
+    ${_}scope.page = null;
+
+	var prepareLinkedEntities = function(callback) {
+#if(${entity.hasLinks})
+		var hasCallbacks = false;
+#foreach($info in ${entity.info})
+#if(${info.link}) 		
+		if(${_}scope.item["${info.name}"] != null) {
+			hasCallbacks = true;
+			remaningCallbacks++;
+			${_}http.get(${_}scope.item._links.${info.name}.href).then(
+				function(success) {
+					var url = success.data._links.self.href;
+					${_}scope.item["${info.name}"] = url;
+					remaningCallbacks--;
+					callback(${_}scope.item);		
+				});
+		}
+#end
+#end
+		if(!hasCallbacks)
+			callback(${_}scope.item);
+#else
+		callback(${_}scope.item);		
+#end
+	}
+
+	var removeCollections = function(item) {
+#if(${entity.hasCollections})	
+#foreach($info in ${entity.info})
+#if(${info.collection}) 	
+		item.${info.name} = null;			
+#end
+#end
+#end 	
+	}
+
+	var updateLinkedEntity = function(selectField, item, href) {
+		${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].item[selectField] = item.shortLabel;
+		if(${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].item._links == null) {
+			${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].item._links = [];
+			${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].item._links[selectField] = [];
+		}
+		${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].item._links[selectField]['href'] = href;			
+		${_}rootScope.goBack();
+	}
+
+	${_}scope.addToSelection = function(item,itemIndex) {	
+		if(${_}rootScope.modifiedItems.length > 0) {
+			var selectField = ${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].selectField;
+			var href = CommonServices.getHRef(item);
+			if(item.shortLabel == null || item.shortLabel == "") {
+				CommonServices.getDescription(href, capitalize(selectField)).then(function(success) {
+					updateLinkedEntity(selectField, item, href);					
+				});	
+			} else {
+				updateLinkedEntity(selectField, item, href);
+			}
+				 		
+		}			
+	}
+
+	${_}scope.selectTarget = function(fieldName, url) {			
+		if(${_}rootScope.modifiedItems.length > 0) {
+			${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].selectField = fieldName;
+			window.location = url;			
+		}			
+	}	  
+	   
+  
+	var validate = function(item) {
+		
+		console.log("Controller validation");
+	}
+	
+	var addItem = function(item) {
+		if(remaningCallbacks == 0) {
+			validate(item);	
+			removeCollections(item)
+			CommonServices.create(${entity.name}_ENDPOINT, item).then(
+				function(processedResponse) {
+					${_}scope.items.push(item);
+					${_}rootScope.modifiedItems.pop();		
+					${_}rootScope.goBack();			
+				});
+		}		
+	};	
+
+	${_}scope.openCreateForm = function() {		
+		${_}rootScope.modifiedItems.push({item : {}, selectField : null});
+		${_}location.path( CommonServices.getCreationFormUrl(${entity.name}_ADMIN_URL));
+	};
+	
+	${_}scope.openUpdateForm = function(item) {	
+		openEditForm("${entity.name}", CommonServices.getItemId(item));
+	};
+
+	var openEditForm = function(entityName, itemId) {
+		CommonServices.get(plural(entityName), entityName, itemId).then(
+				function(success) {
+					//${_}scope.item = success;
+					${_}rootScope.modifiedItems.push({item : success, selectField : null});
+					console.log("Edited item = " + success);
+					window.location = "admin#/" + uncapitalize(entityName) + "/" + itemId;
+				});		
+	}
+
+	${_}scope.editLinkedEntity = function(entityName, url) {
+		${_}http.get(url).then(
+				function(success) {
+					var url = success.data._links.self.href;
+					var i1 = url.lastIndexOf("/");	
+					openEditForm(entityName, url.substring(i1 + 1));				
+				});
+	} 
+			
+	var updateItem = function(item) {
+		if(remaningCallbacks == 0) {
+			validate(item);
+			removeCollections(item)	
+			var url = CommonServices.getHRef(item);
+			CommonServices.update(${entity.name}_ENDPOINT, item).then( function(success) {
+				${_}rootScope.modifiedItems.pop();
+				${_}rootScope.goBack();
+			});
+		}
+	};
+
+	${_}scope.cancel = function() {
+		${_}rootScope.modifiedItems.pop();
+		${_}rootScope.goBack();
+	};
+
+	${_}scope.deleteItem = function(item) {
+		MessageHandler.cleanMessage();
+		CommonServices.deleteItem(${entity.name}_ENDPOINT, CommonServices.getItemId(item)).then( function(success) {
+			${_}scope.items.splice(${_}scope.items.indexOf(item), 1);	
+			if(${_}scope.mode == 'edit') {
+				${_}rootScope.modifiedItems.pop();
+				${_}rootScope.goBack();
+			}
+		});
+		
+	};
+
+	var initModifiedItem = function() {
+		if(${_}rootScope.modifiedItems.length > 0) {			
+			${_}scope.item = ${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].item;
+		}
+	}
+	
+	${_}scope.createUpdateItem = function(item) {
+		MessageHandler.cleanMessage();		
+		if (${_}scope.mode == 'create')
+			return prepareLinkedEntities(addItem);
+		else
+			prepareLinkedEntities(updateItem);
+	}
+	
+	var initList = function(response) {
+		${_}scope.items = response ? response : [];
+		${_}scope.page = Item.page;
+		${_}scope.page.maxPages = new Array(Math.min(Item.page.totalPages, 10));
+		${_}scope.page.range = floor10(${_}scope.page.number, 1);
+	}
+	
+	${_}scope.goToPage = function(pageNumber) {
+		if(pageNumber >= 0 && pageNumber < ${_}scope.page.totalPages) {
+			Item.query(${entity.name}_ENDPOINT, "${entity.name}", pageNumber, null, function(response) {
+				initList(response);
+			});
+		}
+	}
+	
+	 // Main
+	MessageHandler.cleanMessage();
+    if( ${_}location.path().endsWith('/new') ) {
+        // Creation page
+    	console.log("Creation page");
+        initModifiedItem();		
+        ${_}scope.mode = 'create';
+		
+    } else if( ${_}location.path().endsWith('/select') ) {
+        // Select page
+    	console.log("Select page");
+		${_}scope.mode = 'select';
+		Item.query(${entity.name}_ENDPOINT, "${entity.name}", null, null, function(response) {
+			initList(response);
+		});
+    } else if( ${_}routeParams.id != null ) {
+        // Edit page
+    	console.log("Edit page");
+ 		${_}scope.mode = 'edit';
+		initModifiedItem();		
+    } else {
+		${_}scope.mode = 'list';
+		${_}rootScope.modifiedItems = [];
+		Item.query(${entity.name}_ENDPOINT, "${entity.name}", null, null, function(response) {
+			initList(response);
+		});
+	}
+    
+    
+}]);

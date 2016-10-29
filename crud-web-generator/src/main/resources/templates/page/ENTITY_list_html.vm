@@ -1,0 +1,67 @@
+##--------------------------------------------------------------------------------------------------------
+#set( $_ = "$" )
+##--------------------------------------------------------------------------------------------------------
+<div class="container-fluid">
+		<div class="page-header row">
+			<div class="col-md-8"><h1>${entity.name}</h1></div>
+			<div class="col-md-4"><a class="btn btn-primary btn-block create"  ng-click="openCreateForm()">Create</a></div>
+		</div>
+		<div ng-include="admin/partials/message-include.html"></div>
+		<div class="alert alert-info" role="alert"
+			ng-hide="items && items.length > 0">There are no items yet.</div>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+## DATA FIELDS
+#foreach( $info in ${entity.info} )
+#if(!${info.link} && !${info.collection})
+						<th>${info.capitName}</th>
+#end
+#end
+#foreach( $info in ${entity.info} )
+#if(${info.link})
+						<th>${info.capitName}</th>
+#end
+#end
+						<th colspan="2"></th>						
+					</tr>
+				</thead>
+## ---TABLE BODY ------------------------------------------------------------------
+				<tbody>
+					<tr ng-repeat="item in items" ng-click="addToSelection(item)" ng-class="{selected: hover && mode == 'select'}" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
+## DATA FIELDS
+#foreach( $info in ${entity.info} )
+#if(!${info.link} && !${info.collection})
+#if( ${info.type} == "Date" || ${info.type} == "DateTime" || ${info.type} == "Calendar" )
+						<td>{{item.${info.name} | date:'shortDate'}}</td>
+#elseif( ${info.number} )
+						<td>{{item.${info.name} | number }}</td>
+#else
+						<td>{{item.${info.name}}}</td>
+#end
+#end
+#end
+#foreach( $info in ${entity.info} )
+#if(${info.link})
+						<td>{{item.${info.name}}}</td>		
+#end
+#end
+						<td><button type="button" class="btn-group btn-group-sm" ng-click="openUpdateForm(item)">
+							<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+       					</button></td>
+						<td><button type="button" class="btn-group btn-group-sm" ng-click="deleteItem(item)">
+							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
+       					</button></td>
+					</tr>
+				</tbody>
+			</table>
+			<nav ng-style="(page == null || page.totalPages <= 1) && {'display' : 'none'}">
+			<div class="nav navbar-nav" >
+			  <ul class="pagination" >
+			  	<li ng-class="{'disabled' : page.number == 0}"><a href ng-click="goToPage(page.number - 1)" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+				<li ng-repeat="i in page.maxPages track by $index" ng-class="{'active' : page.number % 10 == $index}"><a href ng-click="goToPage($index + page.range)">{{$index + page.range + 1}} <span class="sr-only">(current)</span></a></li>					
+				<li ng-class="{'disabled' : page.number == (page.totalPages - 1)}"><a href ng-click="goToPage(page.number + 1)" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+			  </ul>
+			  </div>
+			</nav>
+</div>

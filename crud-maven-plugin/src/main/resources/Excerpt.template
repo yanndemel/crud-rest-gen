@@ -1,0 +1,18 @@
+package $$PACKAGE$$.projection;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.rest.core.config.Projection;
+
+import $$ENTITY_CLASS$$;
+
+/**
+ * $$ENTITY$$ Projection : adds shortLabel and linked entities descriptions
+ *
+ * @author OCTO
+ *
+ */
+@Projection(name = "$$ENTITY$$Excerpt", types = {$$ENTITY$$.class})
+public interface $$ENTITY$$Excerpt {
+	
+$$PROJECTION$$	
+}
