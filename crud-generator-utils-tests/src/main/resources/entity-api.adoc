@@ -1,0 +1,200 @@
+[[resources-${entities}]]
+
+== ${Entities}
+
+
+
+The ${Entities} resources is used to create and list ${entities}
+
+
+
+
+
+
+
+[[resources-${entities}-list]]
+
+=== Listing ${entities}
+
+
+
+A `GET` request will list all of the service's ${entities}.
+
+
+
+==== Response structure
+
+
+
+include::{snippets}/${entities}-list-example/response-fields.adoc[]
+
+
+
+==== Example request
+
+
+
+include::{snippets}/${entities}-list-example/curl-request.adoc[]
+
+
+
+==== Example response
+
+
+
+include::{snippets}/${entities}-list-example/http-response.adoc[]
+
+
+
+[[resources-${entities}-list-links]]
+
+==== Links
+
+
+
+include::{snippets}/${entities}-list-example/links.adoc[]
+
+
+
+
+
+[[resources-${entities}-create]]
+
+=== Creating a ${entity}
+
+
+
+A `POST` request is used to create a ${entity}
+
+
+
+==== Request structure
+
+
+
+include::{snippets}/${entities}-create-example/request-fields.adoc[]
+
+
+
+==== Example request
+
+
+
+include::{snippets}/${entities}-create-example/curl-request.adoc[]
+
+
+
+==== Example response
+
+
+
+include::{snippets}/${entities}-create-example/http-response.adoc[]
+
+
+
+
+
+
+
+[[resources-${entity}]]
+
+== ${Entity}
+
+
+
+The ${Entity} resource is used to retrieve, update, and delete individual ${entities}
+
+
+
+
+
+
+
+[[resources-${entity}-links]]
+
+=== Links
+
+
+
+include::{snippets}/${entity}-get-example/links.adoc[]
+
+
+
+
+
+
+
+[[resources-${entity}-retrieve]]
+
+=== Retrieve a ${entity}
+
+
+
+A `GET` request will retrieve the details of a ${entity}
+
+
+
+==== Response structure
+
+
+
+include::{snippets}/${entity}-get-example/response-fields.adoc[]
+
+
+
+==== Example request
+
+
+
+include::{snippets}/${entity}-get-example/curl-request.adoc[]
+
+
+
+==== Example response
+
+
+
+include::{snippets}/${entity}-get-example/http-response.adoc[]
+
+
+
+
+
+
+
+[[resources-${entity}-update]]
+
+=== Update a ${entity}
+
+
+
+A `PATCH` request is used to update a ${entity}
+
+
+
+==== Request structure
+
+
+
+include::{snippets}/${entity}-update-example/request-fields.adoc[]
+
+
+
+To leave an attribute of a ${entity} unchanged, any of the above may be omitted from the request.
+
+
+
+==== Example request
+
+
+
+include::{snippets}/${entity}-update-example/curl-request.adoc[]
+
+
+
+==== Example response
+
+
+
+include::{snippets}/${entity}-update-example/http-response.adoc[]
+

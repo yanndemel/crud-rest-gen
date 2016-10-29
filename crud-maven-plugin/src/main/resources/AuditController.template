@@ -1,0 +1,48 @@
+package $$PACKAGE$$.audit;
+
+import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import $$AUDIT_CONTROLLER_CLASS$$;
+import $$ENTITY_CLASS$$;
+import $$PACKAGE$$.URLs;
+$$IMPORT_REVISION_CLASS$$
+
+/**
+ * $$ENTITY$$ Audit Rest Repository Controller
+ *
+ * @author OCTO
+ *
+ */
+@RepositoryRestController
+@RequestMapping(com.octo.tools.audit.AbstractAuditController.HISTORY)
+public class $$ENTITY$$AuditController extends $$AUDIT_CONTROLLER$$<$$ENTITY$$$$REVISION_ENTITY$$> {
+	
+	public $$ENTITY$$AuditController() {
+		super($$ENTITY$$.class, $$ENTITY$$AuditController.class);
+	}
+	
+	@Override
+	@RequestMapping(method = RequestMethod.GET, value = URLs.$$ENTITY_UPPER_PLURAL$$_SEARCH) 
+	public @ResponseBody ResponseEntity<?> getRevisionsForEntity(@RequestParam("entityId") Long id) {
+		return super.getRevisionsForEntity(id);
+	}
+		
+	@Override
+	@RequestMapping(method = RequestMethod.GET, value = URLs.$$ENTITY_UPPER_PLURAL$$_ID) 
+	public @ResponseBody ResponseEntity<?> getRevisionEntity(@PathVariable("id") Long revId) {
+		return super.getRevisionEntity(revId);
+	}
+	
+	@Override
+	@RequestMapping(method = RequestMethod.GET, value = URLs.$$ENTITY_UPPER_PLURAL$$) 
+    public @ResponseBody ResponseEntity<?> getRevisions() {
+		return super.getRevisions();
+	}
+	
+}

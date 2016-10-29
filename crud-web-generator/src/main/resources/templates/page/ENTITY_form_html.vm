@@ -1,0 +1,89 @@
+#set( $_= "$" )
+##--------------------------------------------------------------------------------------------------------
+<div class="container-fluid">
+	<fieldset class="col-sm-12 bordure">
+		<legend class="legende">${entity.name}</legend>
+		
+		<div ng-include="'admin/partials/message-include.html'"></div>
+   		
+		<form class="well form-horizontal" ng-submit="createUpdateItem(item)" >			
+#foreach($info in ${entity.info})
+#set($htmlName    = ${info.name} )
+#set($htmlId      = "item_${info.name}" )
+#if(!${info.link} && !${info.collection})
+			<div class="form-group">
+				<label for="${htmlId}" class="col-sm-2 control-label">${info.capitName}</label>
+				<div class="col-sm-10">
+## ------------------------------------------------ KEY ELEMENT 
+#if( ${info.type} == "Date" || ${info.type} == "DateTime" || ${info.type} == "Calendar" )
+					<input id="${htmlId}" bs-datepicker data-autoclose="1" ng-model="item.${htmlName}" name="${htmlName}" class="form-control" minlength="${info.sizeMin}" maxlength="${info.sizeMax}" ></input>
+#elseif( ${info.type} == "String" && ${info.sizeMax} > 255)
+					<textarea id="${htmlId}" name="${htmlName}" ng-model="item.${htmlName}" class="form-control" ></textarea>
+#elseif( ${info.type} == "Boolean" || ${info.type} == "boolean" )
+					<input type="checkbox" id="${htmlId}" name="${htmlName}" ng-model="item.${htmlName}" class="form-control" ></input>
+#else
+#set( $pattern = ".{0}|.{"+ ${info.sizeMin} +","+${info.sizeMax}+"}")
+#set( $required = "")
+#if(${info.notNull})
+#set( $required = "required")
+#set( $pattern = ".{"+ ${info.sizeMin} +","+${info.sizeMax}+"}")
+#end
+#if( ${info.number} )
+#set($min = "")
+#if(${info.isMin})
+#set($min = "min='${info.min}'")
+#end
+#set($max = "")
+#if(${info.isMax})
+#set($max = "max='${info.max}'")
+#end
+#set($step = "")
+#if(${info.isStep})
+#set($step = "step='${info.step}'")
+#end
+
+					<input type="number" id="${htmlId}" name="${htmlName}" ng-model="item.${htmlName}" class="form-control" ${required} ${min} ${max} ${step} ></input>
+#else					
+					<input type="text" pattern="${pattern}" id="${htmlId}" name="${htmlName}" ng-model="item.${htmlName}" class="form-control" ${required} minlength="${info.sizeMin}" maxlength="${info.sizeMax}" ></input>
+#end
+#end
+				</div>
+			</div>
+#end
+#end
+#foreach($info in ${entity.info})
+#set($htmlName    = ${info.name} )
+#set($htmlId      = "item_${info.name}" )
+#if(${info.link})
+			<div class="form-group">
+				<label for="${htmlId}" class="col-sm-2 control-label">${info.capitName}</label>
+				<div class="form-group">
+						<span class="col-sm-6" style="vertical-align: baseline;">{{item.${info.name}}}</span>
+     					<div class="btn-group" role="group">
+       						<button type="button" class="btn-group btn-group-sm" ng-click="editLinkedEntity('${info.name}', item._links.${info.name}.href)" ng-show="item.${info.name} != null">
+								<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+							</button>
+							<button type="button" class="btn-group btn-group-sm" ng-click="selectTarget('${info.name}', '#/${info.uncapitType}/select')" >
+								<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Choose
+							</button>
+      					</div>
+  				</div>
+			</div>
+#end
+#end
+			<!-- ACTION BUTTONS -->
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-2">
+					<a role="button" class="btn btn-danger btn-block" ng-click="deleteItem(item)" ng-show="mode != 'create'">Delete</a>
+				</div>
+    			<div class="col-sm-offset-4 col-sm-2">
+					<a role="button" class="btn btn-info btn-block" ng-click="cancel()">Cancel</a>
+				</div>
+    			<div class="col-sm-2">
+					<button type="submit" class="btn btn-primary btn-block" >Save</button>
+				</div>
+			</div>
+		</form>
+			
+    </fieldset>
+</div>

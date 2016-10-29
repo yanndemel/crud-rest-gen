@@ -1,0 +1,173 @@
+#set( $_= "$" )
+##--------------------------------------------------------------------------------------------------------
+'use strict';
+
+/* Services */
+
+var myAppServices = angular.module('myApp.services', ['ngResource', 'spring-data-rest']);
+
+// Demonstrate how to register services
+// In this case it is a simple value service.
+myAppServices.value('version', '0.1');
+
+// Base URL for REST Services on the Spring MVC webapp
+var springRestApiUrl = "${restUrl}";
+if(!springRestApiUrl.endsWith("/"))
+	springRestApiUrl = springRestApiUrl + "/";
+
+myAppServices.value('restURL', springRestApiUrl);
+
+myAppServices.factory('CommonServices', ['${_}http', 'restURL', 'SpringDataRestAdapter', 
+                                         function(${_}http, restURL, SpringDataRestAdapter) {	
+
+	function _getEntityUrl(endPointName) {
+		return restURL + endPointName;
+	}
+	
+	function _getId(href) {
+		return href.substring(href.lastIndexOf("/") + 1);
+	}
+	
+	function _getHRef(item) {
+		return item._links.self.href;
+	}
+	
+	function _getItemId(item) {
+		var href = _getHRef(item);
+		return _getId(href);
+	}
+	
+	return {
+		
+		getId:function getId(href) {
+			return _getId(href);
+		},
+
+		getHRef:function getHRef(item) {
+			return _getHRef(item);
+		},
+		
+		getItemId:function getItemId(item) {
+			return _getItemId(item);
+		},
+		
+		getEntityUrl:function(endPointName) {
+			return _getEntityUrl(endPointName);
+		},
+		
+		getCreationFormUrl:function(adminUrl) {
+			return adminUrl + "/new";
+		},
+		
+		getUpdateFormUrl:function(adminUrl, item) {
+			var id = _getItemId(item);
+			return adminUrl + "/" + id;
+		},
+		
+        
+        /**
+		 * Get all items
+		 * 
+		 * @return all items
+		 */
+    	getAll: function(endPointName, entityName) {
+        	return SpringDataRestAdapter.process(${_}http.get(_getEntityUrl(endPointName)+'/?projection=' + uncapitalize(entityName) + 'Excerpt'));
+    	},
+
+		getDescription: function(url, entityName) {
+        	return SpringDataRestAdapter.process(${_}http.get(url + '/?projection=' + uncapitalize(entityName) + 'Excerpt'));
+    	},
+
+        /**
+		 * Get item
+		 * 
+		 * @param id
+		 *            id
+		 * @return item
+		 */
+    	get: function(endPointName, entityName, id) {
+    	    var url = _getEntityUrl(endPointName) + '/' + id+'/?projection=' + uncapitalize(entityName) + 'Excerpt';
+        	return SpringDataRestAdapter.process(${_}http.get(url));
+    	},
+
+        /**
+		 * Create a new item
+		 * 
+		 * @param item
+		 *            item
+		 * @return item saved
+		 */
+		create: function(endPointName, item) {
+			return SpringDataRestAdapter.process(${_}http.post(_getEntityUrl(endPointName), item));
+    	},
+
+        /**
+		 * Update item
+		 * 
+		 * @param item
+		 *            item
+		 * @return item saved
+		 */
+    	update: function(endPointName, item) {
+			var url = _getEntityUrl(endPointName) + '/' + _getItemId(item);
+			return SpringDataRestAdapter.process(${_}http.put(url, item));
+    	},
+
+		/**
+		 * Delete item
+		 * 
+		 * @param id
+		 *            id
+		 */
+    	deleteItem: function(endPointName, id) {
+        	var url = _getEntityUrl(endPointName) + '/' + id;
+        	return SpringDataRestAdapter.process(${_}http.delete(url));
+    	}
+
+	};
+	return ${_}this;
+}]);
+
+myAppServices.factory('Item', [
+                           		'${_}http',
+                           		'restURL',
+                           		'SpringDataRestAdapter',
+function(${_}http, restURL, SpringDataRestAdapter) {
+
+	function Item(item) {
+
+		if (item._resources) {
+			item.resources = item._resources("self", {}, {
+				update : {
+					method : 'PUT'
+				}
+			});
+			
+		} 
+
+		return item;
+	}
+
+	Item.query = function(endpoint, entityName, page, sort, callback) {
+		var url = restURL + endpoint + "/?projection=" + uncapitalize(entityName) + "Excerpt";
+		if(page != null)
+			url += "&page="+page;
+		var deferred = ${_}http.get(url);
+		return SpringDataRestAdapter.process(deferred).then(
+				function(data) {
+					Item.resources = data._resources("self");
+					Item.page = data.page;
+
+					callback
+							&& callback(_.map(data._embeddedItems,
+									function(item) {
+										return new Item(item);
+									}));
+				});
+	};
+
+	Item.resources = null;
+	return Item;
+
+} ]);
+
