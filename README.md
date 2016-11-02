@@ -88,35 +88,35 @@ pom.xml sample :
 		<dependency>
 			<groupId>your-groupId</groupId>
 			<artifactId>your-project-model</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1</version>
 		</dependency>
 		
 		<!-- Custom AbstractAuditController and related classes -->
 		<dependency>
 			<groupId>your-groupId</groupId>
 			<artifactId>your-project-audit</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1</version>
 		</dependency>
 		
 		<!-- Audit classes used by generated audit controllers -->
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>audit-core</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1</version>
 		</dependency>
 
 		<!-- Classes used by generated controllers -->
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1</version>
 		</dependency>
 
 		<!-- Start dependencies for API documentation generation -->
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils-tests</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1</version>
 			<scope>test</scope>
 		</dependency>
 		
@@ -194,7 +194,7 @@ pom.xml sample :
 								<artifactItem>
 									<groupId>com.octo.tools</groupId>
 									<artifactId>crud-generator-utils-tests</artifactId>
-									<version>0.0.1-SNAPSHOT</version>
+									<version>0.0.1</version>
 									<type>jar</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${project.build.directory}/crud-tests</outputDirectory>
@@ -283,7 +283,7 @@ pom.xml sample :
 				<plugin>
 					<groupId>com.octo.tools</groupId>
 					<artifactId>crud-maven-plugin</artifactId>
-					<version>0.0.1-SNAPSHOT</version>
+					<version>0.0.1</version>
 					<configuration>
 						<persistentUnitName>your-project-model</persistentUnitName>
 						<restApiUrl>${restApiUrl}</restApiUrl>
@@ -321,13 +321,13 @@ pom.xml sample :
 						<dependency>
 							<groupId>your-groupId</groupId>
 							<artifactId>your-project-model</artifactId>
-							<version>0.0.1-SNAPSHOT</version>
+							<version>0.0.1</version>
 						</dependency>
 						<!-- Custom AbstractAuditController -->
 						<dependency>
 							<groupId>your-groupId</groupId>
 							<artifactId>your-project-audit</artifactId>
-							<version>0.0.1-SNAPSHOT</version>
+							<version>0.0.1</version>
 						</dependency>
 						<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
 							Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 
@@ -355,8 +355,7 @@ pom.xml sample :
 			</properties>
 		</profile>
 	</profiles>
-</project>
-```
+</project>```
 
 Technology stack
 -
