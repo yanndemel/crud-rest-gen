@@ -1,22 +1,22 @@
 # crud-maven-plugin
-CRUD Application Generation based on the JPA entities of the model
+CRUD Application Generation from JPA entities
 ==
-__Provide the domain entities__ (standard JPA annotated classes), and let **crud-maven-plugin** generate :
-* the CRUD Rest API
-* the Documentation of the API
-* the HTML5/AngularJS CRUD Administration UI
-* the Rest API for retrieving audit information if you use Hibernate Envers to audit your entities
+## Provide the domain entities (standard JPA annotated classes), and let crud-maven-plugin generate :
+* the **CRUD Rest API**
+* the **documentation** of the API
+* the HTML5/AngularJS **CRUD Administration UI**
+* the **Rest API** for retrieving **audit information** if you use Hibernate Envers to audit your entities
 
 Installing the plugin
 -
 Authorized users can use the OCTO Nexus server for managing crud-maven-plugin dependencies.
 
 Or you can build and install/deploy all necassary components in you local repo / Nexus server by invoking ``mvn clean install`` / ``mvn clean deploy``  at the root of crud-rest-gen project. This will install all necessary artifacts :
-* audit-core : Base classes used by generated audit controllers
-* crud-generator-utils : Utility classes for Reflection or String operations
-* crud-generator-utils-tests : Base classes to be extended in the API project for API documentation generation and generated audit controllers testing
-* crud-web-generator : Classes used by crud-maven-plugin to generate the CRUD Web administration UI (relying on the generated Rest API)
-* crud-maven-plugin : Mojos for CRUD Rest API generation, API documentation generation, audit controllers generation, CRUD Web app generation
+* *audit-core* : Base classes used by generated audit controllers
+* *crud-generator-utils* : Utility classes for Reflection or String operations
+* *crud-generator-utils-tests* : Base classes to be extended in the API project for API documentation generation and generated audit controllers testing
+* *crud-web-generator* : Classes used by crud-maven-plugin to generate the CRUD Web administration UI (relying on the generated Rest API)
+* **crud-maven-plugin** : Mojos for CRUD Rest API generation, API documentation generation, audit controllers generation, CRUD Web app generation
 
 Usage
 -
