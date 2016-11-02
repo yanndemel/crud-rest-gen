@@ -11,25 +11,6 @@ Usage
 -
 Package your domain classes in a standalone maven project. Don't forget to place the **persistence.xml** file referencing your entity classes in a persistence unit.
 
-persistence.xml sample :
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-	<persistence-unit name="your-persistence-unit-name">
-		<class>Your-Entites-Here</class>
-		...			
-		<properties>
-			<property name="hibernate.archive.autodetection" value="class" />
-			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
-			<property name="hibernate.connection.driver_class" value="org.h2.Driver" />
-			<property name="hibernate.connection.url" value="jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=CREATE SCHEMA IF NOT EXISTS HISTORY" />
-			<property name="hibernate.connection.user" value="sa" />
-			<property name="hibernate.flushMode" value="FLUSH_AUTO" />
-			<property name="hibernate.hbm2ddl.auto" value="update" />
-		</properties>
-	</persistence-unit>
-</persistence>
-```
 
 You have to create a new maven project for the Rest API. You can use the same project for the Web administration UI or you can create a separate maven project. In the latter case you will have to provide in the pom.xml the root URL of the API.
 In this first example we use the same maven project to generate the Rest API (+its documentation), and the Web administration UI.
@@ -356,6 +337,28 @@ pom.xml sample :
 		</profile>
 	</profiles>
 </project>```
+
+
+persistence.xml sample :
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="your-persistence-unit-name">
+		<class>Your-Entites-Here</class>
+		...			
+		<properties>
+			<property name="hibernate.archive.autodetection" value="class" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+			<property name="hibernate.connection.driver_class" value="org.h2.Driver" />
+			<property name="hibernate.connection.url" value="jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=CREATE SCHEMA IF NOT EXISTS HISTORY" />
+			<property name="hibernate.connection.user" value="sa" />
+			<property name="hibernate.flushMode" value="FLUSH_AUTO" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+		</properties>
+	</persistence-unit>
+</persistence>
+```
+
 
 Technology stack
 -
