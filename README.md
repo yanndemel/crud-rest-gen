@@ -336,7 +336,8 @@ pom.xml sample :
 			</properties>
 		</profile>
 	</profiles>
-</project>```
+</project>
+```
 
 
 persistence.xml sample :
