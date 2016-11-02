@@ -48,6 +48,7 @@ Sample *pom.xml* for **all-in-one** generation : same maven project to generate 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compile.version>1.8</compile.version>
+		<!-- The Snippets directory used by Spring Rest Docs (asciidoctor maven plugin) -->
 		<snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
 		<!-- The package name of the generated RepositoryRestResource classes -->
 		<packageName>your-repository-classes-package</packageName>
@@ -145,10 +146,7 @@ Sample *pom.xml* for **all-in-one** generation : same maven project to generate 
 
 	</dependencies>
 
-	<build>
-
-
-		<finalName>your-projectweb-${project.version}</finalName>
+	<build>		
 		<plugins>
 			<plugin>
 				<groupId>com.octo.tools</groupId>
@@ -191,7 +189,6 @@ Sample *pom.xml* for **all-in-one** generation : same maven project to generate 
 									<outputDirectory>${project.build.directory}/crud-tests</outputDirectory>
 								</artifactItem>
 							</artifactItems>
-
 						</configuration>
 					</execution>
 				</executions>
@@ -320,6 +317,148 @@ Sample *pom.xml* for **all-in-one** generation : same maven project to generate 
 							<artifactId>your-project-audit</artifactId>
 							<version>0.0.1</version>
 						</dependency>
+						<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
+							Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 
+							instead -->
+						<dependency>
+							<groupId>javax.el</groupId>
+							<artifactId>javax.el-api</artifactId>
+							<version>2.2.4</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<profiles>
+		<profile>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>!restApiUrl</name>
+				</property>
+			</activation>
+			<properties>
+				<restApiUrl>http://localhost:8080/api/</restApiUrl>
+			</properties>
+		</profile>
+	</profiles>
+</project>
+```
+
+Sample *pom.xml* for generating only the REST API :
+```xml
+
+<project>
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>your-groupId</groupId>
+	<artifactId>your-artifactId</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<!-- WAR if you intend to deploy in an external servlet container like tomcat -->
+	<packaging>war</packaging>
+	<!-- The project has to be a Spring boot project -->
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.4.1.RELEASE</version>
+	</parent>
+
+	<name>your-project-web</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<compile.version>1.8</compile.version>		
+		<!-- The package name of the generated RepositoryRestResource classes -->
+		<packageName>your-repository-classes-package</packageName>
+	</properties>
+
+	<dependencies>
+		<!-- Spring dependencies -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Change with your favorite DB -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>your-groupId</groupId>
+			<artifactId>your-project-model</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+
+		<!-- Classes used by generated controllers -->
+		<dependency>
+			<groupId>com.octo.tools</groupId>
+			<artifactId>crud-generator-utils</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>		
+		<plugins>
+			<plugin>
+				<groupId>com.octo.tools</groupId>
+				<artifactId>crud-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${compile.version}</source>
+					<target>${compile.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>			
+		<pluginManagement>
+			<plugins>
+				<!-- Configuration of the crud-maven-plugin -->
+				<plugin>
+					<groupId>com.octo.tools</groupId>
+					<artifactId>crud-maven-plugin</artifactId>
+					<version>0.0.1</version>
+					<configuration>
+						<persistentUnitName>your-project-model</persistentUnitName>
+						<packageName>${packageName}</packageName>
+					</configuration>
+					<executions>						
+						<!-- CRUD API generation -->
+						<execution>
+							<id>api</id>
+							<phase>generate-sources</phase>
+							<goals>
+								<goal>crudapi</goal>
+							</goals>
+						</execution>						
+					</executions>
+					<dependencies>
+						<!-- JPA model (must contain persistence.xml) -->
+						<dependency>
+							<groupId>your-groupId</groupId>
+							<artifactId>your-project-model</artifactId>
+							<version>0.0.1</version>
+						</dependency>						
 						<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
 							Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 
 							instead -->
