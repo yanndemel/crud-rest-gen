@@ -1,4 +1,4 @@
-# crud-rest-gen
+# crud-maven-plugin
 CRUD Application Generation based on the JPA entities of the model
 ==
 __Provide the domain entities__ (standard JPA annotated classes), and let **crud-maven-plugin** generate :
@@ -7,16 +7,26 @@ __Provide the domain entities__ (standard JPA annotated classes), and let **crud
 * the HTML5/AngularJS CRUD Administration UI
 * the Rest API for retrieving audit information if you use Hibernate Envers to audit your entities
 
+Installing the plugin
+-
+Authorized users can use the OCTO Nexus server for managing crud-maven-plugin dependencies.
+
+Or you can build and install/deploy all necassary components in you local repo / Nexus server by invoking ``mvn clean install`` / ``mvn clean deploy``  at the root of crud-rest-gen project. This will install all necessary artifacts :
+* audit-core : Base classes used by generated audit controllers
+* crud-generator-utils : Utility classes for Reflection or String operations
+* crud-generator-utils-tests : Base classes to be extended in the API project for API documentation generation and generated audit controllers testing
+* crud-web-generator : Classes used by crud-maven-plugin to generate the CRUD Web administration UI (relying on the generated Rest API)
+* crud-maven-plugin : Mojos for CRUD Rest API generation, API documentation generation, audit controllers generation, CRUD Web app generation
+
 Usage
 -
 Package your domain classes in a standalone maven project. Don't forget to place the **persistence.xml** file referencing your entity classes in a persistence unit.
 
 
-You have to create a new maven project for the Rest API. You can use the same project for the Web administration UI or you can create a separate maven project. In the latter case you will have to provide in the pom.xml the root URL of the API.
-In this first example we use the same maven project to generate the Rest API (+its documentation), and the Web administration UI.
+You have to create a new maven project for the Rest API. You can use the same project for the Web administration UI or you can create a separate maven project.
 
 
-pom.xml sample :
+Sample *pom.xml* for **all-in-one** generation : same maven project to generate the Rest API (+its documentation), and the Web administration UI :
 ```xml
 <project>
 	<modelVersion>4.0.0</modelVersion>
