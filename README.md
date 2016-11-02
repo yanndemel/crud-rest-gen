@@ -11,9 +11,31 @@ Usage
 -
 Package your domain classes in a standalone maven project. Don't forget to place the **persistence.xml** file referencing your entity classes in a persistence unit.
 
+persistence.xml sample :
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="your-persistence-unit-name">
+		<class>Your-Entites-Here</class>
+		...			
+		<properties>
+			<property name="hibernate.archive.autodetection" value="class" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+			<property name="hibernate.connection.driver_class" value="org.h2.Driver" />
+			<property name="hibernate.connection.url" value="jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=CREATE SCHEMA IF NOT EXISTS HISTORY" />
+			<property name="hibernate.connection.user" value="sa" />
+			<property name="hibernate.flushMode" value="FLUSH_AUTO" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+		</properties>
+	</persistence-unit>
+</persistence>
+```
+
 You have to create a new maven project for the Rest API. You can use the same project for the Web administration UI or you can create a separate maven project. In the latter case you will have to provide in the pom.xml the root URL of the API.
 In this first example we use the same maven project to generate the Rest API (+its documentation), and the Web administration UI.
 
+
+pom.xml sample :
 ```xml
 <project>
 	<modelVersion>4.0.0</modelVersion>
@@ -21,8 +43,9 @@ In this first example we use the same maven project to generate the Rest API (+i
 	<groupId>your-groupId</groupId>
 	<artifactId>your-artifactId</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<!-- WAR if you intend to deploy in an external servlet container like tomcat -->
 	<packaging>war</packaging>
-
+	<!-- The project has to be a Spring boot project -->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -35,11 +58,13 @@ In this first example we use the same maven project to generate the Rest API (+i
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compile.version>1.8</compile.version>
 		<snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
-		<packageName>your-groupId.repository</packageName>
+		<!-- The package name of the generated RepositoryRestResource classes -->
+		<packageName>your-repository-classes-package</packageName>
 	</properties>
 
 
 	<dependencies>
+		<!-- Spring dependencies -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-rest</artifactId>
@@ -126,8 +151,12 @@ In this first example we use the same maven project to generate the Rest API (+i
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 	</dependencies>
+
 	<build>
+
+
 		<finalName>your-projectweb-${project.version}</finalName>
 		<plugins>
 			<plugin>
@@ -326,9 +355,11 @@ In this first example we use the same maven project to generate the Rest API (+i
 			</properties>
 		</profile>
 	</profiles>
-</project>```
+</project>
+```
 
-Technology stack :
+Technology stack
+-
 * Spring Boot
 * Spring Data Rest
 * Spring Data JPA
@@ -336,4 +367,3 @@ Technology stack :
 * Hibernate Envers
 * Angular JS
 
-Usage
