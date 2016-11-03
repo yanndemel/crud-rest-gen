@@ -26,7 +26,7 @@ Package your domain classes in a standalone maven project. Don't forget to place
 You have to create a new maven project for the Rest API. You can use the same project for the Web administration UI or you can create a separate maven project.
 
 
-Sample *pom.xml* for **all-in-one** generation : same maven project to generate the Rest API (+its documentation), and the Web administration UI :
+Sample *pom.xml* for **all-in-one** generation : same maven project to generate the Rest API (+its documentation), the audit API and the Web administration UI :
 ```xml
 <project>
 	<modelVersion>4.0.0</modelVersion>
@@ -346,9 +346,9 @@ Sample *pom.xml* for **all-in-one** generation : same maven project to generate 
 </project>
 ```
 
-Sample *pom.xml* for generating only the REST API :
-```xml
 
+Sample *pom.xml* for generating **only the REST API** :
+```xml
 <project>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -471,20 +471,7 @@ Sample *pom.xml* for generating only the REST API :
 				</plugin>
 			</plugins>
 		</pluginManagement>
-	</build>
-	<profiles>
-		<profile>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-				<property>
-					<name>!restApiUrl</name>
-				</property>
-			</activation>
-			<properties>
-				<restApiUrl>http://localhost:8080/api/</restApiUrl>
-			</properties>
-		</profile>
-	</profiles>
+	</build>	
 </project>
 ```
 
