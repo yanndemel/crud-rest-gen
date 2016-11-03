@@ -42,9 +42,7 @@ Sample *pom.xml* for **all-in-one** generation : same maven project to generate 
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.4.1.RELEASE</version>
 	</parent>
-
 	<name>your-project-web</name>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compile.version>1.8</compile.version>
@@ -53,8 +51,6 @@ Sample *pom.xml* for **all-in-one** generation : same maven project to generate 
 		<!-- The package name of the generated RepositoryRestResource classes -->
 		<packageName>your-repository-classes-package</packageName>
 	</properties>
-
-
 	<dependencies>
 		<!-- Spring dependencies -->
 		<dependency>
@@ -77,6 +73,7 @@ Sample *pom.xml* for **all-in-one** generation : same maven project to generate 
 			<artifactId>h2</artifactId>
 		</dependency>
 		
+		<!-- Your JPA domain classes (must contain persistence.xml)  -->
 		<dependency>
 			<groupId>your-groupId</groupId>
 			<artifactId>your-project-model</artifactId>
@@ -96,7 +93,13 @@ Sample *pom.xml* for **all-in-one** generation : same maven project to generate 
 			<artifactId>audit-core</artifactId>
 			<version>0.0.1</version>
 		</dependency>
-
+		
+		<!-- Audit management using Envers -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-envers</artifactId>
+		</dependency>
+		
 		<!-- Classes used by generated controllers -->
 		<dependency>
 			<groupId>com.octo.tools</groupId>
@@ -110,12 +113,7 @@ Sample *pom.xml* for **all-in-one** generation : same maven project to generate 
 			<artifactId>crud-generator-utils-tests</artifactId>
 			<version>0.0.1</version>
 			<scope>test</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-envers</artifactId>
-		</dependency>
+		</dependency>				
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
@@ -143,7 +141,6 @@ Sample *pom.xml* for **all-in-one** generation : same maven project to generate 
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 
 	<build>		
@@ -305,7 +302,7 @@ Sample *pom.xml* for **all-in-one** generation : same maven project to generate 
 						</execution>
 					</executions>
 					<dependencies>
-						<!-- JPA model (must contain persistence.xml) -->
+						<!-- Your JPA domain classes (must contain persistence.xml) -->
 						<dependency>
 							<groupId>your-groupId</groupId>
 							<artifactId>your-project-model</artifactId>
@@ -363,16 +360,13 @@ Sample *pom.xml* for generating **only the REST API** :
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.4.1.RELEASE</version>
 	</parent>
-
 	<name>your-project-web</name>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compile.version>1.8</compile.version>		
 		<!-- The package name of the generated RepositoryRestResource classes -->
 		<packageName>your-repository-classes-package</packageName>
 	</properties>
-
 	<dependencies>
 		<!-- Spring dependencies -->
 		<dependency>
