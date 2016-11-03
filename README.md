@@ -16,7 +16,7 @@ Or you can build and install/deploy all necassary components in you local repo /
 * *crud-generator-utils* : Utility classes for Reflection & String operations and Controllers for accessing generated documentation page and history API
 * *crud-generator-utils-tests* : Base classes to be extended in the API project for API documentation generation and generated audit controllers testing
 * *crud-web-generator* : Classes used by crud-maven-plugin to generate the CRUD Web administration UI (relying on the generated Rest API)
-* **crud-maven-plugin** : Mojos for CRUD Rest API generation, audit controllers generation, CRUD Web app generation
+* **crud-maven-plugin** : Mojos for CRUD Rest API generation (generate-sources phase), audit controllers generation (generate-sources phase), CRUD Web app generation (generate-resources phase)
 
 Usage
 -
