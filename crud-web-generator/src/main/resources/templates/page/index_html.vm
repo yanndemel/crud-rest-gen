@@ -29,7 +29,6 @@
     <script src="admin/libs/angular.min.js"></script>   
     <script src="admin/libs/angular-resource.min.js"></script>
     <script src="admin/libs/angular-route.min.js"></script>
-    <script src="admin/libs/angular-spring-data-rest.min.js"></script>
     <script src="admin/libs/lodash.min.js"></script>
     <script src="admin/js/app.js"></script>
     <script src="admin/js/messages_handler.js"></script>

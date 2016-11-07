@@ -15,6 +15,7 @@ import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
@@ -157,7 +158,8 @@ public class EntityHelper {
 		Map<String, String> params = new HashMap<>();
 		List<Field> allFields = ReflectionUtils.getAllFields(clazz);
 		for (Field f : allFields) {
-			if (isFieldExposed(f) && !f.isAnnotationPresent(OneToMany.class))
+			if (isFieldExposed(f) && !f.isAnnotationPresent(OneToMany.class)  
+					&& !f.isAnnotationPresent(ManyToMany.class))
 				params.put(f.getName(), getFieldValue(clazz, f, forUpdate));
 		}
 		return params;
@@ -266,8 +268,10 @@ public class EntityHelper {
 				value = forUpdate ? "false" : "true";
 			else {
 				String tstStr = forUpdate ? "Test2" : "Test";
-				if (String.class.isAssignableFrom(type))
+				if (String.class.isAssignableFrom(type) && !f.isAnnotationPresent(Digits.class))
 					value = tstStr;
+				else if(f.isAnnotationPresent(Digits.class))
+					value = "0";
 				else if (Number.class.isAssignableFrom(type) || type.isPrimitive())
 					value = forUpdate ? "7" : "9";
 				else if (Date.class.isAssignableFrom(type) || DateTime.class.isAssignableFrom(type))

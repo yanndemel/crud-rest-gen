@@ -16,6 +16,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.RevisionEntity;
 
 /**
@@ -54,7 +55,8 @@ public class ReflectionUtils {
 	 * @return true if javaType is not annotated with {@link org.hibernate.envers.RevisionEntity}
 	 */
 	public static boolean isEntityExposed(Class javaType) {
-		return javaType != null && !javaType.isAnnotationPresent(RevisionEntity.class);
+		return javaType != null && !javaType.isAnnotationPresent(RevisionEntity.class)
+				&& !javaType.equals(DefaultRevisionEntity.class);
 	}
 
 	/**

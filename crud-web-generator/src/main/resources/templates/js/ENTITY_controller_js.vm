@@ -58,6 +58,8 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 			${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].item._links = [];
 			${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].item._links[selectField] = [];
 		}
+		if(${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].item._links[selectField] == null)
+			${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].item._links[selectField] = [];
 		${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].item._links[selectField]['href'] = href;			
 		${_}rootScope.goBack();
 	}
@@ -95,10 +97,10 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 			validate(item);	
 			removeCollections(item)
 			CommonServices.create(${entity.name}_ENDPOINT, item).then(
-				function(processedResponse) {
+				function(processedResponse) {					
 					${_}scope.items.push(item);
 					${_}rootScope.modifiedItems.pop();		
-					${_}rootScope.goBack();			
+					${_}rootScope.goBack();					
 				});
 		}		
 	};	
@@ -115,7 +117,6 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 	var openEditForm = function(entityName, itemId) {
 		CommonServices.get(plural(entityName), entityName, itemId).then(
 				function(success) {
-					//${_}scope.item = success;
 					${_}rootScope.modifiedItems.push({item : success, selectField : null});
 					console.log("Edited item = " + success);
 					window.location = "admin#/" + uncapitalize(entityName) + "/" + itemId;
@@ -139,7 +140,7 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 			CommonServices.update(${entity.name}_ENDPOINT, item).then( function(success) {
 				${_}rootScope.modifiedItems.pop();
 				${_}rootScope.goBack();
-			});
+			});	
 		}
 	};
 
@@ -156,7 +157,7 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 				${_}rootScope.modifiedItems.pop();
 				${_}rootScope.goBack();
 			}
-		});
+		});	
 		
 	};
 
@@ -175,12 +176,22 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 	}
 	
 	var initList = function(response) {
-		${_}scope.items = response ? response : [];
-		${_}scope.page = Item.page;
-		${_}scope.page.maxPages = new Array(Math.min(Item.page.totalPages, 10));
-		${_}scope.page.range = floor10(${_}scope.page.number, 1);
+		if(response != null && response.length > 0) {
+			${_}scope.items = response;
+			initPage();
+		} else {
+			${_}scope.items = [];
+		}
 	}
 	
+	var initPage = function() {
+		${_}scope.page = Item.page;
+		if(${_}scope.page != null) {
+			${_}scope.page.maxPages = new Array(Math.min(Item.page.totalPages, 10));
+			${_}scope.page.range = floor10(${_}scope.page.number, 1);
+		}
+	}
+
 	${_}scope.goToPage = function(pageNumber) {
 		if(pageNumber >= 0 && pageNumber < ${_}scope.page.totalPages) {
 			Item.query(${entity.name}_ENDPOINT, "${entity.name}", pageNumber, null, function(response) {

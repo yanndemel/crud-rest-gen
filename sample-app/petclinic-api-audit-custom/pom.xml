@@ -1,0 +1,167 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.octo.tools.samples</groupId>
+	<artifactId>petclinic-api-audit-custom</artifactId>
+	<version>0.0.1</version>
+	<!-- WAR if you intend to deploy in an external servlet container like tomcat -->
+	<packaging>war</packaging>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.4.1.RELEASE</version>
+	</parent>
+
+	<name>petclinic-api-audit-custom</name>
+
+	<properties>	
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<compile.version>1.8</compile.version>	
+		<packageName>com.octo.tools.samples.petclinic.repository</packageName>
+	</properties>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>
+		<!-- Custom AbstractAuditController and related classes -->
+		<dependency>
+			<groupId>com.octo.tools.samples</groupId>
+			<artifactId>petclinic-audit-custom</artifactId>
+			<version>0.0.1</version>
+		</dependency>	
+		<!-- Your JPA domain classes (must contain persistence.xml)  -->
+		<dependency>
+			<groupId>com.octo.tools.samples</groupId>
+			<artifactId>petclinic-audit-model-custom</artifactId>
+			<version>0.0.1</version>
+		</dependency>						
+
+		<!-- Classes used by generated controllers -->
+		<dependency>
+			<groupId>com.octo.tools</groupId>
+			<artifactId>crud-generator-utils</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		
+		<!-- Audit controllers test classes dependencies -->
+		<dependency>
+            <groupId>com.octo.tools</groupId>
+            <artifactId>crud-generator-utils-tests</artifactId>
+            <version>0.0.1</version>
+            <scope>test</scope>
+        </dependency>
+		
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.octo.tools</groupId>
+				<artifactId>crud-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${compile.version}</source>
+					<target>${compile.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+			<!-- Tests execution : you just have to extend existing test classes located in crud-generator-utils-tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <!-- Test for generated AuditControllers -->
+                        <include>**/*Test.java</include>                        
+                    </includes>
+                    <systemPropertyVariables>
+						<!-- Package name of the repository classes -->
+						<packageName>${packageName}</packageName>	
+					</systemPropertyVariables>                 
+                </configuration>
+            </plugin>
+		</plugins>			
+		<pluginManagement>
+			<plugins>
+				<!-- Configuration of the crud-maven-plugin -->
+				<plugin>
+					<groupId>com.octo.tools</groupId>
+					<artifactId>crud-maven-plugin</artifactId>
+					<version>0.0.1</version>
+					<configuration>
+						<persistentUnitName>petclinic-model</persistentUnitName>
+						<packageName>${packageName}</packageName>
+						<auditControllerClassName>com.octo.tools.samples.AbstractAuditController</auditControllerClassName>
+					</configuration>
+					<executions>						
+						<!-- CRUD API generation -->
+						<execution>
+							<id>api</id>
+							<phase>generate-sources</phase>
+							<goals>
+								<goal>crudapi</goal>
+							</goals>
+						</execution>
+						<!-- Audit controllers generation -->
+                        <execution>
+                            <id>audit</id>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>audit</goal>
+                            </goals>
+                        </execution>						
+					</executions>
+					<dependencies>
+						<!-- Your JPA domain classes (must contain persistence.xml)  -->
+						<dependency>
+							<groupId>com.octo.tools.samples</groupId>
+							<artifactId>petclinic-audit-model-custom</artifactId>
+							<version>0.0.1</version>
+						</dependency>
+						<!-- Custom AbstractAuditController and related classes -->
+						<dependency>
+							<groupId>com.octo.tools.samples</groupId>
+							<artifactId>petclinic-audit-custom</artifactId>
+							<version>0.0.1</version>
+						</dependency>						
+						<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
+							Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 
+							instead -->
+						<dependency>
+							<groupId>javax.el</groupId>
+							<artifactId>javax.el-api</artifactId>
+							<version>2.2.4</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>	
+</project>

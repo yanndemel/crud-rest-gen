@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 
+import org.apache.el.util.ReflectionUtil;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +31,7 @@ import com.octo.tools.audit.AbstractAuditController;
 import com.octo.tools.crud.doc.ADocEntityGenerator;
 import com.octo.tools.crud.util.EntityHelper;
 import com.octo.tools.crud.util.EntityInfo;
+import com.octo.tools.crud.utils.ReflectionUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -62,27 +64,29 @@ public class AuditControllersTest {
 	public void testAudit() throws Exception {
 		for(EntityInfo info : entityInfoList) {
 			Class entityClass = info.getEntityClass();
-			entityHelper.createLinkedEntities(entityClass);
-			String location = entityHelper.createSampleEntity(info);
-			Map<String, String> paramsMap = entityHelper.getParamsMap(entityClass, true);
+			if(ReflectionUtils.isEntityExposed(entityClass)) {
+				entityHelper.createLinkedEntities(entityClass);
+				String location = entityHelper.createSampleEntity(info);
+				Map<String, String> paramsMap = entityHelper.getParamsMap(entityClass, true);
 
-			this.mockMvc
-					.perform(patch(entityHelper.url(location)).contentType(MediaTypes.HAL_JSON)
-							.content(this.objectMapper.writeValueAsString(paramsMap)))
-					.andExpect(status().isNoContent());
-			
-			ResultActions result = this.mockMvc.perform(get(getRevisionsUrl(info.getPluralName().toUpperCase()))).andDo(print()).andExpect(status().isOk())
-					.andExpect(jsonPath("_embedded.auditResourceSupports[0].revType", Matchers.equalTo("ADD")));		
-			Map<String, Object> map = objectMapper.readValue(result.andReturn().getResponse().getContentAsString(), Map.class); 
-			List list = (List)((Map)map.get("_embedded")).get("auditResourceSupports");
-			Object revId = ((Map)list.get(list.size() - 1)).get("revId");
-			this.mockMvc.perform(get(getRevisionsForEntityUrl(info.getPluralName().toUpperCase(), location))).andDo(print()).andExpect(jsonPath("_embedded.auditResourceSupports", Matchers.hasSize(2))).andExpect(status().isOk());
-			
-			this.mockMvc.perform(get(getRevisionEntityUrl(info.getPluralName().toUpperCase(), revId.toString()))).andDo(print()).andExpect(status().isOk())
-				.andExpect(jsonPath("_embedded.auditResourceSupports[0].revType", Matchers.equalTo("MOD")));
-			
-			
-			entityHelper.deleteLinkedEntities(location);
+				this.mockMvc
+						.perform(patch(entityHelper.url(location)).contentType(MediaTypes.HAL_JSON)
+								.content(this.objectMapper.writeValueAsString(paramsMap)))
+						.andExpect(status().isNoContent());
+				
+				ResultActions result = this.mockMvc.perform(get(getRevisionsUrl(info.getPluralName().toUpperCase()))).andDo(print()).andExpect(status().isOk())
+						.andExpect(jsonPath("_embedded.auditResourceSupports[0].revType", Matchers.equalTo("ADD")));		
+				Map<String, Object> map = objectMapper.readValue(result.andReturn().getResponse().getContentAsString(), Map.class); 
+				List list = (List)((Map)map.get("_embedded")).get("auditResourceSupports");
+				Object revId = ((Map)list.get(list.size() - 1)).get("revId");
+				this.mockMvc.perform(get(getRevisionsForEntityUrl(info.getPluralName().toUpperCase(), location))).andDo(print()).andExpect(jsonPath("_embedded.auditResourceSupports", Matchers.hasSize(2))).andExpect(status().isOk());
+				
+				this.mockMvc.perform(get(getRevisionEntityUrl(info.getPluralName().toUpperCase(), revId.toString()))).andDo(print()).andExpect(status().isOk())
+					.andExpect(jsonPath("_embedded.auditResourceSupports[0].revType", Matchers.equalTo("MOD")));
+				
+				
+				entityHelper.deleteLinkedEntities(location);
+			}
 		}
 	}
 

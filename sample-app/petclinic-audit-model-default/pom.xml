@@ -1,0 +1,37 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>petclinic-audit-model-default</artifactId>
+	<packaging>jar</packaging>
+
+	<name>petclinic-audit-model-default</name>
+	<url>http://maven.apache.org</url>
+
+	<parent>
+		<groupId>com.octo.tools.samples</groupId>
+		<artifactId>crud-samples-parent</artifactId>
+		<version>0.0.1</version>
+	</parent>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${compile.version}</source>
+					<target>${compile.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		
+		<dependency>
+			<groupId>com.octo.tools.samples</groupId>
+			<artifactId>petclinic-audit-model-common</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+	</dependencies>
+
+</project>

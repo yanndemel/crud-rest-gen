@@ -4,7 +4,7 @@
 
 /* Services */
 
-var myAppServices = angular.module('myApp.services', ['ngResource', 'spring-data-rest']);
+var myAppServices = angular.module('myApp.services', ['ngResource']);
 
 // Demonstrate how to register services
 // In this case it is a simple value service.
@@ -17,8 +17,8 @@ if(!springRestApiUrl.endsWith("/"))
 
 myAppServices.value('restURL', springRestApiUrl);
 
-myAppServices.factory('CommonServices', ['${_}http', 'restURL', 'SpringDataRestAdapter', 
-                                         function(${_}http, restURL, SpringDataRestAdapter) {	
+myAppServices.factory('CommonServices', ['${_}http', 'restURL',  
+                                         function(${_}http, restURL) {	
 
 	function _getEntityUrl(endPointName) {
 		return restURL + endPointName;
@@ -71,11 +71,11 @@ myAppServices.factory('CommonServices', ['${_}http', 'restURL', 'SpringDataRestA
 		 * @return all items
 		 */
     	getAll: function(endPointName, entityName) {
-        	return SpringDataRestAdapter.process(${_}http.get(_getEntityUrl(endPointName)+'/?projection=' + uncapitalize(entityName) + 'Excerpt'));
+        	return ${_}http.get(_getEntityUrl(endPointName)+'/?projection=' + uncapitalize(entityName) + 'Excerpt');
     	},
 
 		getDescription: function(url, entityName) {
-        	return SpringDataRestAdapter.process(${_}http.get(url + '/?projection=' + uncapitalize(entityName) + 'Excerpt'));
+        	return ${_}http.get(url + '/?projection=' + uncapitalize(entityName) + 'Excerpt');
     	},
 
         /**
@@ -87,7 +87,7 @@ myAppServices.factory('CommonServices', ['${_}http', 'restURL', 'SpringDataRestA
 		 */
     	get: function(endPointName, entityName, id) {
     	    var url = _getEntityUrl(endPointName) + '/' + id+'/?projection=' + uncapitalize(entityName) + 'Excerpt';
-        	return SpringDataRestAdapter.process(${_}http.get(url));
+        	return ${_}http.get(url);
     	},
 
         /**
@@ -98,7 +98,7 @@ myAppServices.factory('CommonServices', ['${_}http', 'restURL', 'SpringDataRestA
 		 * @return item saved
 		 */
 		create: function(endPointName, item) {
-			return SpringDataRestAdapter.process(${_}http.post(_getEntityUrl(endPointName), item));
+			return ${_}http.post(_getEntityUrl(endPointName), item);
     	},
 
         /**
@@ -110,7 +110,7 @@ myAppServices.factory('CommonServices', ['${_}http', 'restURL', 'SpringDataRestA
 		 */
     	update: function(endPointName, item) {
 			var url = _getEntityUrl(endPointName) + '/' + _getItemId(item);
-			return SpringDataRestAdapter.process(${_}http.put(url, item));
+			return ${_}http.put(url, item);
     	},
 
 		/**
@@ -121,7 +121,7 @@ myAppServices.factory('CommonServices', ['${_}http', 'restURL', 'SpringDataRestA
 		 */
     	deleteItem: function(endPointName, id) {
         	var url = _getEntityUrl(endPointName) + '/' + id;
-        	return SpringDataRestAdapter.process(${_}http.delete(url));
+			return ${_}http.delete(url);
     	}
 
 	};
@@ -131,20 +131,9 @@ myAppServices.factory('CommonServices', ['${_}http', 'restURL', 'SpringDataRestA
 myAppServices.factory('Item', [
                            		'${_}http',
                            		'restURL',
-                           		'SpringDataRestAdapter',
-function(${_}http, restURL, SpringDataRestAdapter) {
+function(${_}http, restURL) {
 
 	function Item(item) {
-
-		if (item._resources) {
-			item.resources = item._resources("self", {}, {
-				update : {
-					method : 'PUT'
-				}
-			});
-			
-		} 
-
 		return item;
 	}
 
@@ -152,21 +141,13 @@ function(${_}http, restURL, SpringDataRestAdapter) {
 		var url = restURL + endpoint + "/?projection=" + uncapitalize(entityName) + "Excerpt";
 		if(page != null)
 			url += "&page="+page;
-		var deferred = ${_}http.get(url);
-		return SpringDataRestAdapter.process(deferred).then(
+		return ${_}http.get(url).then(
 				function(data) {
-					Item.resources = data._resources("self");
 					Item.page = data.page;
-
-					callback
-							&& callback(_.map(data._embeddedItems,
-									function(item) {
-										return new Item(item);
-									}));
+					callback(data.data._embedded[plural(entityName)]);
 				});
 	};
 
-	Item.resources = null;
 	return Item;
 
 } ]);

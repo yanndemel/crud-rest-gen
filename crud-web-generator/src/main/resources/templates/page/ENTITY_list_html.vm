@@ -6,7 +6,15 @@
 			<div class="col-md-8"><h1>${entity.name}</h1></div>
 			<div class="col-md-4"><a class="btn btn-primary btn-block create"  ng-click="openCreateForm()">Create</a></div>
 		</div>
-		<div ng-include="admin/partials/message-include.html"></div>
+		<div ng-repeat="success in message.successs" ng-show="message.successs.length > 0" class="alert alert-success">
+    		{{success}}
+		</div>
+		<div ng-repeat="error in message.errors" ng-show="message.errors.length > 0" class="alert alert-danger">
+     		{{error}}
+		</div>
+		<div ng-repeat="serverError in message.serverErrors" ng-show="message.serverErrors.length > 0" class="alert alert-danger">
+    		{{serverError.message}}
+		</div>
 		<div class="alert alert-info" role="alert"
 			ng-hide="items && items.length > 0">There are no items yet.</div>
 		<table class="table table-striped">

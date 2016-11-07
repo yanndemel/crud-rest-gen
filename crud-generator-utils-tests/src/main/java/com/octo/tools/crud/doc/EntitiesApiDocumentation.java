@@ -25,8 +25,10 @@ import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.EntityManager;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import org.hamcrest.Matchers;
@@ -46,7 +48,6 @@ import org.springframework.restdocs.constraints.ConstraintDescriptions;
 import org.springframework.restdocs.hypermedia.LinkDescriptor;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -155,10 +156,10 @@ public class EntitiesApiDocumentation {
 				.description("This <<resources-" + info.getSimpleName() + "," + info.getSimpleName() + ">>"));
 		List<Field> allFields = ReflectionUtils.getAllFields(info.getEntityClass());
 		for (Field f : allFields) {
-			if (f.isAnnotationPresent(ManyToOne.class)) {
+			if (f.isAnnotationPresent(ManyToOne.class) || f.isAnnotationPresent(OneToOne.class)) {
 				String name = f.getName();
 				list.add(linkWithRel(name).description("The linked <<resources-" + name + "," + name + ">>"));
-			} else if (f.isAnnotationPresent(OneToMany.class)) {
+			} else if (f.isAnnotationPresent(OneToMany.class) || f.isAnnotationPresent(ManyToMany.class)) {
 				String name = f.getName();
 				list.add(linkWithRel(name).description("The linked list of <<resources-" + name + "," + name + ">>"));
 			}

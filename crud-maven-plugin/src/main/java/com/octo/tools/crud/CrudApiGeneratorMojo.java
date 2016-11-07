@@ -107,7 +107,7 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 	 * unit test by adding @Test on the method : take care at commenting
 	 * the @Test before committing your code !!! WARNING !!! Overrides existing
 	 * classes in the source code You will need to refresh the package
-	 * com.nexity.refdata.repository.projection after execution and then make a
+	 * ${packageName}.projection after execution and then make a
 	 * "Organize imports" on the package on your favorite IDE (CTRL+SHIFT+O on
 	 * eclipse)
 	 * 
@@ -145,7 +145,7 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 					projection.append(lastField);
 				projection.append(getComment("Short label of " + javaType.getSimpleName(),
 						"the short label of " + javaType.getSimpleName()));
-				projection.append("\t@Value(\"#{T(com.octo.tools.crud.utils.StringUtils).toString(target)}\")");
+				projection.append("\t@Value(\"#{T(com.octo.tools.crud.utils.StringUtils).toString(target)}\")\n");
 				projection.append("\tpublic String getShortLabel();\n\n");
 
 				BufferedWriter writer = Files.newBufferedWriter(path);
@@ -217,7 +217,7 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 		System.out.println("File " + path);
 		try {
 			BufferedWriter writer = Files.newBufferedWriter(path);
-			writer.write("package com.nexity.refdata.repository;\n");
+			writer.write("package "+packageName+";\n\n");
 			writer.write("public interface URLs {\n\n");
 			for (EntityType type : entityList) {
 				Class javaType = type.getJavaType();
@@ -243,7 +243,7 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 					+ javaType.getSimpleName();
 			String s = getComment(comment,
 					"the String representation of the " + pd.getReadMethod().getReturnType().getSimpleName())
-					+ "\t@Value(\"#{T(com.octo.tools.crud.utils.StringUtils).toString(target)}\")\n";
+					+ "\t@Value(\"#{T(com.octo.tools.crud.utils.StringUtils).toString(target."+f.getName()+")}\")\n";
 			return s + "\tpublic String " + pd.getReadMethod().getName() + "();\n\n";
 		}
 		String comment = f.getName() + " of the " + javaType.getSimpleName();

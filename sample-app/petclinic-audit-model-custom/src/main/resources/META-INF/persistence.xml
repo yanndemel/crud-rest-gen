@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="petclinic-model">
+		<class>org.springframework.samples.petclinic.model.CustomRevisionEntity</class>
+		<class>org.springframework.samples.petclinic.model.BaseEntity</class>
+		<class>org.springframework.samples.petclinic.model.NamedEntity</class>
+		<class>org.springframework.samples.petclinic.model.Owner</class>
+		<class>org.springframework.samples.petclinic.model.Person</class>
+		<class>org.springframework.samples.petclinic.model.Pet</class>
+		<class>org.springframework.samples.petclinic.model.PetType</class>
+		<class>org.springframework.samples.petclinic.model.Specialty</class>
+		<class>org.springframework.samples.petclinic.model.Vet</class>
+		<class>org.springframework.samples.petclinic.model.Visit</class>
+		
+		<properties>
+			<property name="hibernate.archive.autodetection" value="class" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+			<property name="hibernate.connection.driver_class" value="org.h2.Driver" />
+			<property name="hibernate.connection.url" value="jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE" />
+			<property name="hibernate.connection.user" value="sa" />
+			<!-- <property name="hibernate.show_sql" value="true"/> -->
+			<property name="hibernate.flushMode" value="FLUSH_AUTO" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+		</properties>
+	</persistence-unit>
+</persistence>

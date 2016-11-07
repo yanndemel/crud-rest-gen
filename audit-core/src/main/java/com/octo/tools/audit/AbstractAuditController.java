@@ -52,7 +52,7 @@ public abstract class AbstractAuditController<T, R> {
 	}
 
 
-	private Resources<AuditResourceSupport<T>> getAuditInfoList(List<Object[]> resultList) {		
+	protected Resources<AuditResourceSupport<T>> getAuditInfoList(List<Object[]> resultList) {		
 		int size = resultList != null ? resultList.size() : 0;
 		if(size == 0)
 			return new Resources<>(Collections.emptyList());
@@ -99,7 +99,7 @@ public abstract class AbstractAuditController<T, R> {
 		
 	}
 
-	private AuditQueryCreator getAuditQueryCreator() {
+	protected AuditQueryCreator getAuditQueryCreator() {
 		return  getAuditReader().createQuery();
 	}
 

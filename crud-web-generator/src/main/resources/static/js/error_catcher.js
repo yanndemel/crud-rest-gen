@@ -1,7 +1,7 @@
 'use strict';
 
-var errorCatcherModule = angular.module('errorCatcher.module', []);
-errorCatcherModule.factory('$exceptionHandler', ['$injector', function ($injector) {
+var exceptionCatcherModule = angular.module('exceptionCatcher.module', []);
+exceptionCatcherModule.factory('$exceptionHandler', ['$injector', function ($injector) {
     return function errorCatcherHandler(exception, cause) {    	
         console.error(exception.stack);
         var MessageHandler = $injector.get("MessageHandler")
@@ -9,7 +9,7 @@ errorCatcherModule.factory('$exceptionHandler', ['$injector', function ($injecto
     };
 }]);
 
-
+var errorCatcherModule = angular.module('errorCatcher.module', []);
 errorCatcherModule.factory('errorHttpInterceptor', ['$q', '$injector', function ($q, $injector) {
     return {
         responseError: function responseError(rejection) {

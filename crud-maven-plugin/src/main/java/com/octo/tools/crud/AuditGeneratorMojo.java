@@ -107,7 +107,7 @@ public class AuditGeneratorMojo extends AbstractMojo {
 	 * Method used to generate <Entity>AuditController java source code for all @Autited Entities
 	 *  --> can be used as a unit test by adding @Test on the method : take care at commenting the @Test before committing your code 
 	 *  !!! WARNING !!! Overrides existing classes in the source code 
-	 *  You will need to refresh the package com.nexity.refdata.repository.audit after execution. 
+	 *  You will need to refresh the package ${packageName}.audit after execution. 
 	 *  The test is based on a template : AuditController.template
 	 *   
 	 * 

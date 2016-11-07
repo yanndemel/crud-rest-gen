@@ -209,7 +209,7 @@ public class CrudGenerator {
         List<Map<String, Object>> entities = new ArrayList<Map<String,Object>>();
         for(EntityType et : allEntities) {
         	Class clazz = et.getJavaType();
-        	if(ReflectionUtils.isEntityExposed(clazz) && !clazz.equals(DefaultRevisionEntity.class)) {
+        	if(ReflectionUtils.isEntityExposed(clazz)) {
         		entityInfo = new HashMap<String, Object>();
             	entities.add(entityInfo);
         		String name = clazz.getSimpleName();

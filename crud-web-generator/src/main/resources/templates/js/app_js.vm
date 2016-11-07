@@ -48,10 +48,10 @@ var floor10 = function(value, exp) {
 var myApp = angular.module('myApp', [
    'ngRoute'
   ,'ngResource' 
-  ,'spring-data-rest'
-   ,'myApp.services'
+  ,'myApp.services'
   ,'messageHandler.module'
-, 'errorCatcher.module'
+  ,'errorCatcher.module'
+  ,'exceptionCatcher.module'
 #foreach($entity in ${entities})
   ,'${entity.uncapitName}.module'
 #end

@@ -45,12 +45,16 @@ messageHandler.factory('MessageHandler',['$rootScope', function($rootScope) {
     	if($rootScope.message.errors.indexOf(error)<0)
     		$rootScope.message.errors.push(error);
     };
+    
+    $this.addUnknownError = function() {            	
+    	$this.addError("An error occured while accessing to the API (maybe a connection problem). Please check the browser console for details.")
+    };
 
     /**
      * Add a server error message (no translate)
      */
     $this.addServerError = function(serverError) {
-    	if($rootScope.message.errors.indexOf(serverError)<0)
+    	if($rootScope.message.serverErrors.indexOf(serverError)<0)
     		$rootScope.message.serverErrors.push(serverError);
     };
 
@@ -72,10 +76,10 @@ messageHandler.factory('MessageHandler',['$rootScope', function($rootScope) {
             } else {
                 $this.addServerError(http.data);
             }
-        } else {
-            if( http.data != null && http.data !== "" ) {
-                $this.addServerError(http.data);
-            }
+        } else if( http.data != null && http.data !== "" ) {
+            $this.addServerError(http.data);         
+        } else if(http.status <= 0) {
+        	$this.addUnknownError();
         }
     };
 
@@ -83,7 +87,10 @@ messageHandler.factory('MessageHandler',['$rootScope', function($rootScope) {
      * Manage the exception
      */
     $this.manageException = function(error) {
-        $this.addError(error);
+    	if(error.message != null)
+    		$this.addServerError(error);
+    	else
+    		$this.addError(error);
     };
 
     // Return message handler

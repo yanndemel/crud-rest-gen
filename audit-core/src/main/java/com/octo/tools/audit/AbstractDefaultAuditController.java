@@ -1,6 +1,10 @@
 package com.octo.tools.audit;
 
+import java.util.List;
+
 import org.hibernate.envers.DefaultRevisionEntity;
+import org.hibernate.envers.query.AuditEntity;
+import org.springframework.http.ResponseEntity;
 
 public abstract class AbstractDefaultAuditController<T> extends AbstractAuditController<T, DefaultRevisionEntity> {
 
@@ -20,8 +24,11 @@ public abstract class AbstractDefaultAuditController<T> extends AbstractAuditCon
 		return revEntity.getTimestamp();
 	}
 
-	
-
+	@Override
+	public ResponseEntity<?> getRevisionEntity(Long revId) {
+		List<Object[]> resultList = getAuditQueryCreator().forRevisionsOfEntity(entityClass, false, true).add(AuditEntity.revisionNumber().eq(revId.intValue())).getResultList();
+		return ResponseEntity.ok(getAuditInfoList(resultList));
+	}
 	
 	
 	

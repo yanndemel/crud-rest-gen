@@ -1,0 +1,107 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.octo.tools.samples</groupId>
+	<artifactId>petclinic-web</artifactId>
+	<version>0.0.1</version>
+	<!-- WAR if you intend to deploy in an external servlet container like tomcat -->
+	<packaging>war</packaging>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.4.1.RELEASE</version>
+	</parent>
+
+	<name>petclinic-web</name>
+
+
+	<properties>
+		<restApiUrl>http://localhost:8080/</restApiUrl>		
+	</properties>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Classes used by generated controllers -->
+		<dependency>
+			<groupId>com.octo.tools</groupId>
+			<artifactId>crud-generator-utils</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.octo.tools</groupId>
+				<artifactId>crud-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${compile.version}</source>
+					<target>${compile.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>			
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!-- Configuration of the crud-maven-plugin -->
+				<plugin>
+					<groupId>com.octo.tools</groupId>
+					<artifactId>crud-maven-plugin</artifactId>
+					<version>0.0.1</version>
+					<configuration>
+						<persistentUnitName>petclinic-model</persistentUnitName>
+						<restApiUrl>${restApiUrl}</restApiUrl>						
+					</configuration>
+					<executions>
+						<!-- CRUD Admin Web app generation -->
+						<execution>
+							<id>web</id>
+							<phase>generate-resources</phase>
+							<goals>
+								<goal>crudweb</goal>
+							</goals>
+						</execution>						
+					</executions>
+					<dependencies>
+						<!-- JPA model (must contain persistence.xml) -->
+						<dependency>
+							<groupId>com.octo.tools.samples</groupId>
+							<artifactId>petclinic-model</artifactId>
+							<version>0.0.1</version>
+						</dependency>						
+						<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
+							Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 
+							instead -->
+						<dependency>
+							<groupId>javax.el</groupId>
+							<artifactId>javax.el-api</artifactId>
+							<version>2.2.4</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>	
+</project>
