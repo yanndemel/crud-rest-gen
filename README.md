@@ -50,7 +50,6 @@ Use your own data model
 * The type of **all @Id** in your entities **must be java.lang.Long**
 * If you generate CRUD Web Administration with crud-maven-plugin:**crudweb** all entities must have/inherit a **public String getShortLabel()** method (returning the description of the entity).  
 
-
 ###Project setup
 
  1. Package the **persistence.xml** file referencing your entity classes in a maven artifact containing (or dependent from) your JPA entities.
