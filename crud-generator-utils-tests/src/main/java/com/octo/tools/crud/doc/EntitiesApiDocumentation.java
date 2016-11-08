@@ -200,7 +200,8 @@ public class EntitiesApiDocumentation {
 				type.optional();
 			list.add(type);
 		}
-		list.add(fieldWithPath("shortLabel").description("The short label of the " + entityClass.getSimpleName())
+		if("true".equalsIgnoreCase(System.getProperty("shortLabel")))
+			list.add(fieldWithPath("shortLabel").description("The short label of the " + entityClass.getSimpleName())
 				.type(JsonFieldType.STRING));
 		list.add(fieldWithPath("_links").description("links to other resources"));
 		Collections.sort(list, (p1, p2) -> p1.getPath().compareTo(p2.getPath()));
