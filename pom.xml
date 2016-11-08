@@ -18,6 +18,7 @@
 		<module>crud-generator-utils-tests</module>
 		<module>crud-web-generator</module>
 		<module>crud-maven-plugin</module>
+		<module>sample-app</module>
 	</modules>
 
 	<build>

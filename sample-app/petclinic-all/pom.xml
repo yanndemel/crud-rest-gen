@@ -163,6 +163,8 @@
                         <audit>true</audit>
                         <!-- Used by BaseApiDocumentation : set to true if you add "com.octo.tools" to the @ComponentScan annotation on your @SpringBootApplication class -->
                         <doc>true</doc>
+                        <!-- Used by EntitiesApiDocumentation : set to true if all the JPA entities (unless RevisionEntity) have a public getShortLabel method -->
+                        <shortLabel>true</shortLabel>
                     </systemPropertyVariables>              
                 </configuration>
             </plugin>

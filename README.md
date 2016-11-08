@@ -1,32 +1,64 @@
-# crud-maven-plugin
-CRUD Application Generation from JPA entities
-==
-## Provide the domain entities (standard JPA annotated classes), and let crud-maven-plugin generate :
+
+#**crud-maven-plugin**
+
+*CRUD Application Generation from JPA entities*
+=============
+
+Provide the domain entities (standard JPA annotated classes), and let crud-maven-plugin generate for you :
+
 * the **CRUD Rest API**
 * the **documentation** of the API
 * the HTML5/AngularJS **CRUD Administration UI**
-* the **Rest API** for retrieving **audit information** if you use Hibernate Envers to audit your entities
+* the **Rest API** for retrieving **audit information** and associated unit tests if you use Hibernate Envers to audit your entities
 
-Installing the plugin
--
-Authorized users can use the OCTO Nexus server for managing crud-maven-plugin dependencies.
+> **Technology stack**
 
-Or you can build and install/deploy all necassary components in you local repo / Nexus server by invoking ``mvn clean install`` / ``mvn clean deploy``  at the root of crud-rest-gen project. This will install all necessary artifacts :
+> - Spring Boot
+> - Spring Data Rest
+> - Spring Data JPA
+> - Spring Rest Docs
+> - Hibernate Envers
+> - Angular JS
+
+Install the plugin
+------------------
+Authorized users can use the **OCTO Nexus server** for managing crud-maven-plugin dependencies.
+
+Or you can build and install/deploy all necessary components in you local repo / Nexus server by invoking ``mvn clean install`` / ``mvn clean deploy``  at the root of crud-rest-gen project. This will install all necessary artifacts :
 * *audit-core* : Base classes used by generated audit controllers
 * *crud-generator-utils* : Utility classes for Reflection & String operations and Controllers for accessing generated documentation page and history API
 * *crud-generator-utils-tests* : Base classes to be extended in the API project for API documentation generation and generated audit controllers testing
 * *crud-web-generator* : Classes used by crud-maven-plugin to generate the CRUD Web administration UI (relying on the generated Rest API)
 * **crud-maven-plugin** : Mojos for CRUD Rest API generation (generate-sources phase), audit controllers generation (generate-sources phase), CRUD Web app generation (generate-resources phase)
+* The samples located in the sample-app directory
 
-Usage
--
-Package your domain classes in a standalone maven project. Don't forget to place the **persistence.xml** file referencing your entity classes in a persistence unit.
+Browse the samples
+----------------------------
+The [Spring Petclinic](https://github.com/spring-projects/spring-petclinic) model is used for all samples. It has been slightly adapted to fit the pre-requisites. The samples will learn you how to generate, based on the domain classes :
+
+* the Rest API
+* the documentation of the API
+* the Rest API for audited entities and associated unit tests
+* the Web application for administrating the data model
+
+All details can be found in the [README.md](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/README.md) of the ``sample-app`` directory.
+
+Use your own data model
+--------------------
+###Pre-requisites
+
+* The type of **all @Id** in your entities **must be java.lang.Long**
+* If you generate CRUD Web Administration with crud-maven-plugin:**crudweb** all entities must have/inherit a **public String getShortLabel()** method (returning the description of the entity).  
 
 
-You have to create a new maven project for the Rest API. You can use the same project for the Web administration UI or you can create a separate maven project.
+###Project setup
 
+ 1. Package the **persistence.xml** file referencing your entity classes in a maven artifact containing (or dependent from) your JPA entities.
+ 2. You have to create a new maven project for the Rest API. You can use the same project for the Web administration UI or you can create a separate maven project.
 
-Sample *pom.xml* for **all-in-one** generation : same maven project to generate the Rest API (+its documentation), the audit API and the Web administration UI :
+> **Note** : It is **strongly recommended** to **browse the samples before starting** with your own model and choose the kind of project you need (API only ? Documentation ? Audit API ? Web application ? Packaging mode : all-in-one or separate applications ?).
+
+You can find below a sample *pom.xml* for **all-in-one** generation (more details can be found in the [petclinic-all sample](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-all/README.md)) : same maven project to generate the Rest API (+its documentation), the audit Rest API (+associated unit tests) and the Web administration UI :
 ```xml
 <project>
 	<modelVersion>4.0.0</modelVersion>
@@ -209,6 +241,8 @@ Sample *pom.xml* for **all-in-one** generation : same maven project to generate 
 						<audit>true</audit>
 						<!-- Used by BaseApiDocumentation : set to true if you add "com.octo.tools" to the @ComponentScan annotation on your @SpringBootApplication class -->
 						<doc>true</doc>
+						<!-- Used by EntitiesApiDocumentation : set to true if all the JPA entities (unless RevisionEntity) have/inherit a public getShortLabel method -->
+                   <shortLabel>true</shortLabel>
 					</systemPropertyVariables>
 				</configuration>
 			</plugin>
@@ -343,134 +377,8 @@ Sample *pom.xml* for **all-in-one** generation : same maven project to generate 
 </project>
 ```
 
+The data model artefact must contain a **persistence.xml** file as shown below :
 
-Sample *pom.xml* for generating **only the REST API** :
-```xml
-<project>
-	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>your-groupId</groupId>
-	<artifactId>your-artifactId</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<!-- WAR if you intend to deploy in an external servlet container like tomcat -->
-	<packaging>war</packaging>
-	<!-- The project has to be a Spring boot project -->
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.4.1.RELEASE</version>
-	</parent>
-	<name>your-project-web</name>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<compile.version>1.8</compile.version>		
-		<!-- The package name of the generated RepositoryRestResource classes -->
-		<packageName>your-repository-classes-package</packageName>
-	</properties>
-	<dependencies>
-		<!-- Spring dependencies -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-rest</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- Change with your favorite DB -->
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>your-groupId</groupId>
-			<artifactId>your-project-model</artifactId>
-			<version>0.0.1</version>
-		</dependency>
-
-		<!-- Classes used by generated controllers -->
-		<dependency>
-			<groupId>com.octo.tools</groupId>
-			<artifactId>crud-generator-utils</artifactId>
-			<version>0.0.1</version>
-		</dependency>
-
-	</dependencies>
-
-	<build>		
-		<plugins>
-			<plugin>
-				<groupId>com.octo.tools</groupId>
-				<artifactId>crud-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>${compile.version}</source>
-					<target>${compile.version}</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-				</configuration>
-			</plugin>			
-		<pluginManagement>
-			<plugins>
-				<!-- Configuration of the crud-maven-plugin -->
-				<plugin>
-					<groupId>com.octo.tools</groupId>
-					<artifactId>crud-maven-plugin</artifactId>
-					<version>0.0.1</version>
-					<configuration>
-						<persistentUnitName>your-project-model</persistentUnitName>
-						<packageName>${packageName}</packageName>
-					</configuration>
-					<executions>						
-						<!-- CRUD API generation -->
-						<execution>
-							<id>api</id>
-							<phase>generate-sources</phase>
-							<goals>
-								<goal>crudapi</goal>
-							</goals>
-						</execution>						
-					</executions>
-					<dependencies>
-						<!-- JPA model (must contain persistence.xml) -->
-						<dependency>
-							<groupId>your-groupId</groupId>
-							<artifactId>your-project-model</artifactId>
-							<version>0.0.1</version>
-						</dependency>						
-						<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
-							Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 
-							instead -->
-						<dependency>
-							<groupId>javax.el</groupId>
-							<artifactId>javax.el-api</artifactId>
-							<version>2.2.4</version>
-						</dependency>
-					</dependencies>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>	
-</project>
-```
-
-
-persistence.xml sample :
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
@@ -490,13 +398,25 @@ persistence.xml sample :
 </persistence>
 ```
 
+For an all-in-one application, the Application main class must contain the following annotations :
 
-Technology stack
--
-* Spring Boot
-* Spring Data Rest
-* Spring Data JPA
-* Spring Rest Docs
-* Hibernate Envers
-* Angular JS
+```java
+@SpringBootApplication
+@EnableJpaRepositories(basePackages = "com.octo.tools.samples.petclinic.repository")
+@EntityScan({"org.springframework.samples.petclinic.model"})	
+@ComponentScan({"com.octo.tools.crud.admin", "com.octo.tools.crud.doc", "com.octo.tools.audit", 
+	"com.octo.tools.samples.petclinic.repository.audit", 
+	"com.octo.tools.samples.petclinic.repository.projection"})	
+public class Application extends SpringBootServletInitializer {
 
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {		
+		return application.sources(Application.class);
+	}
+	
+	public static void main(String[] args) {
+		 new SpringApplicationBuilder(Application.class)         
+         .run(args);
+	}
+}
+```
