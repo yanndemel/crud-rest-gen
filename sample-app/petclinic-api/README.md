@@ -13,6 +13,7 @@ Run ``mvn spring-boot:run``
 Test the API
 =============
 Execute a GET request at the root of the API : ``$ curl http://localhost:8080/``.
+
 Server response : 
 ```json
 {
@@ -53,7 +54,24 @@ How it works ?
 
 ###Dependencies
 
+* The first dependency is petclinic-model, the data model. The original petclinic model has been slightly modified to fit crud-maven-plugin [pre-requisites](https://github.com/yanndemel/crud-rest-gen/blob/master/README.md#pre-requisites). Please look at [petclinic-model](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-model) for details.
+* The second dependency is crud-generator-utils that contains utility classes used by the generated Projection classes (StringUtils.toString method) and by the application (CORS filter for enabling requests from any host, mandatory for using the 
+Extract from pom.xml :
+```xml
+<!-- Your JPA domain classes (must contain persistence.xml)  -->
+<dependency>
+	<groupId>com.octo.tools.samples</groupId>
+	<artifactId>petclinic-model</artifactId>
+	<version>0.0.1</version>
+</dependency>						
 
+<!-- Classes used by generated controllers -->
+<dependency>
+	<groupId>com.octo.tools</groupId>
+	<artifactId>crud-generator-utils</artifactId>
+	<version>0.0.1</version>
+</dependency>
+```
 ###Java code
 
 
@@ -62,28 +80,17 @@ How it works ?
 ###Generated sources
 
 All generated sources are located in ```/target/generated-sources```.
+The base package for @RepositoryRestResource classes is the value of the ``packageName`` parameter in the crud-maven-plugin configuration.
+The base package for Projection classes (\*Excerpt.java files) is the value of the ``packageName`` parameter suffixed by ``.projection``.
+For each JPA entity, a @RepositoryRestResource source file and a Projection are used by the generated Web Admin UI
 
+* @RepositoryRestResource 
+* Projection classes
 
-@RepositoryRestResource 
+In the sample the generated source code is compiled and included in the packaged application. However you can choose, by setting the ``compile`` parameter to ``false`` in the crud-maven-plugin configuration, to use the crud-maven-plugin only for source code generation (e.g. if you want to customize the generated sources after generation and include them "manually" in your project).
 
 Main dependencies
 =================
-
-```xml
-    <!-- Your JPA domain classes (must contain persistence.xml)  -->
-		<dependency>
-			<groupId>com.octo.tools.samples</groupId>
-			<artifactId>petclinic-model</artifactId>
-			<version>0.0.1</version>
-		</dependency>						
-
-		<!-- Classes used by generated controllers -->
-		<dependency>
-			<groupId>com.octo.tools</groupId>
-			<artifactId>crud-generator-utils</artifactId>
-			<version>0.0.1</version>
-		</dependency>
-```
 
 
 * *[petclinic-model](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-model)* (PetClinic JPA entities)
