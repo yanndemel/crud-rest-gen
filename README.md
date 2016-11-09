@@ -47,7 +47,7 @@ Use your own data model
 --------------------
 ###Prerequisites
 
- 1. Your entities must be simple POJOs annotated with standard javax.persistence annotations
+ 1. Your entities must be POJOs annotated with standard **javax.persistence annotations** : currently only **Field access** defined annotations are supported
  2. The type of **all @Id** in your entities **must be java.lang.Long**
 
 
