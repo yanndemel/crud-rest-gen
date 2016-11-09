@@ -104,7 +104,7 @@ The same configuration as in the petclinic-api project is used for the crud-mave
 ```
 ####Step 2 : Tests execution
 
-Please refer at the documentation of the [crud-generator-utils-tests](https://github.com/yanndemel/crud-rest-gen/blob/master/crud-generator-utils-tests/README.md) for the detail of the generation of the documentation.
+Please refer at the documentation of the [crud-generator-utils-tests](https://github.com/yanndemel/crud-rest-gen/blob/master/crud-generator-utils-tests/README.md#api-documentation-generation-unit-tests) for the details of the generation of the documentation.
 ```xml
 <!-- Tests execution : you just have to extend existing test classes located in crud-generator-utils-tests -->
 <plugin>
