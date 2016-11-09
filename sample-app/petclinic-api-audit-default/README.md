@@ -85,7 +85,40 @@ How it works ?
 ###Project dependencies
 
 For the API generation the dependencies are the same as for the [petclinic-api](../petclinic-api/README.md#project-dependencies) project, unless the petclinic-model which is replaced by [petclinic-audit-model-default](../petclinic-audit-model-default).
+```xml
+<!-- Your JPA domain classes (must contain persistence.xml)  -->
+<dependency>
+  <groupId>com.octo.tools.samples</groupId>
+  <artifactId>petclinic-audit-model-default</artifactId>
+  <version>0.0.1</version>
+</dependency>						
 
+<!-- Classes used by generated controllers -->
+<dependency>
+  <groupId>com.octo.tools</groupId>
+  <artifactId>crud-generator-utils</artifactId>
+  <version>0.0.1</version>
+</dependency>
+```
+For compiling the audit generated classes, the following dependency must be present :
+```xml
+<!-- Custom AbstractAuditController and related classes -->
+<dependency>
+  <groupId>com.octo.tools.samples</groupId>
+  <artifactId>petclinic-audit-default</artifactId>
+  <version>0.0.1</version>
+</dependency>
+```
+For testing the audit generated classes, the following dependency must be present :
+```xml
+<!-- Audit controllers test classes dependencies -->
+<dependency>
+    <groupId>com.octo.tools</groupId>
+    <artifactId>crud-generator-utils-tests</artifactId>
+    <version>0.0.1</version>
+    <scope>test</scope>
+</dependency>
+```
 
 ###Java code
 
