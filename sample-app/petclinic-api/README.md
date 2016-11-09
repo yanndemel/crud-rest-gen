@@ -54,8 +54,10 @@ How it works ?
 
 ###Project dependencies
 
-* The first dependency is petclinic-model, the data model. The original petclinic model has been slightly modified to fit crud-maven-plugin [pre-requisites](https://github.com/yanndemel/crud-rest-gen/blob/master/README.md#pre-requisites). Please look at [petclinic-model](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-model) for details.
-* The second dependency is crud-generator-utils that contains utility classes used by the generated Projection classes ([StringUtils](https://github.com/yanndemel/crud-rest-gen/blob/master/crud-generator-utils/src/main/java/com/octo/tools/crud/utils/StringUtils.java).toString method) and by the application ([CORS filter](https://github.com/yanndemel/crud-rest-gen/blob/master/crud-generator-utils/src/main/java/com/octo/tools/crud/filter/SimpleCORSFilter.java) for enabling requests from any host, mandatory for using the API from another server and in particular for the sample application [petclinic-web](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-web)).
+In addition to the standard Spring Boot dependencies (spring-boot-starter-data-rest, spring-boot-starter-data-jpa and spring-boot-starter-tomcat) and the H2 database, two dependencies are needed for building the project :
+
+* The first is *petclinic-model*, the data model. The original petclinic model has been slightly modified to fit crud-maven-plugin [pre-requisites](https://github.com/yanndemel/crud-rest-gen/blob/master/README.md#pre-requisites). Please look at [petclinic-model](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-model) for details.
+* The second is *crud-generator-utils* that contains utility classes used by the generated Projection classes ([StringUtils](https://github.com/yanndemel/crud-rest-gen/blob/master/crud-generator-utils/src/main/java/com/octo/tools/crud/utils/StringUtils.java).toString method) and by the application ([CORS filter](https://github.com/yanndemel/crud-rest-gen/blob/master/crud-generator-utils/src/main/java/com/octo/tools/crud/filter/SimpleCORSFilter.java) for enabling requests from any host, mandatory for using the API from another server and in particular for the sample application [petclinic-web](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-web)).
 
 Extract from pom.xml :
 ```xml
