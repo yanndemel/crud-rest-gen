@@ -14,7 +14,7 @@ Test the sample
 =============
 * Test the API (see [petclinic-api](https://github.com/yanndemel/crud-rest-gen/blob/master/sample-app/petclinic-api/README.md#test-the-api) for details)
 * Browse the generated documentation at ``http://localhost:8080/doc`` : 
-![expected result](/sample_api.jpg)
+![expected result](sample_api.jpg)
 
 How it works ?
 ==============
