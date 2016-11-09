@@ -24,33 +24,33 @@ How it works ?
 In addition to the dependencies needed for the API (detailed [here](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-api/README.md#project-dependencies)), the generation of the documentation needs the Spring Rest Docs dependencies as shown below (extracted from [pom.xml](pom.xml):
 ```xml
 <!-- Start dependencies for API documentation generation -->
-        <dependency>
-            <groupId>com.octo.tools</groupId>
-            <artifactId>crud-generator-utils-tests</artifactId>
-            <version>0.0.1</version>
-            <scope>test</scope>
-        </dependency>               
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.restdocs</groupId>
-            <artifactId>spring-restdocs-mockmvc</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- End of dependencies for API documentation generation -->
+<dependency>
+    <groupId>com.octo.tools</groupId>
+    <artifactId>crud-generator-utils-tests</artifactId>
+    <version>0.0.1</version>
+    <scope>test</scope>
+</dependency>               
+<dependency>
+    <groupId>joda-time</groupId>
+    <artifactId>joda-time</artifactId>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.springframework.restdocs</groupId>
+    <artifactId>spring-restdocs-mockmvc</artifactId>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-test</artifactId>
+    <scope>test</scope>
+</dependency>
+<!-- End of dependencies for API documentation generation -->
 ```
 
 ###Java code
