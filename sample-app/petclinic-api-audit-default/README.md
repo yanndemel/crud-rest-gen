@@ -78,3 +78,17 @@ Server response :
   }
 }
 ```
+
+How it works ?
+==============
+
+###Project dependencies
+
+For the API generation the dependencies are the same as for the [petclinic-api](../petclinic-api/README.md#project-dependencies) project, unless the petclinic-model which is replaced by [petclinic-audit-model-default](../petclinic-audit-model-default).
+
+
+###Java code
+
+###crud-maven-plugin configuration
+
+###Generated sources
