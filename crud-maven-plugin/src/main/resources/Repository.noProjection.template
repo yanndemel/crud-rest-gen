@@ -1,0 +1,19 @@
+package $$PACKAGE$$;
+
+import java.util.List;
+
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+
+import $$ENTITY_CLASS$$;
+
+/**
+ * $$ENTITY$$ Rest Repository resource
+ *
+ *
+ */
+@RepositoryRestResource
+public interface $$ENTITY$$Repository extends PagingAndSortingRepository<$$ENTITY$$, Long> {
+ 	
+}

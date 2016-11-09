@@ -81,7 +81,13 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 	private String packageName;
 	
 	/**
-	 * Boolean for adding generated sources to the compilation path
+	 * Set to false if you don't want Projections (*Excerpt.java source files) to be generated
+	 */
+	@Parameter(property = "projections", defaultValue = "true", required = false)
+	private boolean projections;
+	
+	/**
+	 * Set to false if you don't want to add generated sources to the compilation path
 	 */
 	@Parameter(property = "compile", defaultValue = "true", required = false)
 	private boolean compile;
@@ -92,7 +98,8 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 
 		try {
 			generateURLsContstants(em);
-			generateProjectionExcepts(em);
+			if(projections)
+				generateProjectionExcepts(em);
 			generateRepositories(em);
 			if(compile)
 				project.addCompileSourceRoot(outputDirectory);
@@ -103,16 +110,11 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 	}
 
 	/*
-	 * Method used to generate Exceprt java source code --> can be used as a
-	 * unit test by adding @Test on the method : take care at commenting
-	 * the @Test before committing your code !!! WARNING !!! Overrides existing
-	 * classes in the source code You will need to refresh the package
-	 * ${packageName}.projection after execution and then make a
-	 * "Organize imports" on the package on your favorite IDE (CTRL+SHIFT+O on
-	 * eclipse)
+	 * Method used to generate Exceprt java source code in 
+	 * ${packageName}.projection 
 	 * 
 	 */
-	public void generateProjectionExcepts(EntityManager em) throws Exception {
+	private void generateProjectionExcepts(EntityManager em) throws Exception {
 		Set<EntityType<?>> entityList = em.getMetamodel().getEntities();
 		for (EntityType type : entityList) {
 			Class javaType = type.getJavaType();
@@ -177,7 +179,7 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 				Path path = Paths.get(dir.getPath(), filename);
 				System.out.println("File " + path);
 				BufferedWriter writer = Files.newBufferedWriter(path);
-				InputStream in = getClass().getClassLoader().getResourceAsStream("Repository.template");
+				InputStream in = getClass().getClassLoader().getResourceAsStream(projections ? "Repository.template" : "Repository.noProjection.template");
 				BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
 				while (reader.ready()) {
@@ -208,7 +210,7 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 	 * 
 	 * Generate package_name.URLs source code
 	 */
-	public void generateURLsContstants(EntityManager em) throws Exception {
+	private void generateURLsContstants(EntityManager em) throws Exception {
 		Set<EntityType<?>> entityList = em.getMetamodel().getEntities();
 
 		File dir = getRootDirectory();

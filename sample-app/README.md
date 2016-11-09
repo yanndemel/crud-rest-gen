@@ -58,7 +58,7 @@ The easiest way for running the samples is to go in the sample project root fold
 > **Note** : For running the ``petclinic-web`` sample you will have to execute the following comands : 
 > 
 > - ``mvn spring-boot:run`` for starting the API (at port 8080 by default)
-> - ``mvn spring-boot:run -Dserver.port=<FREE_PORT>`` where FREE_PORT has to be a free port (diffrent from those used by the API)
+> - ``mvn spring-boot:run -Dserver.port=<FREE_PORT>`` for starting the Web Admin UI where FREE_PORT has to be a free port (different from the one used by the API)
 
 
 However you might prefer deploy the WARs in a Tomcat instance (or another servlet container) : that is naturally feasible.
