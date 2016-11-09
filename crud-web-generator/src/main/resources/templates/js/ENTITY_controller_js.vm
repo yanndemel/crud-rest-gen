@@ -117,7 +117,7 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 	var openEditForm = function(entityName, itemId) {
 		CommonServices.get(plural(entityName), entityName, itemId).then(
 				function(success) {
-					${_}rootScope.modifiedItems.push({item : success, selectField : null});
+					${_}rootScope.modifiedItems.push({item : success.data, selectField : null});
 					console.log("Edited item = " + success);
 					window.location = "admin#/" + uncapitalize(entityName) + "/" + itemId;
 				});		

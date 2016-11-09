@@ -15,6 +15,10 @@
  */
 package org.springframework.samples.petclinic.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -23,6 +27,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlElement;
+
+import org.springframework.beans.support.MutableSortDefinition;
+import org.springframework.beans.support.PropertyComparator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -44,29 +52,31 @@ public class Vet extends Person {
     private Set<Specialty> specialties;
 
     
+    protected Set<Specialty> getSpecialtiesInternal() {
+        if (this.specialties == null) {
+            this.specialties = new HashSet<>();
+        }
+        return this.specialties;
+    }
 
-//    @XmlElement
-//    public List<Specialty> getSpecialties() {
-//        List<Specialty> sortedSpecs = new ArrayList<>(getSpecialtiesInternal());
-//        PropertyComparator.sort(sortedSpecs, new MutableSortDefinition("name", true, true));
-//        return Collections.unmodifiableList(sortedSpecs);
-//    }
+    protected void setSpecialtiesInternal(Set<Specialty> specialties) {
+        this.specialties = specialties;
+    }
 
-    public Set<Specialty> getSpecialties() {
-		return specialties;
-	}
-
-	public void setSpecialties(Set<Specialty> specialties) {
-		this.specialties = specialties;
-	}
+    @XmlElement
+    public List<Specialty> getSpecialties() {
+        List<Specialty> sortedSpecs = new ArrayList<>(getSpecialtiesInternal());
+        PropertyComparator.sort(sortedSpecs, new MutableSortDefinition("name", true, true));
+        return Collections.unmodifiableList(sortedSpecs);
+    }
 
 	@JsonIgnore
 	public int getNrOfSpecialties() {
-        return getSpecialties().size();
+		return getSpecialtiesInternal().size();
     }
 
     public void addSpecialty(Specialty specialty) {
-        getSpecialties().add(specialty);
+        getSpecialtiesInternal().add(specialty);
     }
 
 }

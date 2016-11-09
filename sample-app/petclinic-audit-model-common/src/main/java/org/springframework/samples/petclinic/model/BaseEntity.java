@@ -48,10 +48,6 @@ public class BaseEntity {
     @JsonIgnore
     public boolean isNew() {
         return this.id == null;
-    }
-    
-    public String getShortLabel() {
-    	return this.toString();
-    }
+    }       
 
 }

@@ -59,7 +59,7 @@
 			<version>0.0.1</version>
 		</dependency>
 		
-		 <!-- Start dependencies for API documentation generation -->
+		<!-- Start dependencies for API documentation generation -->
         <dependency>
             <groupId>com.octo.tools</groupId>
             <artifactId>crud-generator-utils-tests</artifactId>
@@ -159,9 +159,7 @@
                         <!-- Used by BaseApiDocumentation : set to true if you have generated audit controllers with crud-maven-plugin -->
                         <audit>false</audit>
                         <!-- Used by BaseApiDocumentation : set to true if you add "com.octo.tools" to the @ComponentScan annotation on your @SpringBootApplication class -->
-                        <doc>true</doc>
-                        <!-- Used by EntitiesApiDocumentation : set to true if all the JPA entities (unless RevisionEntity) have/inherit a public String getShortLabel method -->
-                        <shortLabel>false</shortLabel>
+                        <doc>true</doc>                        
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

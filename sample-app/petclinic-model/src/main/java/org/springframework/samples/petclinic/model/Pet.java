@@ -92,13 +92,27 @@ public class Pet extends NamedEntity {
         this.owner = owner;
     }
 
-	public Set<Visit> getVisits() {
-		return visits;
-	}
+    protected Set<Visit> getVisitsInternal() {
+        if (this.visits == null) {
+            this.visits = new HashSet<>();
+        }
+        return this.visits;
+    }
 
-	public void setVisits(Set<Visit> visits) {
-		this.visits = visits;
-	}
+    protected void setVisitsInternal(Set<Visit> visits) {
+        this.visits = visits;
+    }
+
+    public List<Visit> getVisits() {
+        List<Visit> sortedVisits = new ArrayList<>(getVisitsInternal());
+        PropertyComparator.sort(sortedVisits, new MutableSortDefinition("date", false, false));
+        return Collections.unmodifiableList(sortedVisits);
+    }
+
+    public void addVisit(Visit visit) {
+        getVisitsInternal().add(visit);
+        visit.setPet(this);
+    }
 
    
 
