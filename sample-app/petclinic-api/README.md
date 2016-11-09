@@ -1,4 +1,4 @@
-#**petclinic-api** : API generation
+#**petclinic-api** : Rest API generation
 
 Use the crud-maven-plugin to generate the Rest API for all entities.
 
@@ -133,6 +133,7 @@ In addition crud-maven-plugin generates the URL class which gathers all URLs use
 All generated sources are located in ```/target/generated-sources```.
 
 In the sample, the generated source code is compiled and included in the packaged application. However you can choose, by setting the ``compile`` parameter to ``false`` in the crud-maven-plugin configuration, to use the crud-maven-plugin only for source code generation (e.g. if you want to customize the generated sources after generation and include them "manually" in your project).
+
 
 
 > **Note** : the project is packaged as a "war" in order to be deployable in any servlet container like Tomcat
