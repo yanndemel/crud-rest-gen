@@ -45,11 +45,11 @@ All details can be found in the [README.md](https://github.com/yanndemel/crud-re
 
 Use your own data model
 --------------------
-###Pre-requisites
+###Prerequisites
 
  1. Your entities must be simple POJOs annotated with standard javax.persistence annotations
  2. The type of **all @Id** in your entities **must be java.lang.Long**
- 3. If you generate CRUD Web Administration with crud-maven-plugin:**crudweb** all entities must have/inherit a **public String getShortLabel()** method (returning the description of the entity).  
+
 
 ###Project setup
 
