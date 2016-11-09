@@ -13,6 +13,7 @@ Run ``mvn spring-boot:run``
 Test the sample
 =============
 * Test the CRUD API : execute a GET request at the root of the API : ``$ curl http://localhost:8080/``.
+
 Server response :
 ```json
 {
@@ -51,6 +52,7 @@ Server response :
 }
 ```
 * Test the audit API : execute a GET request at the root of the API : ``$ curl http://localhost:8080/history``.
+
 Server response :
 ```json
 {
