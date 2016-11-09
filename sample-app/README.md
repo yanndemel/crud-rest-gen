@@ -7,16 +7,7 @@ The samples shows you the different ways of using the crud-maven-plugin.
 
 ### **[petclinic-api](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-api)** : Rest API generation
 
-Depends on :
-
-* *petclinic-model* (PetClinic JPA entities)
-
-
 ### **[petclinic-api-doc](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-api-doc)** : Rest API & API documentation generation
-
-Depends on :
-
-* *petclinic-model* (PetClinic JPA entities)
 
 ### **[petclinic-api-audit-default](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-api-audit-default)** : Audit Rest API generation using default Hibernate Envers RevisionEntity
 
