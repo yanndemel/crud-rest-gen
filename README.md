@@ -240,9 +240,7 @@ You can find below a sample *pom.xml* for **all-in-one** generation (more detail
 						<!-- Used by BaseApiDocumentation : set to true if you have generated audit controllers with crud-maven-plugin -->
 						<audit>true</audit>
 						<!-- Used by BaseApiDocumentation : set to true if you add "com.octo.tools" to the @ComponentScan annotation on your @SpringBootApplication class -->
-						<doc>true</doc>
-						<!-- Used by EntitiesApiDocumentation : set to true if all the JPA entities (unless RevisionEntity) have/inherit a public getShortLabel method -->
-                   <shortLabel>true</shortLabel>
+						<doc>true</doc>						
 					</systemPropertyVariables>
 				</configuration>
 			</plugin>
