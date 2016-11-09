@@ -5,41 +5,41 @@ Sample projects structure
 
 The samples shows you the different ways of using the crud-maven-plugin.
 
-### **petclinic-api** : Rest API generation
+### **[petclinic-api](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-api)** : Rest API generation
 
 Depends on :
 
 * *petclinic-model* (PetClinic JPA entities)
 
 
-### **petclinic-api-doc** : Rest API & API documentation generation
+### **[petclinic-api-doc](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-api-doc)** : Rest API & API documentation generation
 
 Depends on :
 
 * *petclinic-model* (PetClinic JPA entities)
 
-### **petclinic-api-audit-default** : Audit Rest API generation using default Hibernate Envers RevisionEntity
+### **[petclinic-api-audit-default](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-api-audit-default)** : Audit Rest API generation using default Hibernate Envers RevisionEntity
 
 Depends on :
 
 * *petclinic-audit-model-default* (PetClinic JPA entities with @Audited annotations)
 * *petclinic-audit-default* (Customization of the base audit controller used by generated audit classes)
 
-### **petclinic-api-audit-custom** : Audit Rest API generation using a custom RevisionEntity
+### **[petclinic-api-audit-custom](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-api-audit-custom)** : Audit Rest API generation using a custom RevisionEntity
 
 Depends on :
 
 * *petclinic-audit-model-custom* (PetClinic JPA entities with @Audited annotations and a custom RevisionEntity )
 * *petclinic-audit-custom* (Customization of the base audit controller used by generated audit classes)
 
-### **petclinic-web** : CRUD Web application generation
+### **[petclinic-web](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-web)** : CRUD Web application generation
 
 Depends on :
 
 * *petclinic-model* (PetClinic JPA entities)
 * *petclinic-api* : Run only - the Rest API must be running (back-end of the Web app)
 
-### **petclinic-all** : Rest API, API documentation, Audit Rest API with custom RevisionEntity and CRUD Web application generation
+### **[petclinic-all](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-all)** : Rest API, API documentation, Audit Rest API with custom RevisionEntity and CRUD Web application generation
 
 Depends on :
 
