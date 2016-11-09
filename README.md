@@ -401,11 +401,11 @@ For an all-in-one application, the Application main class must contain the follo
 
 ```java
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = "com.octo.tools.samples.petclinic.repository")
-@EntityScan({"org.springframework.samples.petclinic.model"})	
+@EnableJpaRepositories(basePackages = "value of ${packageName}")
+@EntityScan({"package(s) of your entities"})	
 @ComponentScan({"com.octo.tools.crud.admin", "com.octo.tools.crud.doc", "com.octo.tools.audit", 
-	"com.octo.tools.samples.petclinic.repository.audit", 
-	"com.octo.tools.samples.petclinic.repository.projection"})	
+	"${packageName}.audit", 
+	"${packageName}.projection"})	
 public class Application extends SpringBootServletInitializer {
 
 	@Override
