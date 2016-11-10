@@ -180,4 +180,5 @@ Audit controllers are generated in ``target/generated-sources/`` in the package 
 > **Note** : the **auditControllerClassName** parameter is optional as shown in [pom-reflection.xml](pom-reflection.xml). If you don't define it :
 > - you can remove petclinic-audit-default from your pom
 > - crud-maven-plugin will generate audit controllers extending the default [AbstractDefaultAuditController](../../audit-core/src/main/java/com/octo/tools/audit/AbstractDefaultAuditController.java) and then use reflection for finding the @Id field on each entity.
+>
 > However to avoid reflection calls in the audit controllers, it is suitable to define a custom AbstractAuditController, extending [AbstractDefaultAuditController](../../audit-core/src/main/java/com/octo/tools/audit/AbstractDefaultAuditController.java) and overriding the ``protected Long getEntityId(T entity)`` method.
