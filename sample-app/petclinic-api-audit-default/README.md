@@ -100,7 +100,7 @@ For the API generation the dependencies are the same as for the [petclinic-api](
   <version>0.0.1</version>
 </dependency>
 ```
-For compiling the audit generated classes, the following dependency must be present :
+For compiling the audit generated classes, the dependency to [petclinic-audit-default](../petclinic-audit-default) must be added. It contains the custom abstract controller used by crud-maven-plugin for generating audit controllers. See the [crud-maven-plugin configuration](#crud-maven-plugin-configuration) section for details.
 ```xml
 <!-- Custom AbstractAuditController and related classes -->
 <dependency>
@@ -109,7 +109,7 @@ For compiling the audit generated classes, the following dependency must be pres
   <version>0.0.1</version>
 </dependency>
 ```
-For testing the audit generated classes, the following dependency must be present :
+For testing the audit generated classes, the dependency to [crud-generator-utils-tests](../../crud-generator-utils-tests) must be added. It contains the base class ([AuditControllersTest](../../crud-generator-utils-tests/src/main/java/com/octo/tools/audit/AuditControllersTest.java)) used for testing the generated audit controllers.
 ```xml
 <!-- Audit controllers test classes dependencies -->
 <dependency>
