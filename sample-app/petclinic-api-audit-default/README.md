@@ -174,7 +174,7 @@ For the audit controllers the **audit** goal is used in this sample (bound to th
 
 ###Generated sources
 
-For API sources generation details please see [here](../petclinic-api/README.MD#generated-sources).
+For API sources generation details please see [here](../petclinic-api/README.md#generated-sources).
 Audit controllers are generated in ``target/generated-sources/`` in the package ``${packageName}.audit``. As for API generated sources you can choose to generate the source files without compiling them by setting the ``compile`` parameter to false in the crud-maven-plugin configuration.
 
 > **Note** : the **auditControllerClassName** parameter is optional as shown in [pom-reflection.xml](pom-reflection.xml). If you don't define it :
