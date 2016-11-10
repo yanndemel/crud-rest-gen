@@ -12,8 +12,7 @@ Run ``mvn spring-boot:run``
 
 Test the sample
 =============
-* Test the CRUD API : execute a GET request at the root of the API : ``$ curl http://localhost:8080/``.
-
+Test the **CRUD API** : execute a GET request at the root of the API : ``$ curl http://localhost:8080/``.
 Server response :
 ```json
 {
@@ -51,8 +50,7 @@ Server response :
   }
 }
 ```
-* Test the audit API : execute a GET request at the root of the API : ``$ curl http://localhost:8080/history``.
-
+Test the **audit API** : execute a GET request at the root of the API : ``$ curl http://localhost:8080/history``.
 Server response :
 ```json
 {
@@ -84,7 +82,7 @@ How it works ?
 
 ###Project dependencies
 
-For the API generation the dependencies are the same as for the [petclinic-api](../petclinic-api/README.md#project-dependencies) project, unless the petclinic-model which is replaced by [petclinic-audit-model-default](../petclinic-audit-model-default).
+For the **API generation** the dependencies are the same as for the [petclinic-api](../petclinic-api/README.md#project-dependencies) project, unless the petclinic-model which is replaced by [petclinic-audit-model-default](../petclinic-audit-model-default).
 ```xml
 <!-- Your JPA domain classes (must contain persistence.xml)  -->
 <dependency>
@@ -100,7 +98,7 @@ For the API generation the dependencies are the same as for the [petclinic-api](
   <version>0.0.1</version>
 </dependency>
 ```
-For compiling the audit generated classes, the dependency to [petclinic-audit-default](../petclinic-audit-default) must be added. It contains the custom abstract controller used by crud-maven-plugin for generating audit controllers. See the [crud-maven-plugin configuration](#crud-maven-plugin-configuration) section for details.
+For **compiling** the **audit generated classes**, the dependency to [petclinic-audit-default](../petclinic-audit-default) must be added. It contains the custom abstract controller used by crud-maven-plugin for generating audit controllers. See the [crud-maven-plugin configuration](#crud-maven-plugin-configuration) section for details.
 ```xml
 <!-- Custom AbstractAuditController and related classes -->
 <dependency>
@@ -109,7 +107,7 @@ For compiling the audit generated classes, the dependency to [petclinic-audit-de
   <version>0.0.1</version>
 </dependency>
 ```
-For testing the audit generated classes, the dependency to [crud-generator-utils-tests](../../crud-generator-utils-tests) must be added. It contains the base class ([AuditControllersTest](../../crud-generator-utils-tests/src/main/java/com/octo/tools/audit/AuditControllersTest.java)) used for testing the generated audit controllers.
+For **testing** the **audit generated classes**, the dependency to [crud-generator-utils-tests](../../crud-generator-utils-tests) must be added. It contains the base class ([AuditControllersTest](../../crud-generator-utils-tests/src/main/java/com/octo/tools/audit/AuditControllersTest.java)) used for testing the generated audit controllers.
 ```xml
 <!-- Audit controllers test classes dependencies -->
 <dependency>
@@ -121,7 +119,49 @@ For testing the audit generated classes, the dependency to [crud-generator-utils
 ```
 
 ###Java code
+The only Java class in the **main** code is the [Application](src/main/java/com/octo/tools/samples/petclinic/Application.java) class that initialize the Spring Boot context. The same annotations as in the [petclinic-api](../petclinic-api/README.md#java-code) sample are used. The only difference resides on the @componentScan annotation : *@ComponentScan({"com.octo.tools.crud.filter", "com.octo.tools.audit", "com.octo.tools.samples.petclinic.repository.audit"})* is used in petclinic-api-audit-default in order to enable, in addition to the CORS filter, the audit controllers ([AuditControllerBase](../../audit-core/src/main/java/com/octo/tools/audit/AuditControllerBase.java) and generated audit controllers) and the support of the ``/history`` Rest resource ([AuditResourceProcessor](../../audit-core/src/main/java/com/octo/tools/audit/AuditResourceProcessor.java)).
+
+You will find in the **test** code 1 class ([PetClinicAuditControllerTest](src/test/java/com/octo/tools/samples/petclinic/PetClinicAuditControllerTest.java))with empty body extending the ([AuditControllersTest](../../crud-generator-utils-tests/src/main/java/com/octo/tools/audit/AuditControllersTest.java) class provided by [crud-generator-utils-tests](../../crud-generator-utils-tests) and annotated with ``@ContextConfiguration(classes = Application.class)`` in order to load the Spring context of the main application for the test.
 
 ###crud-maven-plugin configuration
+The same configuration as in the [petclinic-api](../petclinic-api#crud-maven-plugin-configuration) project is used for the generation of the Rest API source code.
+For the audit controllers the **audit** goal is used in this sample (bound to the generate-sources phase) :
+```xml
+<!-- Audit controllers generation -->
+<execution>
+    <id>audit</id>
+    <phase>generate-sources</phase>
+    <goals>
+        <goal>audit</goal>
+    </goals>
+</execution>
+```
+
+* *crud-maven-plugin* needs the custom abstract audit controller as a plugin dependency in order to be able to load  [AbstractAuditController](../petclinic-audit-default/src/main/java/com/octo/tools/samples/AbstractAuditController.java), extended by all generated audit controllers.
+```xml
+<dependencies>
+  <!-- Your JPA domain classes (must contain persistence.xml)  -->
+  <dependency>
+    <groupId>com.octo.tools.samples</groupId>
+    <artifactId>petclinic-audit-model-default</artifactId>
+    <version>0.0.1</version>
+  </dependency>
+  <!-- Custom AbstractAuditController and related classes -->
+  <dependency>
+    <groupId>com.octo.tools.samples</groupId>
+    <artifactId>petclinic-audit-default</artifactId>
+    <version>0.0.1</version>
+  </dependency>						
+  <!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
+    Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 
+    instead -->
+  <dependency>
+    <groupId>javax.el</groupId>
+    <artifactId>javax.el-api</artifactId>
+    <version>2.2.4</version>
+  </dependency>
+</dependencies>
+```
+* The *auditControllerClassName* declared in the configuration of the plugin must 
 
 ###Generated sources
