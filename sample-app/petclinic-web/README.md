@@ -98,6 +98,14 @@ must match name of the *persistence-unit* declared in the [*persistence.xml*](..
 
 For each JPA entity, crud-maven-plugin:crudweb generates :
 
+* 2 JS files in ``js/<entity>/`` :
+ * ``<entity>_controller.js``
+ * ``<entity>_module.js``
+* 2 HTML files in ``partials/<entity>/`` :
+ * ``<entity>_form.html``
+ * ``<entity>_list.html``
+
+The details of the Web application generation are explained in the [crud-web-generator](../../crud-web-generator) project
 All generated sources are located in ```/target/classes/static/admin```.
 
 > **Note** : the project is packaged as a "war" in order to be deployable in any servlet container like Tomcat
