@@ -137,8 +137,8 @@ must match name of the *persistence-unit* declared in the [*persistence.xml*](ht
 
 For each JPA entity, crud-maven-plugin:crudapi generates :
 
-* One @RepositoryRestResource source file implementing ``PagingAndSortingRepository<ENTITY, Long>``
-* One @Projection source file (\*Excerpt.java file) : the generation of this file can be disabled by setting the parameter ``projections`` to false in the plugin configuration. The aim of the projection is to give a "flat" view of each entity by returning a String representation of each linked entity (used by the generated admin web app, cf. [petclinic-web](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-web)).
+* One @RepositoryRestResource source file implementing ``PagingAndSortingRepository<ENTITY, Long>`` in the package ``${packageName}``
+* One @Projection source file (\*Excerpt.java file) in the package ``${packageName}.projection`` : the generation of this file can be disabled by setting the parameter ``projections`` to false in the plugin configuration. The aim of the projection is to give a "flat" view of each entity by returning a String representation of each linked entity (used by the generated admin web app, cf. [petclinic-web](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-web)).
 
 In addition crud-maven-plugin generates the URL class which gathers all URLs used in the Rest API mapping.
 
