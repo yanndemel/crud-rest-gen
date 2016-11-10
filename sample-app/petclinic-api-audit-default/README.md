@@ -1,6 +1,7 @@
-#**petclinic-api-audit-default** : Audit Rest API generation using default Hibernate Envers RevisionEntity
+#**petclinic-api-audit-default** : CRUD and Audit Rest APIs generation based on the auditable version of the Petclinic model
 
-Use the crud-maven-plugin to generate Rest CRUD and audit APIs for all entities.
+* default behaviour of the Hibernate Envers framework (org.hibernate.envers.DefaultRevisionEntity)
+* crud-maven-plugin generates Rest CRUD and audit APIs (+unit tests) for all entities.
 
 Build the sample
 ================
@@ -162,6 +163,21 @@ For the audit controllers the **audit** goal is used in this sample (bound to th
   </dependency>
 </dependencies>
 ```
-* The *auditControllerClassName* declared in the configuration of the plugin must 
+* The *auditControllerClassName* declared in the configuration of the plugin is located in petclinic-audit-default ( [AbstractAuditController](../petclinic-audit-default/src/main/java/com/octo/tools/samples/AbstractAuditController.java))
+```xml
+<configuration>
+  <persistentUnitName>petclinic-model</persistentUnitName>
+  <packageName>${packageName}</packageName>
+  <auditControllerClassName>com.octo.tools.samples.AbstractAuditController</auditControllerClassName>
+</configuration>
+```
 
 ###Generated sources
+
+For API sources generation details please see [here](../petclinic-api/README.MD#generated-sources).
+Audit controllers are generated in ``target/generated-sources/`` in the package ``${packageName}.audit``. As for API generated sources you can choose to generate the source files without compiling them by setting the ``compile`` parameter to false in the crud-maven-plugin configuration.
+
+> **Note** : the **auditControllerClassName** parameter is optional as shown in [pom-reflection.xml](pom-reflection.xml). If you don't define it :
+> - you can remove petclinic-audit-default from your pom
+> - crud-maven-plugin will generate audit controllers extending the default [AbstractDefaultAuditController](../../audit-core/src/main/java/com/octo/tools/audit/AbstractDefaultAuditController.java) and then use reflection for finding the @Id field on each entity.
+> However to avoid reflection calls in the audit controllers, it is suitable to define a custom AbstractAuditController, extending [AbstractDefaultAuditController](../../audit-core/src/main/java/com/octo/tools/audit/AbstractDefaultAuditController.java) and overriding the ``protected Long getEntityId(T entity)`` method.
