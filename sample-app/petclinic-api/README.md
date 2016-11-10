@@ -90,6 +90,16 @@ No application.properties file is used in this sample. Therefore the default Spr
 
 It is located in the ``<pluginManagement>`` section of the [pom.xml](https://github.com/yanndemel/crud-rest-gen/blob/master/sample-app/petclinic-api/pom.xml).
 The **crudapi** goal is used in this sample  (bound to the generate-sources phase).
+```xml					
+<!-- CRUD API generation -->
+<execution>
+	<id>api</id>
+	<phase>generate-sources</phase>
+	<goals>
+		<goal>crudapi</goal>
+	</goals>
+</execution>						
+```
 
 * *crud-maven-plugin* needs the domain classes with the associated persistence.xml as a plugin dependency in order to be able to load the EntityManagerFactory :
 ```xml
