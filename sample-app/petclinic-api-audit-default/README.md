@@ -163,7 +163,7 @@ For the audit controllers the **audit** goal is used in this sample (bound to th
   </dependency>
 </dependencies>
 ```
-* The *auditControllerClassName* declared in the configuration of the plugin is located in petclinic-audit-default ( [AbstractAuditController](../petclinic-audit-default/src/main/java/com/octo/tools/samples/AbstractAuditController.java))
+* *crud-maven-plugin* uses the *auditControllerClassName* declared in the configuration and located in [petclinic-audit-default](../petclinic-audit-default) : all generated audit contrtollers will extend this class.
 ```xml
 <configuration>
   <persistentUnitName>petclinic-model</persistentUnitName>
