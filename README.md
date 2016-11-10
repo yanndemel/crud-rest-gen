@@ -34,14 +34,14 @@ Or you can build and install/deploy all necessary components in you local repo /
 
 Browse the samples
 ----------------------------
-The [Spring Petclinic](https://github.com/spring-projects/spring-petclinic) model is used for all samples. It has been slightly adapted to fit the pre-requisites. The samples will learn you how to generate, based on the domain classes :
+The [Spring Petclinic](https://github.com/spring-projects/spring-petclinic) model is used for all [samples](sample-app). It has been slightly adapted to fit the pre-requisites. The samples will learn you how to generate, based on the domain classes :
 
 * the Rest API
 * the documentation of the API
 * the Rest API for audited entities and associated unit tests
 * the Web application for administrating the data model
 
-All details can be found in the [README.md](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/README.md) of the ``sample-app`` directory.
+All details can be found in the [README.md](sample-app/README.md) of the ``sample-app`` directory.
 
 Use your own data model
 --------------------
@@ -58,7 +58,7 @@ Use your own data model
 
 > **Note** : It is **strongly recommended** to **browse the samples before starting** with your own model and choose the kind of project you need (API only ? Documentation ? Audit API ? Web application ? Packaging mode : all-in-one or separate applications ?).
 
-You can find below a sample *pom.xml* for **all-in-one** generation (more details can be found in the [petclinic-all sample](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-all/README.md)) : same maven project to generate the Rest API (+its documentation), the audit Rest API (+associated unit tests) and the Web administration UI :
+You can find below a sample *pom.xml* for **all-in-one** generation (more details can be found in the [petclinic-all sample](sample-app/petclinic-all/README.md)) : same maven project to generate the Rest API (+its documentation), the audit Rest API (+associated unit tests) and the Web administration UI :
 ```xml
 <project>
 	<modelVersion>4.0.0</modelVersion>
