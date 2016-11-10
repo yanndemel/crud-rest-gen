@@ -41,7 +41,6 @@ import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
-import org.hibernate.envers.DefaultRevisionEntity;
 
 import com.octo.tools.crud.utils.ReflectionUtils;
 import com.octo.tools.crud.utils.StringUtils;
