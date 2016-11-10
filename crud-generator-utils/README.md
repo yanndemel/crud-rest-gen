@@ -13,4 +13,4 @@ Default controllers can be used in client projects for :
 * Enabling requests from any host : [SimpleCORSFilter](src/main/java/com/octo/tools/crud/filter/SimpleCORSFilter.java)
 * Helper classes for [Reflection](src/main/java/com/octo/tools/crud/utils/ReflectionUtils.java) and [String](src/main/java/com/octo/tools/crud/utils/StringUtils.java) operations
 
-Sample usages of this classes can be found in the [samples](sample-app).
+Sample usages of this classes can be found in the [samples](../sample-app).
