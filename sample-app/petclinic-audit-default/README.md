@@ -1,5 +1,7 @@
 #petclinic-audit-default : Base class extended by the generated audit controllers
 
+This project is used by [petclinic-api-audit-default](../petclinic-api-audit-default).
+
 Java code
 =========
 The only class in this project is [**AbstractAuditController**](src/main/java/com/octo/tools/samples/AbstractAuditController.java) which extends the default abstract audit controller used by the *crud-maven-plugin:audit* for generating the audit controllers.
