@@ -10,4 +10,4 @@ Project used by the crud-maven-plugin and as dependency of client projects for a
 * [Audit resouce processor](src/main/java/com/octo/tools/audit/AuditResourceProcessor.java) and [default audit resouce support](src/main/java/com/octo/tools/audit/AuditResourceSupport.java)
 * [Audit configuration exception](src/main/java/com/octo/tools/audit/AuditConfigurationException.java)
 
-Sample usages of this project can be found in the [samples](sample-app).
+Sample usages of this project can be found in the [samples](../sample-app).
