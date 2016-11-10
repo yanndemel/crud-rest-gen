@@ -23,7 +23,7 @@ Run ``mvn spring-boot:run``
 
 Test the sample
 =============
-* Test the API and the documentation (see [petclinic-api-doc](../petclinic-api-doc/README.md#test-the-sample) for details). **Warning!** the expected result of a GET at the root of the API is a little different from the petclinic-api-doc (adds the /history resource) :
+* Test the API and the documentation : see [petclinic-api-doc](../petclinic-api-doc/README.md#test-the-sample) for details. **Warning!** the expected result of a GET at the root of the API is a little different from the petclinic-api-doc (adds the /history resource) :
 ```xml
 {
   "_links" : {
@@ -63,3 +63,6 @@ Test the sample
   }
 }
 ```
+
+* Test the audit Rest API : see [petclinic-api-audit-custom](../petclinic-api-audit-custom/README.md#test-the-sample) for details.
+* Test the Web admin application : see [petclinic-web](../petclinic-web/README.md#test-the-sample) for details.
