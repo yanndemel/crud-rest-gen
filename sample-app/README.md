@@ -5,22 +5,22 @@ Sample projects structure
 
 The samples shows you the different ways of using the crud-maven-plugin.
 
-### **[petclinic-api](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-api)** : Rest API generation
+### **[petclinic-api](petclinic-api)** : Rest API generation
 
-### **[petclinic-api-doc](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-api-doc)** : Rest API & API documentation generation
+### **[petclinic-api-doc](petclinic-api-doc)** : Rest API & API documentation generation
 
-### **[petclinic-api-audit-default](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-api-audit-default)** : Audit Rest API generation using default Hibernate Envers RevisionEntity
+### **[petclinic-api-audit-default](petclinic-api-audit-default)** : CRUD and Audit Rest APIs generation based on the auditable version of the Petclinic model
 
-### **[petclinic-api-audit-custom](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-api-audit-custom)** : Audit Rest API generation using a custom RevisionEntity
+### **[petclinic-api-audit-custom](petclinic-api-audit-custom)** : CRUD and Audit Rest APIs generation based on the auditable version of the Petclinic model (custom RevisionEntity)
 
-### **[petclinic-web](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-web)** : CRUD Web application generation
+### **[petclinic-web](petclinic-web)** : CRUD Web application generation
 
 Depends on :
 
 * *petclinic-model* (PetClinic JPA entities)
 * *petclinic-api* : Run only - the Rest API must be running (back-end of the Web app)
 
-### **[petclinic-all](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-all)** : Rest API, API documentation, Audit Rest API with custom RevisionEntity and CRUD Web application generation
+### **[petclinic-all](petclinic-all)** : Rest API, API documentation, Audit Rest API with custom RevisionEntity and CRUD Web application generation
 
 Depends on :
 
