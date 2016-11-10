@@ -13,11 +13,6 @@ The samples shows you the different ways of using the crud-maven-plugin.
 
 ### **[petclinic-api-audit-custom](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-api-audit-custom)** : Audit Rest API generation using a custom RevisionEntity
 
-Depends on :
-
-* *petclinic-audit-model-custom* (PetClinic JPA entities with @Audited annotations and a custom RevisionEntity )
-* *petclinic-audit-custom* (Customization of the base audit controller used by generated audit classes)
-
 ### **[petclinic-web](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-web)** : CRUD Web application generation
 
 Depends on :
