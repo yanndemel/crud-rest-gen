@@ -7,7 +7,15 @@ Source code is divided into 3 packages :
 ###Audit controllers unit test
 
 Package *com.octo.tools.audit* :
- * [**AuditControllersTest**](src/main/java/com/octo/tools/audit/AuditControllersTest.java) : Base class launching the unit tests of the generated audit API
+
+ * [**AuditControllersTest**](src/main/java/com/octo/tools/audit/AuditControllersTest.java) : Base class launching the unit tests of the generated audit API. For each JPA entity :
+  * Creation of the entities linked to the target entity to be cretaed
+  * Creation of the target entity
+  * Update of the entity
+  * Get all revisions of all instances of same type as the target entity (``/history/<entities>``)
+  * Get all revisions of the created target entity. (``/history/<entity>/search?entityId=<id of the entity>``)
+  * Get the last revision of the  created target entity (``/history/<entity>/<last revision of the entity>``)
+
 
 ###API documentation generation unit tests
 
