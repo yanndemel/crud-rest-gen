@@ -106,13 +106,13 @@ For the audit controllers the **audit** goal is used in this sample (bound to th
 For API sources generation details please see [here](../petclinic-api/README.md#generated-sources).
 Audit controllers are generated in ``target/generated-sources/`` in the package ``${packageName}.audit``. As for API generated sources you can choose to generate the source files without compiling them by setting the ``compile`` parameter to false in the crud-maven-plugin configuration.
 
-> **Note** : the **auditControllerClassName** parameter is optional as shown for the [petclinic-api-audit-default](../petclinic-api-audit-default/README.md#Note) project. If you don't define it :
+> **Note** : the **auditControllerClassName** parameter is optional as shown for the [petclinic-api-audit-default](../petclinic-api-audit-default/README.md#generated-sources) project. If you don't define it :
 >
 >- you can remove petclinic-audit-custom from your pom
 >- crud-maven-plugin will generate audit controllers extending the default [AbstractReflectionAuditController](../../audit-core/src/main/java/com/octo/tools/audit/AbstractReflectionAuditController.java) and then use reflection for finding the id of each entity and the revision number and timestamp of each revision entity.
 >
 > However to avoid reflection calls in the audit controllers, it is suitable to define a custom AbstractAuditController, extending [``AbstractAuditController<T, R>``](../../audit-core/src/main/java/com/octo/tools/audit/AbstractAuditController.java) and overriding the following methods :
-
+> 
 >- ``protected Long getEntityId(T entity)``
 >- ``protected AuditResourceSupport<T> newAuditResourceSupport(RevisionType revType, T entity, CustomRevisionEntity revEntity)``
 >- ``protected Long getRevisionEntityId(CustomRevisionEntity revEntity)``
