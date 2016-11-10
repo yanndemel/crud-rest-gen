@@ -11,11 +11,6 @@ The samples shows you the different ways of using the crud-maven-plugin.
 
 ### **[petclinic-api-audit-default](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-api-audit-default)** : Audit Rest API generation using default Hibernate Envers RevisionEntity
 
-Depends on :
-
-* *petclinic-audit-model-default* (PetClinic JPA entities with @Audited annotations)
-* *petclinic-audit-default* (Customization of the base audit controller used by generated audit classes)
-
 ### **[petclinic-api-audit-custom](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-api-audit-custom)** : Audit Rest API generation using a custom RevisionEntity
 
 Depends on :
