@@ -13,7 +13,7 @@ Run ``mvn spring-boot:run``
 Test the sample
 =============
 * Test the API (see [petclinic-api](../petclinic-api/README.md#test-the-api) for details)
-* Browse the generated documentation at ``http://localhost:8080/doc`` you will be redirected to the API documantation page :
+* Browse the generated documentation at ``http://localhost:8080/doc`` you will be redirected to the API documentation page :
 ![expected result](sample_api.jpg)
 
 How it works ?
