@@ -67,7 +67,7 @@ As in the petclinic-api sample, no application.properties file is used.
 
 ###crud-maven-plugin configuration
 
-The same configuration as in the petclinic-api project is used for the crud-maven-plugin. The generation of the documentation is not part of the plugin : it uses only the classes located in crud-generator-utils-tests, which use only the Spring Rest Docs framework.
+The same configuration as in the [petclinic-api](../petclinic-api#crud-maven-plugin-configuration) project is used for the generation of the Rest API source code. The generation of the documentation of the API is not part of the plugin : it uses only the classes located in crud-generator-utils-tests, which use only the Spring Rest Docs framework.
 
 ###Spring Rest Docs configuration
 
