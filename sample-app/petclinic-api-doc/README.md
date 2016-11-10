@@ -12,7 +12,7 @@ Run ``mvn spring-boot:run``
 
 Test the sample
 =============
-* Test the API (see [petclinic-api](https://github.com/yanndemel/crud-rest-gen/blob/master/sample-app/petclinic-api/README.md#test-the-api) for details)
+* Test the API (see [petclinic-api](../petclinic-api/README.md#test-the-api) for details)
 * Browse the generated documentation at ``http://localhost:8080/doc`` you will be redirected to the API documantation page :
 ![expected result](sample_api.jpg)
 
@@ -21,7 +21,7 @@ How it works ?
 
 ###Project dependencies
 
-In addition to the dependencies needed for the API (detailed [here](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-api/README.md#project-dependencies)), the generation of the documentation needs the Spring Rest Docs dependencies as shown below (extracted from [pom.xml](pom.xml):
+In addition to the dependencies needed for the API (detailed [here](../petclinic-api/README.md#project-dependencies)), the generation of the documentation needs the Spring Rest Docs dependencies as shown below (extracted from [pom.xml](pom.xml):
 ```xml
 <!-- Start dependencies for API documentation generation -->
 <dependency>
@@ -55,9 +55,9 @@ In addition to the dependencies needed for the API (detailed [here](https://gith
 
 ###Java code
 
-The only Java class in the **main** code is the [Application](src/main/java/com/octo/tools/samples/petclinic/Application.java) class that initialize the Spring Boot context. The same annotations as in the [petclinic-api](https://github.com/yanndemel/crud-rest-gen/blob/master/sample-app/petclinic-api/README.md#java-code) sample are used. The only difference resides on the @componentScan annotation : *@ComponentScan({"com.octo.tools.crud.doc"})* is used in petclinic-api-doc in order to enable the controller enabling the /doc redirection to the generated documentation ([ApiDocsController](https://github.com/yanndemel/crud-rest-gen/blob/master/crud-generator-utils/src/main/java/com/octo/tools/crud/doc/ApiDocsController.java)) and the support of the /doc resource at the root of the API ([DocResourceProcessor](https://github.com/yanndemel/crud-rest-gen/blob/master/crud-generator-utils/src/main/java/com/octo/tools/crud/doc/DocResourceProcessor.java)).
+The only Java class in the **main** code is the [Application](src/main/java/com/octo/tools/samples/petclinic/Application.java) class that initialize the Spring Boot context. The same annotations as in the [petclinic-api](../petclinic-api/README.md#java-code) sample are used. The only difference resides on the @componentScan annotation : *@ComponentScan({"com.octo.tools.crud.doc"})* is used in petclinic-api-doc in order to enable the controller enabling the /doc redirection to the generated documentation ([ApiDocsController](../../crud-generator-utils/src/main/java/com/octo/tools/crud/doc/ApiDocsController.java)) and the support of the /doc resource at the root of the API ([DocResourceProcessor](https://github.com/yanndemel/crud-rest-gen/blob/master/crud-generator-utils/src/main/java/com/octo/tools/crud/doc/DocResourceProcessor.java)).
 
-You will find in the **test** code 3 classes extending classes provided by [crud-generator-utils-tests](https://github.com/yanndemel/crud-rest-gen/tree/master/crud-generator-utils-tests) :
+You will find in the **test** code 3 classes with empty body extending classes provided by [crud-generator-utils-tests](../../crud-generator-utils-tests) and annotated with ``@ContextConfiguration(classes = Application.class)`` in order to load the Spring context of the main application for the test :
 
 * [PetClinicADocEntityGenerator](src/test/java/com/octo/tools/samples/petclinic/PetClinicADocEntityGenerator.java) which extends [ADocEntityGenerator](https://github.com/yanndemel/crud-rest-gen/blob/master/crud-generator-utils-tests/src/main/java/com/octo/tools/crud/doc/ADocEntityGenerator.java)
 * [PetClinicBaseApiDocumentation](src/test/java/com/octo/tools/samples/petclinic/PetClinicBaseApiDocumentation.java) which extends [BaseApiDocumentation](src/main/java/com/octo/tools/crud/doc/BaseApiDocumentation.java)
@@ -104,7 +104,7 @@ The same configuration as in the petclinic-api project is used for the crud-mave
 ```
 ####Step 2 : Tests execution
 
-Please refer at the documentation of the [crud-generator-utils-tests](https://github.com/yanndemel/crud-rest-gen/blob/master/crud-generator-utils-tests/README.md#api-documentation-generation-unit-tests) for the details of the generation of the documentation.
+Please refer at the documentation of the [crud-generator-utils-tests](../../crud-generator-utils-tests/README.md#api-documentation-generation-unit-tests) for the details of the generation of the documentation.
 ```xml
 <!-- Tests execution : you just have to extend existing test classes located in crud-generator-utils-tests -->
 <plugin>
@@ -186,7 +186,7 @@ Please refer at the documentation of the [crud-generator-utils-tests](https://gi
 
 ###Generated sources
 
-The same sources as in petclinic-api project are generated : see [README](https://github.com/yanndemel/crud-rest-gen/tree/master/sample-app/petclinic-api/README.md#generated-sources) for details
+The same sources as in petclinic-api project are generated : see [README](../petclinic-api/README.md#generated-sources) for details
 
 
 > **Note** : the project is packaged as a "war" in order to be deployable in any servlet container like Tomcat
