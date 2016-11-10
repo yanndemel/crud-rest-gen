@@ -131,13 +131,13 @@ crud-maven-plugin configuration
 			</goals>
 		</execution>
 		<!-- Audit controllers generation -->
-                    <execution>
-                        <id>audit</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>audit</goal>
-                        </goals>
-                    </execution>	
+		<execution>
+			<id>audit</id>
+			<phase>generate-sources</phase>
+			<goals>
+			    <goal>audit</goal>
+			</goals>
+		</execution>	
 		<!-- CRUD Admin Web app generation -->
 		<execution>
 			<id>web</id>
