@@ -105,7 +105,8 @@ For each JPA entity, crud-maven-plugin:crudweb generates :
  * ``<entity>_form.html``
  * ``<entity>_list.html``
 
-The details of the Web application generation are explained in the [crud-web-generator](../../crud-web-generator) project
+The details of the Web application generation are explained in the [crud-web-generator](../../crud-web-generator) project.
+
 All generated sources are located in ```/target/classes/static/admin```.
 
 > **Note** : the project is packaged as a "war" in order to be deployable in any servlet container like Tomcat
