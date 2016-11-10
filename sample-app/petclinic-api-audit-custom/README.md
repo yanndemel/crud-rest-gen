@@ -8,7 +8,7 @@ To build, run and test the sample use the same procedure as for the [petclinic-a
 How it works ?
 ==============
 
-It works exactly the same as for the [petclinic-api-audit-default](../petclinic-api-audit-default#how-it-works) project : just replace *default* by *custom* and you're done (I have made the replacement for you below). The last little difference is explained in the [notes](#note)
+It works exactly the same as for the [petclinic-api-audit-default](../petclinic-api-audit-default/README.md#how-it-works) project : just replace *default* by *custom* and you're done (I have made the replacement for you below). The last little difference is explained in the [notes](#note)
 
 ###Project dependencies
 
