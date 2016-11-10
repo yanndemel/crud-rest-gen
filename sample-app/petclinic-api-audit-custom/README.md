@@ -3,7 +3,7 @@
 * Custom behaviour of the Hibernate Envers framework (custom revision entity and listener defined in [petclinic-audit-custom](../petclinic-audit-custom))
 * crud-maven-plugin generates Rest CRUD and audit APIs (+unit tests) for all entities.
 
-To build, run and test the sample use the same procedure as for the [petclinic-api-audit-default](../petclinic-api-audit-default) project.
+To build, run and test the sample use the same procedure as for the [petclinic-api-audit-default](../petclinic-api-audit-default/README.md#build-the-sample) project.
 
 How it works ?
 ==============
