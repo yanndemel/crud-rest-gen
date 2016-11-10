@@ -39,12 +39,7 @@
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 		</dependency>
-		<!-- Custom AbstractAuditController and related classes -->
-		<dependency>
-			<groupId>com.octo.tools.samples</groupId>
-			<artifactId>petclinic-audit-default</artifactId>
-			<version>0.0.1</version>
-		</dependency>	
+		
 		<!-- Your JPA domain classes (must contain persistence.xml)  -->
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
@@ -58,6 +53,13 @@
 			<artifactId>crud-generator-utils</artifactId>
 			<version>0.0.1</version>
 		</dependency>
+		
+		<!-- Custom AbstractAuditController and related classes -->
+		<dependency>
+			<groupId>com.octo.tools.samples</groupId>
+			<artifactId>petclinic-audit-default</artifactId>
+			<version>0.0.1</version>
+		</dependency>	
 		
 		<!-- Audit controllers test classes dependencies -->
 		<dependency>

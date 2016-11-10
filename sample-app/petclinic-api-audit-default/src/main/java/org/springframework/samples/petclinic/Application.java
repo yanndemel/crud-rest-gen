@@ -10,7 +10,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication	
 @EnableJpaRepositories(basePackages = "com.octo.tools.samples.petclinic.repository")
 @EntityScan({"org.springframework.samples.petclinic.model"})
-@ComponentScan({"com.octo.tools.samples.petclinic.repository"})	
+@ComponentScan({"com.octo.tools.crud.filter", "com.octo.tools.audit", 
+	"com.octo.tools.samples.petclinic.repository.audit"})	
 public class Application extends SpringBootServletInitializer {
 
 	@Override
