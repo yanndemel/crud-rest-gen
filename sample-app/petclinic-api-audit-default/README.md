@@ -1,6 +1,6 @@
 #**petclinic-api-audit-default** : CRUD and Audit Rest APIs generation based on the auditable version of the Petclinic model
 
-* default behaviour of the Hibernate Envers framework (org.hibernate.envers.DefaultRevisionEntity)
+* Default behaviour of the Hibernate Envers framework (org.hibernate.envers.DefaultRevisionEntity)
 * crud-maven-plugin generates Rest CRUD and audit APIs (+unit tests) for all entities.
 
 Build the sample
@@ -163,7 +163,7 @@ For the audit controllers the **audit** goal is used in this sample (bound to th
   </dependency>
 </dependencies>
 ```
-* *crud-maven-plugin* uses the *auditControllerClassName* declared in the configuration and located in [petclinic-audit-default](../petclinic-audit-default) : all generated audit contrtollers will extend this class.
+* *crud-maven-plugin* uses the *auditControllerClassName* declared in the configuration and located in [petclinic-audit-default](../petclinic-audit-default) : all generated audit controllers will extend this class.
 ```xml
 <configuration>
   <persistentUnitName>petclinic-model</persistentUnitName>
