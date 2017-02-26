@@ -72,18 +72,6 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	<distributionManagement>
-		<snapshotRepository>
-			<id>octo</id>
-			<name>Octo Nexus</name>
-			<url>https://cloud2.octo.com/nexus/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>octo</id>
-			<name>Octo Nexus</name>
-			<url>https://cloud2.octo.com/nexus/content/repositories/releases/</url>
-		</repository>
-	</distributionManagement>
 	<scm>
 		<url>https://github.com/yanndemel/crud-rest-gen</url>
 		<connection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</connection>
