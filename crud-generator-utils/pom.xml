@@ -11,7 +11,7 @@
 	<parent>
 		<groupId>com.octo.tools</groupId>
 		<artifactId>crud-parent</artifactId>
-		<version>0.0.1</version>
+		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 	
 
@@ -27,6 +27,11 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-envers</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.atteo</groupId>
+			<artifactId>evo-inflector</artifactId>
+			<version>${evoinflector.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>joda-time</groupId>

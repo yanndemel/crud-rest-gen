@@ -3,13 +3,14 @@
 
 	<groupId>com.octo.tools</groupId>
 	<artifactId>crud-parent</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compile.version>1.8</compile.version>
 		<spring-boot.version>1.4.1.RELEASE</spring-boot.version>
+		<evoinflector.version>1.2.2</evoinflector.version>
 	</properties>
 
 	<modules>

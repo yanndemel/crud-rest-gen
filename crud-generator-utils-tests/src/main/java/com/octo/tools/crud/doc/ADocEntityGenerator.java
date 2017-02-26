@@ -20,6 +20,7 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.EntityType;
 
+import org.atteo.evo.inflector.English;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,9 +128,7 @@ public class ADocEntityGenerator {
 	}
 
 	static String getPluralName(String name) {
-		String entities1 = name.endsWith("y") ? name.substring(0, name.length() - 1) + "ies"
-				: name.endsWith("s") ? name + "es" : name + "s";
-		return entities1;
+		return English.plural(name);		
 	}
 
 }

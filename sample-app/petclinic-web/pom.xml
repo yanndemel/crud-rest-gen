@@ -1,9 +1,9 @@
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.octo.tools.samples</groupId>
 	<artifactId>petclinic-web</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<!-- WAR if you intend to deploy in an external servlet container like tomcat -->
 	<packaging>war</packaging>
 
@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils</artifactId>
-			<version>0.0.1</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		
 	</dependencies>
@@ -69,7 +69,7 @@
 				<plugin>
 					<groupId>com.octo.tools</groupId>
 					<artifactId>crud-maven-plugin</artifactId>
-					<version>0.0.1</version>
+					<version>0.0.2-SNAPSHOT</version>
 					<configuration>
 						<persistentUnitName>petclinic-model</persistentUnitName>
 						<restApiUrl>${restApiUrl}</restApiUrl>						
@@ -89,7 +89,7 @@
 						<dependency>
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-model</artifactId>
-							<version>0.0.1</version>
+							<version>0.0.2-SNAPSHOT</version>
 						</dependency>						
 						<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
 							Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 
@@ -103,5 +103,22 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-	</build>	
+	</build>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>octo</id>
+			<name>Octo Nexus</name>
+			<url>https://cloud2.octo.com/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>octo</id>
+			<name>Octo Nexus</name>
+			<url>https://cloud2.octo.com/nexus/content/repositories/releases/</url>
+		</repository>
+	</distributionManagement>
+	<scm>
+		<url>https://github.com/yanndemel/crud-rest-gen</url>
+		<connection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</developerConnection>
+	</scm>	
 </project>

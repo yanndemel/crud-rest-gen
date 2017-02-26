@@ -1,5 +1,7 @@
 package com.octo.tools.crud.utils;
 
+import org.atteo.evo.inflector.English;
+
 /**
  * Helper class for String operations
  * 
@@ -28,9 +30,7 @@ public class StringUtils {
 		if(name == null || name.length() == 0) {
 			return name;
 		}
-		String str = name.endsWith("y") ? name.substring(0, name.length() - 1) + "ies"
-				: name.endsWith("s") ? name + "es" : name + "s";
-		return str.substring(0, 1).toLowerCase() + str.substring(1);
+		return English.plural(name);
 	}
 	
 }
