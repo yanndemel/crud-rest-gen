@@ -18,14 +18,14 @@ For the **API generation** the dependencies are the same as for the [petclinic-a
 <dependency>
   <groupId>com.octo.tools.samples</groupId>
   <artifactId>petclinic-audit-model-custom</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2-SNAPSHOT</version>
 </dependency>						
 
 <!-- Classes used by generated controllers -->
 <dependency>
   <groupId>com.octo.tools</groupId>
   <artifactId>crud-generator-utils</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2-SNAPSHOT</version>
 </dependency>
 ```
 For **compiling** the **audit generated classes**, the dependency to [petclinic-audit-custom](../petclinic-audit-custom) must be added. It contains the custom abstract controller used by crud-maven-plugin for generating audit controllers and the custom resource support class for adding custom information returned by the audit API. See the [crud-maven-plugin configuration](#crud-maven-plugin-configuration) section for details.
@@ -34,7 +34,7 @@ For **compiling** the **audit generated classes**, the dependency to [petclinic-
 <dependency>
   <groupId>com.octo.tools.samples</groupId>
   <artifactId>petclinic-audit-custom</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2-SNAPSHOT</version>
 </dependency>
 ```
 For **testing** the **audit generated classes**, the dependency to [crud-generator-utils-tests](../../crud-generator-utils-tests) must be added. It contains the base class ([AuditControllersTest](../../crud-generator-utils-tests/src/main/java/com/octo/tools/audit/AuditControllersTest.java)) used for testing the generated audit controllers.
@@ -43,7 +43,7 @@ For **testing** the **audit generated classes**, the dependency to [crud-generat
 <dependency>
     <groupId>com.octo.tools</groupId>
     <artifactId>crud-generator-utils-tests</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -74,13 +74,13 @@ For the audit controllers the **audit** goal is used in this sample (bound to th
   <dependency>
     <groupId>com.octo.tools.samples</groupId>
     <artifactId>petclinic-audit-model-custom</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
   </dependency>
   <!-- Custom AbstractAuditController and related classes -->
   <dependency>
     <groupId>com.octo.tools.samples</groupId>
     <artifactId>petclinic-audit-custom</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
   </dependency>						
   <!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
     Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 

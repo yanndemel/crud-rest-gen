@@ -109,21 +109,21 @@ You can find below a sample *pom.xml* for **all-in-one** generation (more detail
 		<dependency>
 			<groupId>your-groupId</groupId>
 			<artifactId>your-project-model</artifactId>
-			<version>0.0.1</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- Custom AbstractAuditController and related classes -->
 		<dependency>
 			<groupId>your-groupId</groupId>
 			<artifactId>your-project-audit</artifactId>
-			<version>0.0.1</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- Audit classes used by generated audit controllers -->
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>audit-core</artifactId>
-			<version>0.0.1</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- Audit management using Envers -->
@@ -136,14 +136,14 @@ You can find below a sample *pom.xml* for **all-in-one** generation (more detail
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils</artifactId>
-			<version>0.0.1</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Start dependencies for API documentation generation -->
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils-tests</artifactId>
-			<version>0.0.1</version>
+			<version>0.0.2-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>				
 		<dependency>
@@ -212,7 +212,7 @@ You can find below a sample *pom.xml* for **all-in-one** generation (more detail
 								<artifactItem>
 									<groupId>com.octo.tools</groupId>
 									<artifactId>crud-generator-utils-tests</artifactId>
-									<version>0.0.1</version>
+									<version>0.0.2-SNAPSHOT</version>
 									<type>jar</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${project.build.directory}/crud-tests</outputDirectory>
@@ -300,7 +300,7 @@ You can find below a sample *pom.xml* for **all-in-one** generation (more detail
 				<plugin>
 					<groupId>com.octo.tools</groupId>
 					<artifactId>crud-maven-plugin</artifactId>
-					<version>0.0.1</version>
+					<version>0.0.2-SNAPSHOT</version>
 					<configuration>
 						<persistentUnitName>your-project-model</persistentUnitName>
 						<restApiUrl>${restApiUrl}</restApiUrl>
@@ -338,13 +338,13 @@ You can find below a sample *pom.xml* for **all-in-one** generation (more detail
 						<dependency>
 							<groupId>your-groupId</groupId>
 							<artifactId>your-project-model</artifactId>
-							<version>0.0.1</version>
+							<version>0.0.2-SNAPSHOT</version>
 						</dependency>
 						<!-- Custom AbstractAuditController -->
 						<dependency>
 							<groupId>your-groupId</groupId>
 							<artifactId>your-project-audit</artifactId>
-							<version>0.0.1</version>
+							<version>0.0.2-SNAPSHOT</version>
 						</dependency>
 						<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
 							Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 

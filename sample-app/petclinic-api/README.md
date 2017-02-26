@@ -65,14 +65,14 @@ Extract from pom.xml :
 <dependency>
 	<groupId>com.octo.tools.samples</groupId>
 	<artifactId>petclinic-model</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 </dependency>						
 
 <!-- Classes used by generated controllers -->
 <dependency>
 	<groupId>com.octo.tools</groupId>
 	<artifactId>crud-generator-utils</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 </dependency>
 ```
 ###Java code
@@ -108,7 +108,7 @@ The **crudapi** goal is used in this sample  (bound to the generate-sources phas
     <dependency>
         <groupId>com.octo.tools.samples</groupId>
         <artifactId>petclinic-model</artifactId>
-        <version>0.0.1</version>
+        <version>0.0.2-SNAPSHOT</version>
     </dependency>                       
     <!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
         Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 
