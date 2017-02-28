@@ -143,7 +143,7 @@ function(${_}http, restURL) {
 			url += "&page="+page;
 		return ${_}http.get(url).then(
 				function(data) {
-					Item.page = data.page;
+					Item.page = data.data.page;
 					callback(data.data._embedded[plural(entityName)]);
 				});
 	};
