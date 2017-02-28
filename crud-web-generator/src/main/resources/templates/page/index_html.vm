@@ -30,6 +30,7 @@
     <script src="admin/libs/angular-resource.min.js"></script>
     <script src="admin/libs/angular-route.min.js"></script>
     <script src="admin/libs/lodash.min.js"></script>
+	<script src="admin/libs/pluralize.min.js"></script>
     <script src="admin/js/app.js"></script>
     <script src="admin/js/messages_handler.js"></script>
     <script src="admin/js/error_catcher.js"></script>

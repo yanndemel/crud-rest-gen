@@ -14,9 +14,7 @@ var plural = function(name) {
 	if(name == null || name == "") {
 		return name;
 	}
-	var entities1 = name.endsWith("y") ? name.substring(0, name.length - 1) + "ies"
-			: name.endsWith("s") ? name + "es" : name + "s";
-	return uncapitalize(entities1);
+	return uncapitalize(pluralize(name));
 }
 
 var decimalAdjust = function(type, value, exp) {
