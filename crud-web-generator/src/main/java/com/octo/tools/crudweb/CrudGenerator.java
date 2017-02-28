@@ -213,8 +213,8 @@ public class CrudGenerator {
             	entities.add(entityInfo);
         		String name = clazz.getSimpleName();
 				entityInfo.put("name", name);
-            	entityInfo.put("uncapitName", name.substring(0, 1).toLowerCase() + name.substring(1));
-            	entityInfo.put("pluralName", StringUtils.plural(name));
+            	entityInfo.put("uncapitName", uncapitalize(name));
+            	entityInfo.put("pluralName", uncapitalize(StringUtils.plural(name)));
             	List<Field> fields = ReflectionUtils.getAllFields(clazz);
             	List<FieldInfo> fieldInfoList = new ArrayList<FieldInfo>();
             	boolean hasLink = false;
@@ -283,6 +283,10 @@ public class CrudGenerator {
         }
         Collections.sort(entities, (p1, p2) -> ((String)p1.get("name")).compareTo((String)p2.get("name")));
 		return entities;
+	}
+
+	private String uncapitalize(String name) {
+		return name.substring(0, 1).toLowerCase() + name.substring(1);
 	}
 
 
