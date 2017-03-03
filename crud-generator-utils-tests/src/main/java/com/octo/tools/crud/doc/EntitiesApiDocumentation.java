@@ -284,7 +284,12 @@ public class EntitiesApiDocumentation {
 		list.add(linkWithRel("profile").description("The ALPS profile for this resource"));
 		if (info.isSearch())
 			list.add(linkWithRel("search").description("Search functions for this resource"));
-
+		if (info.isPaged()) { 
+			list.add(linkWithRel("first").optional().description("The first page of results")); 
+			list.add(linkWithRel("last").optional().description("The last page of results")); 
+			list.add(linkWithRel("next").optional().description("The next page of results")); 
+			list.add(linkWithRel("prev").optional().description("The previous page of results")); 
+		}
 		return list.toArray(new LinkDescriptor[0]);
 	}
 
