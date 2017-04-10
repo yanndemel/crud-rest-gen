@@ -1,4 +1,4 @@
-#**crud-maven-plugin - PetClinic samples**
+# **crud-maven-plugin - PetClinic samples**
 
 Sample projects structure
 =========================
