@@ -1,4 +1,4 @@
-#audit-core : Base classes for Audit Rest API
+# audit-core : Base classes for Audit Rest API
 
 Project used by the crud-maven-plugin and as dependency of client projects for audit Rest API generation.
 

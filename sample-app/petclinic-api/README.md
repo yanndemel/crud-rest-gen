@@ -52,7 +52,7 @@ Server response :
 How it works ?
 ==============
 
-###Project dependencies
+### Project dependencies
 
 In addition to the standard Spring Boot dependencies (spring-boot-starter-data-rest, spring-boot-starter-data-jpa and spring-boot-starter-tomcat) and the H2 database, two dependencies are needed for building the project :
 
@@ -75,7 +75,7 @@ Extract from pom.xml :
 	<version>0.0.2-SNAPSHOT</version>
 </dependency>
 ```
-###Java code
+### Java code
 
 The only Java class is the [Application](https://github.com/yanndemel/crud-rest-gen/blob/master/sample-app/petclinic-api/src/main/java/com/octo/tools/samples/petclinic/Application.java) class that initialize the Spring Boot context. Following annotations are used :
 
@@ -86,7 +86,7 @@ The only Java class is the [Application](https://github.com/yanndemel/crud-rest-
 
 No application.properties file is used in this sample. Therefore the default Spring Boot h2 in-memory database is used.
 
-###crud-maven-plugin configuration
+### crud-maven-plugin configuration
 
 It is located in the ``<pluginManagement>`` section of the [pom.xml](https://github.com/yanndemel/crud-rest-gen/blob/master/sample-app/petclinic-api/pom.xml).
 The **crudapi** goal is used in this sample  (bound to the generate-sources phase).
@@ -133,7 +133,7 @@ must match name of the *persistence-unit* declared in the [*persistence.xml*](ht
 </configuration>
 ```
 
-###Generated sources
+### Generated sources
 
 For each JPA entity, crud-maven-plugin:crudapi generates :
 

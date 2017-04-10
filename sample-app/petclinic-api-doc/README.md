@@ -19,7 +19,7 @@ Test the sample
 How it works ?
 ==============
 
-###Project dependencies
+### Project dependencies
 
 In addition to the dependencies needed for the API (detailed [here](../petclinic-api/README.md#project-dependencies)), the generation of the documentation needs the Spring Rest Docs dependencies as shown below (extracted from [pom.xml](pom.xml):
 ```xml
@@ -53,7 +53,7 @@ In addition to the dependencies needed for the API (detailed [here](../petclinic
 <!-- End of dependencies for API documentation generation -->
 ```
 
-###Java code
+### Java code
 
 The only Java class in the **main** code is the [Application](src/main/java/com/octo/tools/samples/petclinic/Application.java) class that initialize the Spring Boot context. The same annotations as in the [petclinic-api](../petclinic-api/README.md#java-code) sample are used. The only difference resides on the @componentScan annotation : *@ComponentScan({"com.octo.tools.crud.doc"})* is used in petclinic-api-doc in order to enable the controller enabling the /doc redirection to the generated documentation ([ApiDocsController](../../crud-generator-utils/src/main/java/com/octo/tools/crud/doc/ApiDocsController.java)) and the support of the /doc resource at the root of the API ([DocResourceProcessor](https://github.com/yanndemel/crud-rest-gen/blob/master/crud-generator-utils/src/main/java/com/octo/tools/crud/doc/DocResourceProcessor.java)).
 
@@ -65,15 +65,15 @@ You will find in the **test** code 3 classes with empty body extending classes p
 
 As in the petclinic-api sample, no application.properties file is used. 
 
-###crud-maven-plugin configuration
+### crud-maven-plugin configuration
 
 The same configuration as in the [petclinic-api](../petclinic-api#crud-maven-plugin-configuration) project is used for the generation of the Rest API source code. The generation of the documentation of the API is not part of the plugin : it uses only the classes located in crud-generator-utils-tests, which use only the Spring Rest Docs framework.
 
-###Spring Rest Docs configuration
+### Spring Rest Docs configuration
 
 4 steps are involved in the generation of the API :
 
-####Step 1 : Unpack crud-generator-utils-tests jar so that asciidoctor-maven-plugin can locate the .adoc template in the sourceDirectory :
+#### Step 1 : Unpack crud-generator-utils-tests jar so that asciidoctor-maven-plugin can locate the .adoc template in the sourceDirectory :
 ```xml
 <!-- Unpacking crud-generator-utils-tests jar so that asciidoctor-maven-plugin can locate the .adoc template in the sourceDirectory -->
 <plugin>
@@ -102,7 +102,7 @@ The same configuration as in the [petclinic-api](../petclinic-api#crud-maven-plu
     </executions>
 </plugin>
 ```
-####Step 2 : Tests execution
+#### Step 2 : Tests execution
 
 Please refer at the documentation of the [crud-generator-utils-tests](../../crud-generator-utils-tests/README.md#api-documentation-generation-unit-tests) for the details of the generation of the documentation.
 ```xml
@@ -127,7 +127,7 @@ Please refer at the documentation of the [crud-generator-utils-tests](../../crud
     </configuration>
 </plugin>
 ```
-####Step 3 : Generation of the API documentation
+#### Step 3 : Generation of the API documentation
 ```xml
 <!-- Generation of the API documentation -->
 <plugin>
@@ -154,7 +154,7 @@ Please refer at the documentation of the [crud-generator-utils-tests](../../crud
     </executions>
 </plugin>
 ```
-####Step 4 : Copy of the generated documentation to static/docs/api
+#### Step 4 : Copy of the generated documentation to static/docs/api
 
 ```xml
 <!-- Copy of the generated documentation to static/docs/api -->
@@ -184,7 +184,7 @@ Please refer at the documentation of the [crud-generator-utils-tests](../../crud
 </plugin>
 ```
 
-###Generated sources
+### Generated sources
 
 The same sources as in petclinic-api project are generated : see [README](../petclinic-api/README.md#generated-sources) for details
 

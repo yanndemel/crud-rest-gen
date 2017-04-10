@@ -1,4 +1,4 @@
-#petclinic-audit-default : Base class extended by the generated audit controllers
+# petclinic-audit-default : Base class extended by the generated audit controllers
 
 This project is used by [petclinic-api-audit-default](../petclinic-api-audit-default).
 

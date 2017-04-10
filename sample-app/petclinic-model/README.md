@@ -1,4 +1,4 @@
-#**petclinic-model** : Base data model
+# **petclinic-model** : Base data model
 
 The original [Spring Petclinc](https://github.com/spring-projects/spring-petclinic) model has been slightly adapted to suit crud-maven-plugin prerequisites :
 

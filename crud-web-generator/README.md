@@ -1,4 +1,4 @@
-#crud-web-generator :  CRUD Web application generation framework
+# crud-web-generator :  CRUD Web application generation framework
 
 Used by **crud-maven-plugin:crudweb** to generate the **Angular JS Admin CRUD application** for administrating a JPA data model using the generated Rest API as backend (generated with *crud-maven-plugin:crudapi*).
 

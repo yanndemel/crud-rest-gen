@@ -1,4 +1,4 @@
-#petclinic-audit-model-custom : PetClinic model with audit (custom Hibernate Envers configuration)
+# petclinic-audit-model-custom : PetClinic model with audit (custom Hibernate Envers configuration)
 
 This project contains :
 * the [*persistence.xml*](src/main/resources/META-INF/persistence.xml) file

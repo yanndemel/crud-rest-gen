@@ -1,4 +1,4 @@
-#petclinic-audit-model-common : PetClinic model with audit information
+# petclinic-audit-model-common : PetClinic model with audit information
 
 The project contains **only java classes. No persistence.xml is defined here**.
 

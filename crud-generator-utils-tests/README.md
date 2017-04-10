@@ -1,10 +1,10 @@
-#**crud-generator-utils-tests** : Base test classes for automatic API documentation generation and audit controllers unit test
+# **crud-generator-utils-tests** : Base test classes for automatic API documentation generation and audit controllers unit test
 
 Java code
 =========
 Source code is divided into 3 packages :
 
-###Audit controllers unit test
+### Audit controllers unit test
 
 Package *com.octo.tools.audit* :
 
@@ -17,7 +17,7 @@ Package *com.octo.tools.audit* :
   6. Get the last revision of the  created target entity (``/history/<entity>/<last revision of the entity>``)
 
 
-###API documentation generation unit tests
+### API documentation generation unit tests
 
 Package *com.octo.tools.crud.doc* : 
  
@@ -29,7 +29,7 @@ Package *com.octo.tools.crud.doc* :
 
 > **Note** :   Documentation based on the name of the entities
 
-###Utility classes : 
+### Utility classes : 
 * *com.octo.tools.crud.util* : Utility classes used by the 4 previous classes during object model introspection
 
 Resources files

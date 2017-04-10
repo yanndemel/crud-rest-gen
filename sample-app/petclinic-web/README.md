@@ -1,4 +1,4 @@
-#petclinic-web : CRUD Web administration UI generation
+# petclinic-web : CRUD Web administration UI generation
 
 Use **crud-maven-plugin:crudweb** to generate an **Angular JS application** for administrating the [petclinic-model](../petclinic-model) using the [petclinic-api](../petclinic-api) as backend.
 
@@ -22,7 +22,7 @@ You can now make CRUD operations on your entities using the Web interface.
 How it works ?
 ==============
 
-###Project dependencies
+### Project dependencies
 
 In addition to the standard Spring Boot dependencies (spring-boot-starter-data-rest, and spring-boot-starter-tomcat), one dependency is needed for building the project :
 
@@ -37,7 +37,7 @@ Extract from pom.xml :
 	<version>0.0.2-SNAPSHOT</version>
 </dependency>
 ```
-###Java code
+### Java code
 
 The only Java class is the [Application](src/main/java/com/octo/tools/samples/petclinic/Application.java) class that initialize the Spring Boot context. Following annotations are used :
 
@@ -47,7 +47,7 @@ The only Java class is the [Application](src/main/java/com/octo/tools/samples/pe
 
 No application.properties file is used in this sample.
 
-###crud-maven-plugin configuration
+### crud-maven-plugin configuration
 
 It is located in the ``<pluginManagement>`` section of the [pom.xml](pom.xml).
 The **crudweb** goal is used in this sample  (bound to the *generate-resources* phase).
@@ -94,7 +94,7 @@ must match name of the *persistence-unit* declared in the [*persistence.xml*](..
 </configuration>
 ```
 
-###Generated sources
+### Generated sources
 
 For each JPA entity, crud-maven-plugin:crudweb generates :
 

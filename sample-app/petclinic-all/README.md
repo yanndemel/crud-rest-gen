@@ -1,4 +1,4 @@
-#petclinic-all : CRUD Rest API, API documentation, Audit Rest API with custom RevisionEntity and CRUD Web application generation
+# petclinic-all : CRUD Rest API, API documentation, Audit Rest API with custom RevisionEntity and CRUD Web application generation
 
 Use the *crud-maven-plugin* to generate in single application containing :
 

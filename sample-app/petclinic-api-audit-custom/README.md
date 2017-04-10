@@ -1,4 +1,4 @@
-#petclinic-api-audit-custom : CRUD and Audit Rest APIs generation based on the auditable version of the Petclinic model (custom RevisionEntity)
+# petclinic-api-audit-custom : CRUD and Audit Rest APIs generation based on the auditable version of the Petclinic model (custom RevisionEntity)
 
 * Custom behaviour of the Hibernate Envers framework (custom revision entity and listener defined in [petclinic-audit-custom](../petclinic-audit-custom))
 * crud-maven-plugin generates Rest CRUD and audit APIs (+unit tests) for all entities.
@@ -48,12 +48,12 @@ For **testing** the **audit generated classes**, the dependency to [crud-generat
 </dependency>
 ```
 
-###Java code
+### Java code
 The only Java class in the **main** code is the [Application](src/main/java/com/octo/tools/samples/petclinic/Application.java) class that initialize the Spring Boot context. The same annotations as in the [petclinic-api](../petclinic-api/README.md#java-code) sample are used. The only difference resides on the @componentScan annotation : *@ComponentScan({"com.octo.tools.crud.filter", "com.octo.tools.audit", "com.octo.tools.samples.petclinic.repository.audit"})* is used in petclinic-api-audit-custom in order to enable, in addition to the CORS filter, the audit controllers ([AuditControllerBase](../../audit-core/src/main/java/com/octo/tools/audit/AuditControllerBase.java) and generated audit controllers) and the support of the ``/history`` Rest resource ([AuditResourceProcessor](../../audit-core/src/main/java/com/octo/tools/audit/AuditResourceProcessor.java)).
 
 You will find in the **test** code one class ([PetClinicAuditControllerTest](src/test/java/com/octo/tools/samples/petclinic/PetClinicAuditControllerTest.java)) with empty body, extending the ([AuditControllersTest](../../crud-generator-utils-tests/src/main/java/com/octo/tools/audit/AuditControllersTest.java) class provided by [crud-generator-utils-tests](../../crud-generator-utils-tests) and annotated with ``@ContextConfiguration(classes = Application.class)`` in order to load the Spring context of the main application for the test.
 
-###crud-maven-plugin configuration
+### crud-maven-plugin configuration
 The same configuration as in the [petclinic-api](../petclinic-api#crud-maven-plugin-configuration) project is used for the generation of the Rest API source code.
 For the audit controllers the **audit** goal is used in this sample (bound to the generate-sources phase) :
 ```xml
@@ -101,7 +101,7 @@ For the audit controllers the **audit** goal is used in this sample (bound to th
 </configuration>
 ```
 
-###Generated sources
+### Generated sources
 
 For API sources generation details please see [here](../petclinic-api/README.md#generated-sources).
 Audit controllers are generated in ``target/generated-sources/`` in the package ``${packageName}.audit``. As for API generated sources you can choose to generate the source files without compiling them by setting the ``compile`` parameter to false in the crud-maven-plugin configuration.

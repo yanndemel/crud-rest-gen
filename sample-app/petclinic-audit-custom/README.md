@@ -1,4 +1,4 @@
-#petclinic-audit-custom : Base class extended by the generated audit controllers for customized audited model
+# petclinic-audit-custom : Base class extended by the generated audit controllers for customized audited model
 
 This project is used by [petclinic-api-audit-custom](../petclinic-api-audit-custom).
 

@@ -1,4 +1,4 @@
-#crud-generator-utils : Utility classes
+# crud-generator-utils : Utility classes
 
 Used as a dependency by *crud-maven-plugin* and dependencies.
 Can be use as a dependency in client projects for using default controllers, filter or helper classes.

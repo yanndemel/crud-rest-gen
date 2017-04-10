@@ -1,4 +1,4 @@
-#crud-maven-plugin : Maven plugin for Rest API, Audit Rest API and CRUD administration Web application generation
+# crud-maven-plugin : Maven plugin for Rest API, Audit Rest API and CRUD administration Web application generation
 
 Build the plugin
 ================
