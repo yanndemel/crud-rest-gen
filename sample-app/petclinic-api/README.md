@@ -1,4 +1,4 @@
-#**petclinic-api** : Rest API generation
+# **petclinic-api** : Rest API generation
 
 Use the crud-maven-plugin to generate the Rest API for all entities.
 
