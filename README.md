@@ -45,13 +45,13 @@ All details can be found in the [README.md](sample-app/README.md) of the ``sampl
 
 Use your own data model
 --------------------
-###Prerequisites
+### Prerequisites
 
  1. Your entities must be POJOs annotated with standard **javax.persistence annotations** : currently only **Field access** defined annotations are supported
  2. The type of **all @Id** in your entities **must be java.lang.Long**
 
 
-###Project setup
+### Project setup
 
  1. Package the **persistence.xml** file referencing your entity classes in a maven artifact containing (or dependent from) your JPA entities.
  2. You have to create a new maven project for the Rest API. You can use the same project for the Web administration UI or you can create a separate maven project.
