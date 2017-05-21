@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -61,12 +62,15 @@ public class EntityHelper {
 	
 	private List<EntityInfo> entityInfoList;
 	
+	private int random;
+	
 	public EntityHelper(MockMvc mockMvc, ObjectMapper objectMapper, List<EntityInfo> entityInfoList) {
 		super();
 		this.mockMvc = mockMvc;
 		this.objectMapper = objectMapper;
 		this.linkedEntities = new ArrayList<>();
 		this.entityInfoList = entityInfoList;
+		this.random = 0;
 	}
 
 	private String createSampleEntity(String url, Map<String, String> params)
@@ -91,7 +95,11 @@ public class EntityHelper {
 	}
 	
 	public String createSampleEntity(EntityInfo info) throws JsonProcessingException, Exception {
-		Map<String, String> params = getParamsMap(info.getEntityClass());
+		return createSampleEntity(info, false);
+	}
+	
+	public String createSampleEntity(EntityInfo info, boolean forUpdate) throws JsonProcessingException, Exception {
+		Map<String, String> params = getParamsMap(info.getEntityClass(), forUpdate);
 
 		return createSampleEntity(info.getPluralName(), params);
 	}
@@ -112,7 +120,6 @@ public class EntityHelper {
 
 	private void createLinkedEntities(Class entityClass, boolean rootClass) throws JsonProcessingException, Exception {
 		List<Field> allFields = ReflectionUtils.getAllFields(entityClass);
-		boolean found = false;
 		for (Field f : allFields) {
 			ManyToOne ann = f.getAnnotation(ManyToOne.class);
 			if (ann != null) {
@@ -121,8 +128,8 @@ public class EntityHelper {
 					createLinkedEntities(target, false);
 			}
 		}
-		if (!found && !rootClass)
-			linkedEntities.add(new DeleteInfo(entityClass, createSampleEntity(getEntityInfo(entityClass))));
+		if (!rootClass)
+			linkedEntities.add(new DeleteInfo(entityClass, createSampleEntity(getEntityInfo(entityClass), false)));
 	}
 
 	private boolean alreadyLinked(Class target) {
@@ -178,7 +185,10 @@ public class EntityHelper {
 	}
 
 	private String verifiyValue(Calendar cal, FieldInfo fi, String value) {
-		if (fi.decMin != null && fi.decMin > Double.valueOf(value))
+		if(fi.unique) {			
+			value = ++random + value;
+		}
+		if(fi.decMin != null && fi.decMin > Double.valueOf(value))
 			value = Double.toString(fi.decMin);
 		else if (fi.decMax != null && fi.decMax > Double.valueOf(value))
 			value = Double.toString(fi.decMax);
@@ -253,10 +263,22 @@ public class EntityHelper {
 				if (col.length() != 255) {
 					fi.sizeMax = col.length();
 				}
+				if(col.unique())
+					fi.unique = true;
 			}			
 			if (a.annotationType().equals(ManyToOne.class)) {
-				if (alreadyLinked(type))
+				if (alreadyLinked(type)) {
 					value = getLinkedEntity(type);
+					if(forUpdate) {						
+						try {
+							value = createSampleEntity(getEntityInfo(type), true);
+							linkedEntities.add(new DeleteInfo(type, value));
+						} catch (Exception e) {
+							logger.error("Exception while creating linked Entity (for Update));", e);
+						}
+					}
+					
+				}
 				else {
 					value = "";
 					nullValue = true;

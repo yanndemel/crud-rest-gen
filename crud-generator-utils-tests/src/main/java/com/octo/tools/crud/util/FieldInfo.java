@@ -13,4 +13,5 @@ public class FieldInfo {
 	public String pattern = null; 
 	public Integer sizeMin = null;
 	public Integer sizeMax = null;
+	public boolean unique;
 }

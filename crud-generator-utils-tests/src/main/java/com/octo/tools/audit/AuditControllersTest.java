@@ -11,11 +11,12 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 
-import org.apache.el.util.ReflectionUtil;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +28,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.octo.tools.audit.AbstractAuditController;
 import com.octo.tools.crud.doc.ADocEntityGenerator;
 import com.octo.tools.crud.util.EntityHelper;
 import com.octo.tools.crud.util.EntityInfo;
@@ -37,6 +37,8 @@ import com.octo.tools.crud.utils.ReflectionUtils;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AuditControllersTest {
+	
+	private static final Logger logger = LoggerFactory.getLogger(AuditControllersTest.class);
 
 	@Autowired
 	protected EntityManager em;
@@ -67,13 +69,14 @@ public class AuditControllersTest {
 			if(ReflectionUtils.isEntityExposed(entityClass)) {
 				entityHelper.createLinkedEntities(entityClass);
 				String location = entityHelper.createSampleEntity(info);
+				logger.debug("Created entity : "+this.mockMvc.perform(get(location)).andReturn().getResponse().getContentAsString());
 				Map<String, String> paramsMap = entityHelper.getParamsMap(entityClass, true);
-
+				logger.debug("Updating "+location+" with params "+paramsMap);
 				this.mockMvc
 						.perform(patch(entityHelper.url(location)).contentType(MediaTypes.HAL_JSON)
 								.content(this.objectMapper.writeValueAsString(paramsMap)))
 						.andExpect(status().isNoContent());
-				
+				logger.debug("Updated entity : "+this.mockMvc.perform(get(location)).andReturn().getResponse().getContentAsString());
 				ResultActions result = this.mockMvc.perform(get(getRevisionsUrl(info.getPluralName().toUpperCase()))).andDo(print()).andExpect(status().isOk())
 						.andExpect(jsonPath("_embedded.auditResourceSupports[0].revType", Matchers.equalTo("ADD")));		
 				Map<String, Object> map = objectMapper.readValue(result.andReturn().getResponse().getContentAsString(), Map.class); 
