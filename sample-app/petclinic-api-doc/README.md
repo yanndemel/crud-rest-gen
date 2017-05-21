@@ -1,4 +1,4 @@
-#**petclinic-api-doc** : Rest API and documentation generation
+# **petclinic-api-doc** : Rest API and documentation generation
 
 Use the crud-maven-plugin to generate the Rest API and the documentation for all entities.
 
