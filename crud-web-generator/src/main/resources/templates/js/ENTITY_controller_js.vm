@@ -87,21 +87,31 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 	}	  
 	   
   
-	var validate = function(item) {
-		
+	var validate = function(item) {		
 		console.log("Controller validation");
+		var ok = true;
+#foreach($info in ${entity.info})
+#if(${info.notNull})
+		if(item.${info.name} == null) {
+			ok = false;
+			MessageHandler.addError("${info.name} must not be empty");
+		}
+#end
+#end
+		return ok;
 	}
 	
 	var addItem = function(item) {
 		if(remaningCallbacks == 0) {
-			validate(item);	
-			removeCollections(item)
-			CommonServices.create(${entity.name}_ENDPOINT, item).then(
-				function(processedResponse) {					
-					${_}scope.items.push(item);
-					${_}rootScope.modifiedItems.pop();		
-					${_}rootScope.goBack();					
-				});
+			if(validate(item)) {	
+				removeCollections(item)
+				CommonServices.create(${entity.name}_ENDPOINT, item).then(
+					function(processedResponse) {					
+						${_}scope.items.push(item);
+						${_}rootScope.modifiedItems.pop();		
+						${_}rootScope.goBack();					
+					});
+			}
 		}		
 	};	
 
@@ -134,13 +144,14 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 			
 	var updateItem = function(item) {
 		if(remaningCallbacks == 0) {
-			validate(item);
-			removeCollections(item)	
-			var url = CommonServices.getHRef(item);
-			CommonServices.update(${entity.name}_ENDPOINT, item).then( function(success) {
-				${_}rootScope.modifiedItems.pop();
-				${_}rootScope.goBack();
-			});	
+			if(validate(item)) {
+				removeCollections(item)	
+				var url = CommonServices.getHRef(item);
+				CommonServices.update(${entity.name}_ENDPOINT, item).then( function(success) {
+					${_}rootScope.modifiedItems.pop();
+					${_}rootScope.goBack();
+				});
+			}	
 		}
 	};
 

@@ -29,6 +29,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
@@ -248,6 +249,8 @@ public class EntityHelper {
 				fi.intMax = ((Max) a).value();
 			else if (a.annotationType().equals(Null.class))
 				fi.isNull = true;
+			else if (a.annotationType().equals(NotNull.class))
+				fi.notNull = true;
 			else if (a.annotationType().equals(Pattern.class))
 				fi.pattern = ((Pattern) a).regexp();
 			else if (a.annotationType().equals(Email.class))

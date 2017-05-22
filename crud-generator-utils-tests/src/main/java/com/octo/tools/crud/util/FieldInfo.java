@@ -14,4 +14,5 @@ public class FieldInfo {
 	public Integer sizeMin = null;
 	public Integer sizeMax = null;
 	public boolean unique;
+	public boolean notNull;
 }
