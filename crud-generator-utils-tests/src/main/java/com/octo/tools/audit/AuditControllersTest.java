@@ -89,6 +89,7 @@ public class AuditControllersTest {
 				
 				
 				entityHelper.deleteLinkedEntities(location);
+				entityHelper.reset();
 			}
 		}
 	}

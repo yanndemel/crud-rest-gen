@@ -135,6 +135,7 @@ public class EntitiesApiDocumentation {
 				.andDo(document(info.getSimpleName() + "-update-example", requestFields(
 						getRequestFieldDescriptors(info.getEntityClass(), getParamsDescMap(info.getEntityClass())))));
 		entityHelper.deleteLinkedEntities(location);
+		entityHelper.reset();
 	}
 
 	private void getExample(EntityInfo info) throws JsonProcessingException, Exception, NoSuchFieldException {
@@ -145,6 +146,7 @@ public class EntitiesApiDocumentation {
 				.andDo(document(info.getSimpleName() + "-get-example", links(halLinks(), getLinksForSingleItem(info)),
 						responseFields(getLinkedFieldDescriptors(info.getEntityClass(), paramsMap))));
 		entityHelper.deleteLinkedEntities(location);
+		entityHelper.reset();
 	}
 
 	private LinkDescriptor[] getLinksForSingleItem(EntityInfo info) {
@@ -180,6 +182,7 @@ public class EntitiesApiDocumentation {
 		String location = response.getHeader("Location");
 		
 		entityHelper.deleteLinkedEntities(location);
+		entityHelper.reset();
 	}
 
 	private FieldDescriptor[] getLinkedFieldDescriptors(Class entityClass, Map<String, String> paramsMap)
@@ -262,6 +265,7 @@ public class EntitiesApiDocumentation {
 						responseFields(getFieldsForList(info))));
 
 		entityHelper.deleteLinkedEntities(location);
+		entityHelper.reset();
 
 	}
 

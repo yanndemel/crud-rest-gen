@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -167,8 +166,12 @@ public class EntityHelper {
 		List<Field> allFields = ReflectionUtils.getAllFields(clazz);
 		for (Field f : allFields) {
 			if (isFieldExposed(f) && !f.isAnnotationPresent(OneToMany.class)  
-					&& !f.isAnnotationPresent(ManyToMany.class))
-				params.put(f.getName(), getFieldValue(clazz, f, forUpdate));
+					&& !f.isAnnotationPresent(ManyToMany.class)) {
+				if(!f.getType().equals(clazz))
+					params.put(f.getName(), getFieldValue(clazz, f, forUpdate));
+				else if(!f.isAnnotationPresent(NotNull.class))
+					params.put(f.getName(), null);
+			} 
 		}
 		return params;
 	}
@@ -320,5 +323,9 @@ public class EntityHelper {
 			deleteEntity(di.url);
 		}
 		linkedEntities.clear();
+	}
+
+	public void reset() {
+		random = 0;
 	}
 }
