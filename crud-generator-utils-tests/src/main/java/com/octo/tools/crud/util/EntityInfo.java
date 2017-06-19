@@ -1,5 +1,10 @@
 package com.octo.tools.crud.util;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 public class EntityInfo {
 
 	public Class entityClass;
@@ -9,6 +14,10 @@ public class EntityInfo {
 	private String pluralName1stUpper;
 	private boolean search;
 	private boolean paged;
+	private List<Map<String, String>> dataSet;
+	private Map<String, String> currentElement;
+	private Iterator<Map<String, String>> dataSetIterator;
+	private List<String> allFields;
 	
 	public String getSimpleName1stUpper() {
 		return simpleName1stUpper;
@@ -57,6 +66,27 @@ public class EntityInfo {
 	public void setPaged(boolean paged) {
 		this.paged = paged;
 	}
+	public List<Map<String, String>> getDataSet() {
+		return dataSet;
+	}
+	public void setDataSet(List<Map<String, String>> dataSet) {
+		this.dataSet = dataSet;	
+		this.dataSetIterator = this.dataSet.iterator();
+		this.allFields = new ArrayList<String>();
+	}
+	public String getNextValue(String name) {
+		if(allFields.contains(name)) {
+			if(!this.dataSetIterator.hasNext())
+				this.dataSetIterator = this.dataSet.iterator();
+			allFields.clear();
+			this.currentElement = this.dataSetIterator.next();
+		}
+		allFields.add(name);
+		if(this.currentElement == null)
+			this.currentElement = this.dataSetIterator.next();
+		return this.currentElement.get(name);
+	}
+	
 	
 	
 }

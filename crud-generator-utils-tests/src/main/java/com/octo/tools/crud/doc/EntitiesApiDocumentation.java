@@ -15,6 +15,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -55,7 +57,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.tools.crud.util.EntityHelper;
 import com.octo.tools.crud.util.EntityInfo;
@@ -89,7 +93,7 @@ public class EntitiesApiDocumentation {
 
 	private MockMvc mockMvc;
 
-	private List<EntityInfo> entityInfoList;
+	protected List<EntityInfo> entityInfoList;
 
 	private EntityHelper entityHelper;
 
@@ -98,7 +102,29 @@ public class EntitiesApiDocumentation {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
 				.apply(documentationConfiguration(this.restDocumentation)).build();
 		this.entityInfoList = ADocEntityGenerator.getEntityInfoList(em);
+		initDataSets();
 		this.entityHelper = new EntityHelper(mockMvc, objectMapper, entityInfoList);
+	}
+
+	private void initDataSets() {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+		mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+		for (EntityInfo info : entityInfoList) {
+			File dataFile = getDataFile(info);
+			if(dataFile.exists())
+				try {
+					info.setDataSet(mapper.readValue(dataFile, new TypeReference<List<Map<String, String>>>() {}));
+					info.getDataSet();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}	
+		}
+	}
+
+	private File getDataFile(EntityInfo info) {
+		File dataFile = new File("src/test/resources/"+info.getEntityClass().getPackage().getName().replace(".", "/")+"/"+info.getPluralName()+".json");
+		return dataFile;
 	}
 
 	@Test
@@ -191,17 +217,19 @@ public class EntitiesApiDocumentation {
 		for (String att : paramsMap.keySet()) {
 			String desc = paramsMap.get(att);
 			Field field = getField(entityClass, att);
-			Class<?> fieldType = field.getType();
-			boolean linked = ReflectionUtils.hasLinks(field);
-			boolean collection = ReflectionUtils.hasCollections(field);
-			boolean number = ReflectionUtils.isNumber(fieldType);
-			boolean bool = ReflectionUtils.isBoolean(fieldType);
-			Object jsonType = getJsonType(linked, collection, number, bool);
-			String path = linked || collection ? "_embedded." + att : att;
-			FieldDescriptor type = fieldWithPath(path).description(desc).type(jsonType);
-			if (!isMandatory(field))
-				type.optional();
-			list.add(type);
+			if(entityHelper.isFieldExposed(field)) {
+				Class<?> fieldType = field.getType();
+				boolean linked = ReflectionUtils.hasLinks(field);
+				boolean collection = ReflectionUtils.hasCollections(field);
+				boolean number = ReflectionUtils.isNumber(fieldType);
+				boolean bool = ReflectionUtils.isBoolean(fieldType);
+				Object jsonType = getJsonType(linked, collection, number, bool);
+				String path = linked || collection ? "_embedded." + att : att;
+				FieldDescriptor type = fieldWithPath(path).description(desc).type(jsonType);
+				if (!isMandatory(field))
+					type.optional();
+				list.add(type);
+			}			
 		}		
 		list.add(fieldWithPath("_links").description("links to other resources"));
 		Collections.sort(list, (p1, p2) -> p1.getPath().compareTo(p2.getPath()));
@@ -329,4 +357,5 @@ public class EntitiesApiDocumentation {
 		}
 	}
 
+	
 }

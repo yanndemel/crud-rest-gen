@@ -3,6 +3,7 @@ package com.octo.tools.crud.util;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -44,7 +45,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.tools.crud.utils.ReflectionUtils;
 
@@ -73,6 +76,7 @@ public class EntityHelper {
 		this.random = 0;
 	}
 
+	
 	private String createSampleEntity(String url, Map<String, String> params)
 			throws Exception, JsonProcessingException {
 		ResultActions resultAction = createEntity(url, params);
@@ -168,9 +172,7 @@ public class EntityHelper {
 			if (isFieldExposed(f) && !f.isAnnotationPresent(OneToMany.class)  
 					&& !f.isAnnotationPresent(ManyToMany.class)) {
 				if(!f.getType().equals(clazz))
-					params.put(f.getName(), getFieldValue(clazz, f, forUpdate));
-				else if(!f.isAnnotationPresent(NotNull.class))
-					params.put(f.getName(), null);
+					params.put(f.getName(), getFieldValue(clazz, f, forUpdate));				
 			} 
 		}
 		return params;
@@ -179,6 +181,19 @@ public class EntityHelper {
 	
 
 	private String getFieldValue(Class clazz, Field f, boolean forUpdate) {
+		for(EntityInfo info : entityInfoList) {
+			if(info.getEntityClass().equals(clazz) && info.getDataSet() != null) {
+				if(!f.isAnnotationPresent(ManyToOne.class)) {
+					String value = info.getNextValue(f.getName());					
+					return value == null ? verifyNullValue(f, Calendar.getInstance(), forUpdate, f.getType()) : value;
+				} else {
+					if (alreadyLinked(f.getType())) {
+						return createLinkedEntity(forUpdate, f.getType());
+					}
+					return null;
+				}
+			}
+		}
 		Calendar cal = Calendar.getInstance();
 		FieldInfo fi = new FieldInfo();
 		String value = initFieldInfo(f, cal, fi, forUpdate);
@@ -274,16 +289,7 @@ public class EntityHelper {
 			}			
 			if (a.annotationType().equals(ManyToOne.class)) {
 				if (alreadyLinked(type)) {
-					value = getLinkedEntity(type);
-					if(forUpdate) {						
-						try {
-							value = createSampleEntity(getEntityInfo(type), true);
-							linkedEntities.add(new DeleteInfo(type, value));
-						} catch (Exception e) {
-							logger.error("Exception while creating linked Entity (for Update));", e);
-						}
-					}
-					
+					value = createLinkedEntity(forUpdate, type);
 				}
 				else {
 					value = "";
@@ -292,20 +298,41 @@ public class EntityHelper {
 			}
 		}
 		if (value == null && !nullValue) {
-			if (Boolean.class.isAssignableFrom(type) || (type.isPrimitive() && type.equals(boolean.class)))
-				value = forUpdate ? "false" : "true";
-			else {
-				String tstStr = forUpdate ? "Test2" : "Test";
-				if (String.class.isAssignableFrom(type) && !f.isAnnotationPresent(Digits.class))
-					value = tstStr;
-				else if(f.isAnnotationPresent(Digits.class))
-					value = "0";
-				else if (Number.class.isAssignableFrom(type) || type.isPrimitive())
-					value = forUpdate ? "7" : "9";
-				else if (Date.class.isAssignableFrom(type) || DateTime.class.isAssignableFrom(type))
-					value = DatatypeConverter.printDate(cal);
-				else
-					value = tstStr;
+			value = verifyNullValue(f, cal, forUpdate, type);
+		}
+		return value;
+	}
+
+
+	private String verifyNullValue(Field f, Calendar cal, boolean forUpdate, Class<?> type) {
+		String value;
+		if (Boolean.class.isAssignableFrom(type) || (type.isPrimitive() && type.equals(boolean.class)))
+			value = forUpdate ? "false" : "true";
+		else {
+			String tstStr = forUpdate ? "Test2" : "Test";
+			if (String.class.isAssignableFrom(type) && !f.isAnnotationPresent(Digits.class))
+				value = tstStr;
+			else if(f.isAnnotationPresent(Digits.class))
+				value = "0";
+			else if (Number.class.isAssignableFrom(type) || type.isPrimitive())
+				value = forUpdate ? "7" : "9";
+			else if (Date.class.isAssignableFrom(type) || DateTime.class.isAssignableFrom(type))
+				value = DatatypeConverter.printDate(cal);
+			else
+				value = tstStr;
+		}
+		return value;
+	}
+
+
+	private String createLinkedEntity(boolean forUpdate, Class<?> fieldType) {
+		String value = getLinkedEntity(fieldType);
+		if(forUpdate) {						
+			try {
+				value = createSampleEntity(getEntityInfo(fieldType), true);
+				linkedEntities.add(new DeleteInfo(fieldType, value));
+			} catch (Exception e) {
+				logger.error("Exception while creating linked Entity (for Update));", e);
 			}
 		}
 		return value;
@@ -313,7 +340,7 @@ public class EntityHelper {
 
 	public boolean isFieldExposed(Field f) {
 		return !f.isAnnotationPresent(Id.class) && !f.isAnnotationPresent(Transient.class)
-				&& !f.isAnnotationPresent(Version.class);
+				&& !f.isAnnotationPresent(Version.class) && !f.isAnnotationPresent(JsonIgnore.class);
 	}
 	
 	public void deleteLinkedEntities(String location) throws Exception {
