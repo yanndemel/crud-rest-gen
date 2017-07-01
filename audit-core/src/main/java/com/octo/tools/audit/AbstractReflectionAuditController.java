@@ -67,19 +67,19 @@ public abstract class AbstractReflectionAuditController<T, R> extends AbstractAu
 		return null;
 	}
 
-	private Long getTimestamp(R entity, Method m) {
+	private Date getTimestamp(R entity, Method m) {
 		try {
 			if (m.getReturnType().equals(Date.class))
-				return ((Date) m.invoke(entity, null)).getTime();
+				return (Date) m.invoke(entity, null);
 			else
-				return (Long) m.invoke(entity, null);
+				return new Date((Long) m.invoke(entity, null));
 
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new AuditConfigurationException(e);
 		}
 	}
 
-	private Long getTimestamp(R entity, Field f) {
+	private Date getTimestamp(R entity, Field f) {
 		boolean b = false;
 		try {
 			if (!f.isAccessible()) {
@@ -87,9 +87,9 @@ public abstract class AbstractReflectionAuditController<T, R> extends AbstractAu
 				b = true;
 			}
 			if (f.getType().equals(Date.class))
-				return ((Date) f.get(entity)).getTime();
+				return (Date) f.get(entity);
 			else
-				return (Long) f.get(entity);
+				return new Date((Long) f.get(entity));
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			throw new AuditConfigurationException(e);
 		} finally {
@@ -131,7 +131,7 @@ public abstract class AbstractReflectionAuditController<T, R> extends AbstractAu
 	}
 
 	@Override
-	protected Long getRevisionEntityTimestamp(R revEntity) {
+	protected Date getRevisionEntityTimestamp(R revEntity) {
 		if (revEntityTimestampField != null)
 			return getTimestamp(revEntity, revEntityTimestampField);
 		if (revEntityIdGetter != null)

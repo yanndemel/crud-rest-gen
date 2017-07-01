@@ -1,5 +1,6 @@
 package com.octo.tools.audit;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.envers.DefaultRevisionEntity;
@@ -20,8 +21,8 @@ public abstract class AbstractDefaultAuditController<T> extends AbstractAuditCon
 	}
 
 	@Override
-	protected Long getRevisionEntityTimestamp(DefaultRevisionEntity revEntity) {
-		return revEntity.getTimestamp();
+	protected Date getRevisionEntityTimestamp(DefaultRevisionEntity revEntity) {
+		return new Date(revEntity.getTimestamp());
 	}
 
 	@Override

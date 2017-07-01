@@ -134,7 +134,7 @@
                                 <artifactItem>
                                     <groupId>com.octo.tools</groupId>
                                     <artifactId>crud-generator-utils-tests</artifactId>
-                                    <version>0.0.1</version>
+                                    <version>0.0.2-SNAPSHOT</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/crud-tests</outputDirectory>

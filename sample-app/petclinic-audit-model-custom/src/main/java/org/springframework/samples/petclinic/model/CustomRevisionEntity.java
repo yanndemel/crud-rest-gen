@@ -1,5 +1,7 @@
 package org.springframework.samples.petclinic.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,7 +31,7 @@ public class CustomRevisionEntity {
 	private Long id;
 
 	@RevisionTimestamp
-	private Long timestamp;
+	private Date timestamp;
 	
 	private String userName;
 
@@ -51,13 +53,15 @@ public class CustomRevisionEntity {
 		this.userName = username;
 	}
 
-	public Long getTimestamp() {
+	public Date getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(Long timestamp) {
+	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
+
+	
 	
 	
 	

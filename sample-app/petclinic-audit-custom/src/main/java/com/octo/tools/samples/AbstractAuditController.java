@@ -1,5 +1,7 @@
 package com.octo.tools.samples;
 
+import java.util.Date;
+
 import org.hibernate.envers.RevisionType;
 import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.model.CustomRevisionEntity;
@@ -22,7 +24,7 @@ public abstract class AbstractAuditController<T extends BaseEntity> extends com.
 	}
 
 	@Override
-	protected Long getRevisionEntityTimestamp(CustomRevisionEntity revEntity) {
+	protected Date getRevisionEntityTimestamp(CustomRevisionEntity revEntity) {
 		return revEntity.getTimestamp();
 	}
 

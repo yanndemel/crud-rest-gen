@@ -2,6 +2,7 @@ package com.octo.tools.audit;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -85,7 +86,7 @@ public abstract class AbstractAuditController<T, R> {
 	protected abstract Long getRevisionEntityId(R revEntity);
 
 
-	protected abstract Long getRevisionEntityTimestamp(R revEntity);
+	protected abstract Date getRevisionEntityTimestamp(R revEntity);
 
 
 	protected abstract Long getEntityId(T entity);

@@ -1,7 +1,11 @@
 package com.octo.tools.audit;
 
+import java.util.Date;
+
 import org.hibernate.envers.RevisionType;
 import org.springframework.hateoas.ResourceSupport;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class AuditResourceSupport<T> extends ResourceSupport {
 
@@ -11,11 +15,12 @@ public class AuditResourceSupport<T> extends ResourceSupport {
 	
 	protected Long revId;
 
-	protected Long revTimestamp;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+	protected Date revTimestamp;
 	
 	protected RevisionType revType;
 	
-	public AuditResourceSupport(T entity, Long entityId, Long revEntityId, Long revEntityTimestamp, RevisionType revType) {
+	public AuditResourceSupport(T entity, Long entityId, Long revEntityId, Date revEntityTimestamp, RevisionType revType) {
 		super();
 		this.entity = entity;
 		this.entityId = entityId;
@@ -59,11 +64,11 @@ public class AuditResourceSupport<T> extends ResourceSupport {
 		this.revId = revId;
 	}
 
-	public Long getRevTimestamp() {
+	public Date getRevTimestamp() {
 		return revTimestamp;
 	}
 
-	public void setRevTimestamp(Long revTimestamp) {
+	public void setRevTimestamp(Date revTimestamp) {
 		this.revTimestamp = revTimestamp;
 	}
 
