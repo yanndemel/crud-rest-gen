@@ -15,8 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -26,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Column;
-import javax.persistence.EntityManager;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -34,13 +31,11 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import org.hamcrest.Matchers;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.hateoas.MediaTypes;
@@ -51,24 +46,19 @@ import org.springframework.restdocs.hypermedia.LinkDescriptor;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.octo.tools.crud.util.EntityHelper;
+import com.octo.tools.common.AbstractCrudTest;
 import com.octo.tools.crud.util.EntityInfo;
 import com.octo.tools.crud.utils.ReflectionUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class EntitiesApiDocumentation {
+public class EntitiesApiDocumentation extends AbstractCrudTest {
 
 	
 
@@ -82,50 +72,11 @@ public class EntitiesApiDocumentation {
 	public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation(
 			ADocEntityGenerator.TARGET_GENERATED_SNIPPETS);
 
-	@Autowired
-	private ObjectMapper objectMapper;
-
-	@Autowired
-	protected EntityManager em;
-
-	@Autowired
-	private WebApplicationContext context;
-
-	private MockMvc mockMvc;
-
-	protected List<EntityInfo> entityInfoList;
-
-	private EntityHelper entityHelper;
-
-	@Before
-	public void setUp() throws ClassNotFoundException {
+	protected void seUpMockMvc() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
 				.apply(documentationConfiguration(this.restDocumentation)).build();
-		this.entityInfoList = ADocEntityGenerator.getEntityInfoList(em);
-		initDataSets();
-		this.entityHelper = new EntityHelper(mockMvc, objectMapper, entityInfoList);
 	}
-
-	private void initDataSets() {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-		mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-		for (EntityInfo info : entityInfoList) {
-			File dataFile = getDataFile(info);
-			if(dataFile.exists())
-				try {
-					info.setDataSet(mapper.readValue(dataFile, new TypeReference<List<Map<String, String>>>() {}));
-					info.getDataSet();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}	
-		}
-	}
-
-	private File getDataFile(EntityInfo info) {
-		File dataFile = new File("src/test/resources/"+info.getEntityClass().getPackage().getName().replace(".", "/")+"/"+info.getPluralName()+".json");
-		return dataFile;
-	}
+	
 
 	@Test
 	public void documentEntities() throws Exception {
@@ -143,10 +94,6 @@ public class EntitiesApiDocumentation {
 		}
 
 	}
-
-	
-
-	
 
 	private void updateExample(EntityInfo info) throws JsonProcessingException, Exception, NoSuchFieldException {
 		entityHelper.createLinkedEntities(info.getEntityClass());

@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -18,16 +19,21 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+import javax.persistence.Version;
 import javax.persistence.metamodel.EntityType;
 
 import org.atteo.evo.inflector.English;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.octo.tools.common.AbstractCrudTest;
 import com.octo.tools.crud.util.EntityInfo;
 import com.octo.tools.crud.utils.ReflectionUtils;
 
@@ -38,12 +44,12 @@ import com.octo.tools.crud.utils.ReflectionUtils;
  * */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-public class ADocEntityGenerator {
+public class ADocEntityGenerator extends AbstractCrudTest {
 
 	public static final String TARGET_GENERATED_SNIPPETS = "target/generated-snippets";
 	
-	@Autowired
-	protected EntityManager em;	
+	@Before
+	public void setUp() throws ClassNotFoundException, IOException {}
 	
 	@Test
 	public void generateADocs() throws IOException, URISyntaxException, ClassNotFoundException {
@@ -98,11 +104,26 @@ public class ADocEntityGenerator {
 				info.setPluralName1stUpper(entities1);
 				info.setSearch(hasSearch(javaType));
 				info.setPaged(isPaged(javaType));
+				info.setHasOnlyManyToOne(hasOnlyManyToOne(javaType));
 				list.add(info);
 			}
 		}
 		Collections.sort(list, (p1, p2) -> p1.getSimpleName().compareTo(p2.getSimpleName()));
 		return list;
+	}
+
+	private static boolean hasOnlyManyToOne(Class javaType) {
+		int total = 0;
+		int many = 0;
+		for(Field f : ReflectionUtils.getAllFields(javaType)) {
+			if(!f.isAnnotationPresent(Id.class) && !f.isAnnotationPresent(Transient.class)
+					&& !f.isAnnotationPresent(Version.class)) {
+				total++;
+				if(f.isAnnotationPresent(ManyToOne.class))
+					many++;
+			}
+		}
+		return total == many;
 	}
 
 	private static boolean isPaged(Class javaType) throws ClassNotFoundException {		

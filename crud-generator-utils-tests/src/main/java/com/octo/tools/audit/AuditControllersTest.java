@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.octo.tools.common.AbstractCrudTest;
 import com.octo.tools.crud.doc.ADocEntityGenerator;
 import com.octo.tools.crud.util.EntityHelper;
 import com.octo.tools.crud.util.EntityInfo;
@@ -36,31 +37,11 @@ import com.octo.tools.crud.utils.ReflectionUtils;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AuditControllersTest {
+public class AuditControllersTest extends AbstractCrudTest {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AuditControllersTest.class);
 
-	@Autowired
-	protected EntityManager em;
 	
-	@Autowired
-	private WebApplicationContext context;
-
-	@Autowired
-	private ObjectMapper objectMapper;
-	
-	private MockMvc mockMvc;
-
-	private List<EntityInfo> entityInfoList;
-
-	private EntityHelper entityHelper;
-
-	@Before
-	public void setUp() throws ClassNotFoundException {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context).build();
-		this.entityInfoList = ADocEntityGenerator.getEntityInfoList(em);
-		this.entityHelper = new EntityHelper(mockMvc, objectMapper, entityInfoList);
-	}
 	
 	@Test
 	public void testAudit() throws Exception {

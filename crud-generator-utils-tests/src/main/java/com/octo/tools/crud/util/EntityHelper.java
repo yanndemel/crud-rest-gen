@@ -3,7 +3,6 @@ package com.octo.tools.crud.util;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -47,7 +46,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.tools.crud.utils.ReflectionUtils;
 
@@ -181,14 +179,13 @@ public class EntityHelper {
 	
 
 	private String getFieldValue(Class clazz, Field f, boolean forUpdate) {
-		for(EntityInfo info : entityInfoList) {
+		for(EntityInfo info : entityInfoList) {			
 			if(info.getEntityClass().equals(clazz) && info.getDataSet() != null) {
 				if(!f.isAnnotationPresent(ManyToOne.class)) {
-					String value = info.getNextValue(f.getName());					
-					return value == null ? verifyNullValue(f, Calendar.getInstance(), forUpdate, f.getType()) : value;
+					return info.getValue(f.getName(), forUpdate);					
 				} else {
 					if (alreadyLinked(f.getType())) {
-						return createLinkedEntity(forUpdate, f.getType());
+						return createLinkedEntity(forUpdate, info, f.getType());
 					}
 					return null;
 				}
@@ -196,7 +193,7 @@ public class EntityHelper {
 		}
 		Calendar cal = Calendar.getInstance();
 		FieldInfo fi = new FieldInfo();
-		String value = initFieldInfo(f, cal, fi, forUpdate);
+		String value = initFieldInfo(clazz, f, cal, fi, forUpdate);
 		value = verifiyValue(cal, fi, value);
 
 		return value;
@@ -243,7 +240,7 @@ public class EntityHelper {
 		return value;
 	}
 
-	private String initFieldInfo(Field f, Calendar cal, FieldInfo fi, boolean forUpdate) {
+	private String initFieldInfo(Class clazz, Field f, Calendar cal, FieldInfo fi, boolean forUpdate) {
 		Class<?> type = f.getType();
 		Annotation[] annotations = f.getAnnotations();
 		String value = null;
@@ -289,7 +286,7 @@ public class EntityHelper {
 			}			
 			if (a.annotationType().equals(ManyToOne.class)) {
 				if (alreadyLinked(type)) {
-					value = createLinkedEntity(forUpdate, type);
+					value = createLinkedEntity(forUpdate, getEntityInfo(clazz), type);
 				}
 				else {
 					value = "";
@@ -325,14 +322,16 @@ public class EntityHelper {
 	}
 
 
-	private String createLinkedEntity(boolean forUpdate, Class<?> fieldType) {
+	private String createLinkedEntity(boolean forUpdate, EntityInfo info, Class<?> fieldType) {
 		String value = getLinkedEntity(fieldType);
-		if(forUpdate) {						
-			try {
-				value = createSampleEntity(getEntityInfo(fieldType), true);
-				linkedEntities.add(new DeleteInfo(fieldType, value));
-			} catch (Exception e) {
-				logger.error("Exception while creating linked Entity (for Update));", e);
+		if(forUpdate) {
+			if(info.hasOnlyManyToOne()) {
+				try {
+					value = createSampleEntity(getEntityInfo(fieldType), true);
+					linkedEntities.add(new DeleteInfo(fieldType, value));
+				} catch (Exception e) {
+					logger.error("Exception while creating linked Entity (for Update));", e);
+				}
 			}
 		}
 		return value;

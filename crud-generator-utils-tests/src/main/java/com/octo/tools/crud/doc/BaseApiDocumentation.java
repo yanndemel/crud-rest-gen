@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,31 +37,26 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.octo.tools.audit.AbstractAuditController;
+import com.octo.tools.common.AbstractCrudTest;
 import com.octo.tools.crud.doc.ApiDocsController;
+import com.octo.tools.crud.util.EntityHelper;
 import com.octo.tools.crud.util.EntityInfo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class BaseApiDocumentation {
+public class BaseApiDocumentation extends AbstractCrudTest {
 	
 	@Rule
 	public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation(ADocEntityGenerator.TARGET_GENERATED_SNIPPETS);
-
-	@Autowired
-	protected WebApplicationContext context;
-
-	@Autowired
-	protected EntityManager em;
 	
-	private MockMvc mockMvc;
-
+		
 	@Before
 	public void setUp() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
 				.apply(documentationConfiguration(this.restDocumentation)).build();
 	}
-
+	
 	@Test
 	public void errorExample() throws Exception {
 		this.mockMvc
