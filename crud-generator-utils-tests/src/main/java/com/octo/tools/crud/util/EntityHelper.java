@@ -45,7 +45,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.tools.crud.utils.ReflectionUtils;
 
@@ -64,7 +66,7 @@ public class EntityHelper {
 	private List<EntityInfo> entityInfoList;
 	
 	private int random;
-	
+
 	public EntityHelper(MockMvc mockMvc, ObjectMapper objectMapper, List<EntityInfo> entityInfoList) {
 		super();
 		this.mockMvc = mockMvc;
@@ -106,7 +108,7 @@ public class EntityHelper {
 		return createSampleEntity(info.getPluralName(), params);
 	}
 
-	public Map<String, String> getParamsMap(Class clazz) {
+	public Map<String, String> getParamsMap(Class clazz) throws Exception {
 		return getParamsMap(clazz, false);
 	}
 	
@@ -163,7 +165,7 @@ public class EntityHelper {
 		return null;
 	}
 
-	public Map<String, String> getParamsMap(Class clazz, boolean forUpdate) {
+	public Map<String, String> getParamsMap(Class clazz, boolean forUpdate) throws Exception {
 		Map<String, String> params = new HashMap<>();
 		List<Field> allFields = ReflectionUtils.getAllFields(clazz);
 		for (Field f : allFields) {
@@ -178,16 +180,31 @@ public class EntityHelper {
 
 	
 
-	private String getFieldValue(Class clazz, Field f, boolean forUpdate) {
+	private String getFieldValue(Class clazz, Field f, boolean forUpdate) throws Exception {
 		for(EntityInfo info : entityInfoList) {			
 			if(info.getEntityClass().equals(clazz) && info.getDataSet() != null) {
+				String value = info.getValue(f.getName(), forUpdate);
 				if(!f.isAnnotationPresent(ManyToOne.class)) {
-					return info.getValue(f.getName(), forUpdate);					
-				} else {
-					if (alreadyLinked(f.getType())) {
-						return createLinkedEntity(forUpdate, info, f.getType());
+					return value;					
+				} else if(value != null) {					
+					String overrideValue = info.getOverrideValue(f.getName(), forUpdate);
+					if(overrideValue != null)
+						return overrideValue;
+					else {
+						try {
+							Map<String, String> map = objectMapper.readValue(value, new TypeReference<Map<String, String>>() {});
+							value = createSampleEntity(getEntityInfo(f.getType()).getPluralName(), map);
+							linkedEntities.add(new DeleteInfo(f.getType(), value));
+							info.setOverrideValue(f.getName(), forUpdate, value);
+							return value;
+						} catch (Exception e) {
+							logger.error("Not a valid JSON...", e);
+							return getDefaultManyToOne(f, forUpdate, info);
+						}						
 					}
-					return null;
+				}
+				else {
+					return getDefaultManyToOne(f, forUpdate, info);
 				}
 			}
 		}
@@ -198,6 +215,23 @@ public class EntityHelper {
 
 		return value;
 
+	}
+
+
+	private String getDefaultManyToOne(Field f, boolean forUpdate, EntityInfo info) {
+		if (alreadyLinked(f.getType())) {
+			return createLinkedEntity(forUpdate, info, f.getType());
+		}
+		return null;
+	}
+
+
+	public static ObjectMapper newObjectMapper() {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+		mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, false);
+		mapper.configure(JsonParser.Feature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER, true);
+		return mapper;
 	}
 
 	private String verifiyValue(Calendar cal, FieldInfo fi, String value) {
@@ -327,8 +361,9 @@ public class EntityHelper {
 		if(forUpdate) {
 			if(info.hasOnlyManyToOne()) {
 				try {
-					value = createSampleEntity(getEntityInfo(fieldType), true);
-					linkedEntities.add(new DeleteInfo(fieldType, value));
+					EntityInfo entityInfo = getEntityInfo(fieldType);
+					value = createSampleEntity(entityInfo, true);
+					linkedEntities.add(new DeleteInfo(info.getEntityClass(), value));
 				} catch (Exception e) {
 					logger.error("Exception while creating linked Entity (for Update));", e);
 				}
@@ -336,6 +371,8 @@ public class EntityHelper {
 		}
 		return value;
 	}
+
+
 
 	public boolean isFieldExposed(Field f) {
 		return !f.isAnnotationPresent(Id.class) && !f.isAnnotationPresent(Transient.class)
@@ -352,6 +389,10 @@ public class EntityHelper {
 	}
 
 	public void reset() {
+		for(EntityInfo info : entityInfoList) {
+			info.reset();
+		}
 		random = 0;
 	}
+	
 }

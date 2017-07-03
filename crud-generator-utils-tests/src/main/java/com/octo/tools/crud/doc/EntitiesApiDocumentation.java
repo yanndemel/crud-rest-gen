@@ -96,6 +96,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 	}
 
 	private void updateExample(EntityInfo info) throws JsonProcessingException, Exception, NoSuchFieldException {
+		logger.debug("----->updateExample");
 		entityHelper.createLinkedEntities(info.getEntityClass());
 		String location = entityHelper.createSampleEntity(info);
 		verifiySampleEntity(location);
@@ -112,6 +113,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 	}
 
 	private void getExample(EntityInfo info) throws JsonProcessingException, Exception, NoSuchFieldException {
+		logger.debug("----->getExample");
 		entityHelper.createLinkedEntities(info.getEntityClass());
 		Map<String, String> paramsMap = getParamsDescMap(info.getEntityClass());
 		String location = entityHelper.createSampleEntity(info);

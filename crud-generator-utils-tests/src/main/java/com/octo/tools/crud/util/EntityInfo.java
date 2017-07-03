@@ -1,5 +1,6 @@
 package com.octo.tools.crud.util;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class EntityInfo {
@@ -14,7 +15,9 @@ public class EntityInfo {
 	private boolean hasOnlyManyToOne;
 	private Map<String, String> dataSet;
 	private Map<String, String> updateDataSet;
-
+	private Map<String, String> overrideDataSet;
+	private Map<String, String> updateOverrideDataSet;
+	
 	public String getSimpleName1stUpper() {
 		return simpleName1stUpper;
 	}
@@ -90,6 +93,32 @@ public class EntityInfo {
 			return updateDataSet.get(fieldName);		
 		return dataSet.get(fieldName);
 	}
+	
+	public String getOverrideValue(String fieldName, boolean forUpdate) {
+		if (forUpdate && updateOverrideDataSet != null && updateOverrideDataSet.containsKey(fieldName))
+			return updateOverrideDataSet.get(fieldName);		
+		return overrideDataSet != null ? overrideDataSet.get(fieldName) : null;
+	}
+	
+	public void reset() {
+		if(updateOverrideDataSet != null)
+			updateOverrideDataSet.clear();
+		if(overrideDataSet != null)
+			overrideDataSet.clear();
+	}
+	
+	public void setOverrideValue(String fieldName, boolean forUpdate, String value) {
+		if (forUpdate) {
+			if(updateOverrideDataSet == null)
+				updateOverrideDataSet = new HashMap<String, String>();
+			updateOverrideDataSet.put(fieldName, value);		
+		}
+		else {
+			if(overrideDataSet == null)
+				overrideDataSet = new HashMap<String, String>();
+			overrideDataSet.put(fieldName, value);
+		}
+	}
 
 	public Map<String, String> getUpdateDataSet() {
 		return updateDataSet;
@@ -105,6 +134,6 @@ public class EntityInfo {
 
 	public void setHasOnlyManyToOne(boolean hasOnlyManyToOne) {
 		this.hasOnlyManyToOne = hasOnlyManyToOne;
-	}	
+	}
 
 }

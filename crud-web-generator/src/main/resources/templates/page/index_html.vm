@@ -9,7 +9,7 @@
   
  	<nav class="navbar">
   		<a href="#/" class="navbar-left">
-	        <img src="admin/img/logo.png" width="60px"/>
+	        <img src="${logoPath}" />
 	    </a>	   
 	    <h3>&nbsp;CRUD Aministration application</h3>			   		
 	</nav>

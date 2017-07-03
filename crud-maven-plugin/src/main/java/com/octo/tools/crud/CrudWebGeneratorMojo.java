@@ -51,6 +51,12 @@ public class CrudWebGeneratorMojo
     @Parameter( property = "restApiUrl", required = true )
     private String restApiUrl;
     
+    /**
+     * Local path of the logo image file displayed in the admin GUI
+     */
+    @Parameter( property = "logoPath", defaultValue = "admin/img/logo.png", required = false )
+    private String logoPath;
+    
     
 
     public void execute()
@@ -59,7 +65,7 @@ public class CrudWebGeneratorMojo
         
         
         try {
-			new CrudGenerator().generate(persistentUnitName, outputDirectory, restApiUrl);
+			new CrudGenerator().generate(persistentUnitName, outputDirectory, restApiUrl, logoPath);
 		} catch (Exception e) {
 			throw new MojoExecutionException("Exception during generation", e);
 		}

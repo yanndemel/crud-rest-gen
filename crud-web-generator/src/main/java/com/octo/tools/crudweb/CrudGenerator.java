@@ -54,11 +54,14 @@ public class CrudGenerator {
 
 	private String restUrl;
 
-	public void generate(String persistenceUnitName, String destDirRelativePath, String restUrl) throws Exception {
+	private String logoPath;
+
+	public void generate(String persistenceUnitName, String destDirRelativePath, String restUrl, String logoPath) throws Exception {
 		
 		assert(persistenceUnitName != null);
 		assert(destDirRelativePath != null);
 		assert(restUrl != null);
+		assert(logoPath != null);
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(persistenceUnitName);
 		EntityManager em = emf.createEntityManager();
@@ -66,6 +69,8 @@ public class CrudGenerator {
         this.ve  = new VelocityEngine();
         
         this.restUrl = restUrl;
+        
+        this.logoPath = logoPath;
         
         List<Map<String, Object>> entities = initPersistenceInfo(em);
         
@@ -165,6 +170,7 @@ public class CrudGenerator {
         Template indexTemplate = ve.getTemplate(getResourceFile("page/index_html.vm"));
         context = new VelocityContext();
         context.put("entities", entities);
+        context.put("logoPath", logoPath);
         Path path = Paths.get(root.getPath(), "index.html");
 		System.out.println("File " + path);
 		BufferedWriter writer = Files.newBufferedWriter(path);
