@@ -6,26 +6,51 @@
 	<link rel="stylesheet" href="./admin/css/crud-admin.css" />
   </head>
   <body ng-app="myApp" ng-init="initialise()">        
-  
- 	<nav class="navbar">
-  		<a href="#/" class="navbar-left">
-	        <img src="${logoPath}" />
-	    </a>	   
-	    <h3>&nbsp;CRUD Aministration application</h3>			   		
-	</nav>
-	<div class="container-fluid">
-	<div class="row">
-	  <div class="col-md-2">
-		  <ul class="entity">
-#foreach($entity in ${entities})
-  <li><a href="#/${entity.uncapitName}">${entity.name}</a></li>
+  <div id="wrapper">
+        <div class="overlay"></div>
+    
+        <!-- Sidebar -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+            <ul class="nav sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#/" title="Back to welcome page">Select entity</a>                    
+                </li>
+#set ($count = 0)
+#foreach($entityByPackageEntry in $entitiesByPackage.entrySet())
+#set ($count = $count + 1)
+  				 <li class="dropdown">
+                 <a style="cursor: pointer" class="dropdown-toggle" data-toggle="dropdown">$entityByPackageEntry.key <span class="caret"></span></a>
+  				 <ul class="dropdown-menu" role="menu">
+#foreach($entityByPackageMapEntry in $entityByPackageEntry.value.entrySet())
+					<li><a href="#/$entityByPackageMapEntry.key">$entityByPackageMapEntry.value</a></li>
 #end
-	</ul>
-	    </div>
-	  <div class="col-md-10"><div ng-view></div></div>
-	</div>
-	</div>
-	
+  				</ul>
+                </li>
+#end
+  			</ul>
+  		</nav>
+  		<!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <button type="button" class="hamburger is-closed" data-toggle="offcanvas">
+                <span class="hamb-top"></span>
+    			<span class="hamb-middle"></span>
+				<span class="hamb-bottom"></span>
+            </button>
+            <div class="container">
+                <div class="row">
+  					<div class="col-md-10"><div ng-view></div></div>
+  				</div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+	<script src="./admin/libs/jquery.min.js"></script>
+	<script src="./admin/libs/bootstrap.min.js"></script>
+	<script src="./admin/libs/menu.js"></script>
     <script src="admin/libs/angular.min.js"></script>   
     <script src="admin/libs/angular-resource.min.js"></script>
     <script src="admin/libs/angular-route.min.js"></script>

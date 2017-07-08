@@ -1,3 +1,4 @@
+	<img src="${logoPath}" />
 	<h3>
 		Welcome to the CRUD administration application
 	</h3>

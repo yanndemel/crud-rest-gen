@@ -11,9 +11,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.persistence.Column;
 import javax.persistence.EntityManager;
@@ -37,6 +40,7 @@ import javax.validation.constraints.Size;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.context.AbstractContext;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.RuntimeConstants;
@@ -55,6 +59,8 @@ public class CrudGenerator {
 	private String restUrl;
 
 	private String logoPath;
+
+	private TreeMap<String, Map<String, String>> entitiesByPackage;
 
 	public void generate(String persistenceUnitName, String destDirRelativePath, String restUrl, String logoPath) throws Exception {
 		
@@ -169,12 +175,22 @@ public class CrudGenerator {
         
         Template indexTemplate = ve.getTemplate(getResourceFile("page/index_html.vm"));
         context = new VelocityContext();
-        context.put("entities", entities);
+        context.put("entities", entities);   
+        context.put("entitiesByPackage", entitiesByPackage);   
         context.put("logoPath", logoPath);
         Path path = Paths.get(root.getPath(), "index.html");
 		System.out.println("File " + path);
 		BufferedWriter writer = Files.newBufferedWriter(path);
 		indexTemplate.merge( context, writer );
+		writer.close();
+		
+		Template welcomeTemplate = ve.getTemplate(getResourceFile("page/welcome_html.vm"));
+        context = new VelocityContext();
+        context.put("logoPath", logoPath);
+        path = Paths.get(root.getPath(), "partials", "welcome.html");
+		System.out.println("File " + path);
+		writer = Files.newBufferedWriter(path);
+		welcomeTemplate.merge( context, writer );
 		writer.close();
         
 	}
@@ -209,14 +225,15 @@ public class CrudGenerator {
 
 	private List<Map<String, Object>> initPersistenceInfo(EntityManager em) throws ClassNotFoundException {
 		Set<EntityType<?>> allEntities = em.getMetamodel().getEntities();
-        
+		entitiesByPackage = new TreeMap<>();
         Map<String, Object> entityInfo;        
         List<Map<String, Object>> entities = new ArrayList<Map<String,Object>>();
         for(EntityType et : allEntities) {
         	Class clazz = et.getJavaType();
         	if(ReflectionUtils.isEntityExposed(clazz)) {
         		entityInfo = new HashMap<String, Object>();
-            	entities.add(entityInfo);
+            	entities.add(entityInfo);            	
+            	String packageName = clazz.getPackage().getName();
         		String name = clazz.getSimpleName();
 				entityInfo.put("name", name);
             	entityInfo.put("uncapitName", uncapitalize(name));
@@ -283,12 +300,25 @@ public class CrudGenerator {
             	entityInfo.put("info", fieldInfoList);
             	entityInfo.put("hasLinks", hasLink);
             	entityInfo.put("hasCollections", hasColl);
+            	String parentPackage = packageName.substring(packageName.lastIndexOf(".")+1);
+            	StringBuilder sb = new StringBuilder(parentPackage.substring(0, 1).toUpperCase()).append(parentPackage.substring(1));
+				addToEntitiesByPackage(sb.toString(), entityInfo);
         	}
         	
         	
         }
-        Collections.sort(entities, (p1, p2) -> ((String)p1.get("name")).compareTo((String)p2.get("name")));
+        Collections.sort(entities, (p1, p2) -> ((String)p1.get("name")).compareTo((String)p2.get("name")));               
 		return entities;
+	}
+
+	private void addToEntitiesByPackage(String name, Map<String, Object> entityInfo) {
+		Map<String, String> map = entitiesByPackage.get(name);
+		if(map == null) {
+			map = new TreeMap<>();
+			entitiesByPackage.put(name, map);
+		}
+		map.put((String)entityInfo.get("uncapitName"), (String)entityInfo.get("name"));
+		
 	}
 
 	private String uncapitalize(String name) {
