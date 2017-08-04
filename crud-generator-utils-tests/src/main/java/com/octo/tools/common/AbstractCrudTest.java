@@ -43,8 +43,10 @@ public abstract class AbstractCrudTest {
 	
 	@After
 	public void after() {
-		if(em != null)
-			em.close();
+		if(em != null) {
+			em.clear();
+			em.close();		
+		}
 	}
 	
 	private void configureMapper() {
@@ -93,4 +95,5 @@ public abstract class AbstractCrudTest {
 	private String getDataFileRootPath(EntityInfo info) {
 		return info.getEntityClass().getPackage().getName().replace(".", "/")+"/"+info.getSimpleName();
 	}
+		
 }

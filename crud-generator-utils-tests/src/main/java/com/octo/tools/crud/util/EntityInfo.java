@@ -90,13 +90,13 @@ public class EntityInfo {
 
 	public String getValue(String fieldName, boolean forUpdate) {
 		if (forUpdate && updateDataSet != null && updateDataSet.containsKey(fieldName))
-			return updateDataSet.get(fieldName);		
+			return updateDataSet != null ? updateDataSet.get(fieldName) : null;		
 		return dataSet.get(fieldName);
 	}
 	
 	public String getOverrideValue(String fieldName, boolean forUpdate) {
-		if (forUpdate && updateOverrideDataSet != null && updateOverrideDataSet.containsKey(fieldName))
-			return updateOverrideDataSet.get(fieldName);		
+		if (forUpdate)
+			return updateOverrideDataSet != null ? updateOverrideDataSet.get(fieldName) : null;		
 		return overrideDataSet != null ? overrideDataSet.get(fieldName) : null;
 	}
 	
@@ -135,5 +135,7 @@ public class EntityInfo {
 	public void setHasOnlyManyToOne(boolean hasOnlyManyToOne) {
 		this.hasOnlyManyToOne = hasOnlyManyToOne;
 	}
+	
+	
 
 }

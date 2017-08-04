@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -40,6 +41,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -67,28 +69,45 @@ public class EntityHelper {
 	
 	private int random;
 
+	private Map<String, Map<String, Map<String, String>>> allEntities;
+
 	public EntityHelper(MockMvc mockMvc, ObjectMapper objectMapper, List<EntityInfo> entityInfoList) {
-		super();
+		super();		
 		this.mockMvc = mockMvc;
 		this.objectMapper = objectMapper;
 		this.linkedEntities = new ArrayList<>();
 		this.entityInfoList = entityInfoList;
 		this.random = 0;
+		this.allEntities = new HashMap<>();
 	}
 
 	
-	private String createSampleEntity(String url, Map<String, String> params)
+	public String createSampleEntity(String url, Map<String, String> params)
 			throws Exception, JsonProcessingException {
+		Map<String, Map<String, String>> map = allEntities.get(url);
+		if(map != null) {
+			for(Entry<String, Map<String, String>> e  : map.entrySet()) {
+				Map<String, String> json = e.getValue();
+				if(json.equals(params))
+					throw new AlreadyCreatedException(e.getKey());
+			}
+		} else {
+			map = new HashMap<>();
+			allEntities.put(url, map);
+		}
 		ResultActions resultAction = createEntity(url, params);
-		return resultAction.andReturn().getResponse().getHeader("Location");
+		String location = resultAction.andReturn().getResponse().getHeader("Location");
+		map.put(location, params);
+		logger.debug("Entity created at "+location);	
+		return location;
 	}
 	
 	public ResultActions createEntity(String url, Map<String, String> jsonData)
 			throws Exception, JsonProcessingException {
-		logger.debug("Creating entity at url " + url + " with data {" + jsonData + "}");
+		logger.debug("Creating entity at url " + url + " with data {" + jsonData + "}");		
 		ResultActions resultAction = this.mockMvc.perform(
 				post(url(url)).contentType(MediaTypes.HAL_JSON).content(this.objectMapper.writeValueAsString(jsonData)))
-				.andExpect(status().isCreated());
+				.andExpect(status().isCreated());		
 		return resultAction;
 	}
 	
@@ -122,21 +141,25 @@ public class EntityHelper {
 		createLinkedEntities(entityClass, true);
 	}
 
-	private void createLinkedEntities(Class entityClass, boolean rootClass) throws JsonProcessingException, Exception {
+	public void createLinkedEntities(Class entityClass, boolean rootClass) throws JsonProcessingException, Exception {
+		createLinkedEntities(entityClass, rootClass, false);
+	}
+	
+	public void createLinkedEntities(Class entityClass, boolean rootClass, boolean forUpdate) throws JsonProcessingException, Exception {
 		List<Field> allFields = ReflectionUtils.getAllFields(entityClass);
 		for (Field f : allFields) {
 			ManyToOne ann = f.getAnnotation(ManyToOne.class);
 			if (ann != null) {
 				Class target = getTargetEntity(f, ann);
 				if (!target.equals(entityClass) && !alreadyLinked(target))
-					createLinkedEntities(target, false);
+					createLinkedEntities(target, false, forUpdate);
 			}
 		}
 		if (!rootClass)
-			linkedEntities.add(new DeleteInfo(entityClass, createSampleEntity(getEntityInfo(entityClass), false)));
+			linkedEntities.add(new DeleteInfo(entityClass, createSampleEntity(getEntityInfo(entityClass), forUpdate)));
 	}
 
-	private boolean alreadyLinked(Class target) {
+	public boolean alreadyLinked(Class target) {
 		for (DeleteInfo i : linkedEntities) {
 			if (i.entityClass.equals(target))
 				return true;
@@ -183,20 +206,23 @@ public class EntityHelper {
 	private String getFieldValue(Class clazz, Field f, boolean forUpdate) throws Exception {
 		for(EntityInfo info : entityInfoList) {			
 			if(info.getEntityClass().equals(clazz) && info.getDataSet() != null) {
-				String value = info.getValue(f.getName(), forUpdate);
+				String value = info.getValue(f.getName(), forUpdate);				
 				if(!f.isAnnotationPresent(ManyToOne.class)) {
 					return value;					
-				} else if(value != null) {					
+				} else if(value != null) {							
 					String overrideValue = info.getOverrideValue(f.getName(), forUpdate);
 					if(overrideValue != null)
 						return overrideValue;
 					else {
-						try {
-							Map<String, String> map = objectMapper.readValue(value, new TypeReference<Map<String, String>>() {});
-							value = createSampleEntity(getEntityInfo(f.getType()).getPluralName(), map);
-							linkedEntities.add(new DeleteInfo(f.getType(), value));
+						try {													
+							Class<?> fieldClass = f.getType();
+							value = createSampleEntity(value, fieldClass);
 							info.setOverrideValue(f.getName(), forUpdate, value);
 							return value;
+						} catch(AlreadyCreatedException ace) {
+							String url = ace.getUrl();
+							info.setOverrideValue(f.getName(), forUpdate, url);							
+							return url;
 						} catch (Exception e) {
 							logger.error("Not a valid JSON...", e);
 							return getDefaultManyToOne(f, forUpdate, info);
@@ -215,6 +241,23 @@ public class EntityHelper {
 
 		return value;
 
+	}
+
+
+	public String createSampleEntity(String value, Class<?> clazz) throws JsonProcessingException, Exception {
+		EntityInfo entityInfo = getEntityInfo(clazz);
+		createLinkedEntities(entityInfo.getEntityClass(), true);
+		Map<String, String> map = getParamsMap(entityInfo.getEntityClass());
+		Map<String, String> valMap = objectMapper.readValue(value, new TypeReference<HashMap<String, String>>() {});
+		if(valMap != null) {
+			for(String k : map.keySet()) {
+				if(!valMap.containsKey(k))
+					valMap.put(k, map.get(k));
+			}
+		}
+		value = createSampleEntity(entityInfo.getPluralName(), valMap);
+		linkedEntities.add(new DeleteInfo(clazz, value));
+		return value;
 	}
 
 
@@ -393,6 +436,8 @@ public class EntityHelper {
 			info.reset();
 		}
 		random = 0;
+		allEntities.clear();
 	}
-	
+
+
 }

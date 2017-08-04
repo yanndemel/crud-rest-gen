@@ -144,7 +144,7 @@ public class ADocEntityGenerator extends AbstractCrudTest {
 		return Class.forName(System.getProperty("packageName") + "." + javaType.getSimpleName()+"Repository");
 	}
 
-	static String getName1stLower(String name) {
+	public static String getName1stLower(String name) {
 		return name.substring(0, 1).toLowerCase() + name.substring(1);
 	}
 
