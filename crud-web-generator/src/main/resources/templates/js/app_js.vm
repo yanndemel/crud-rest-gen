@@ -80,7 +80,7 @@ myApp.run(function (${_}rootScope, ${_}location) {
  * Main configuration
  */
 myApp.config(['${_}routeProvider', function(${_}routeProvider) {
-  ${_}routeProvider.when('/', {templateUrl: 'admin/partials/welcome.html'});
+  ${_}routeProvider.when('/', {templateUrl: '${adminPrefix}/partials/welcome.html'});
   ${_}routeProvider.otherwise({redirectTo: '/'});
 }]);
 

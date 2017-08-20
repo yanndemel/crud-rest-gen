@@ -14,8 +14,8 @@ var ${entity.uncapitName}Module = angular.module('${entity.uncapitName}.module',
  */
 ${entity.uncapitName}Module.config(['${_}routeProvider', function(${_}routeProvider) {
     // Pages routes
-    ${_}routeProvider.when( ${entity.name}_ADMIN_URL,    {templateUrl: 'admin/partials/'+${entity.name}_ENTITY.toLowerCase()+'/'+${entity.name}_ENTITY.toLowerCase()+'_list.html', controller: ${entity.name}_ENTITY+'Ctrl'});
-	${_}routeProvider.when( ${entity.name}_ADMIN_URL + '/select', {templateUrl: 'admin/partials/'+${entity.name}_ENTITY.toLowerCase()+'/'+${entity.name}_ENTITY.toLowerCase()+'_list.html', controller: ${entity.name}_ENTITY+'Ctrl'});
-    ${_}routeProvider.when( ${entity.name}_ADMIN_URL + '/new', {templateUrl: 'admin/partials/'+${entity.name}_ENTITY.toLowerCase()+'/'+${entity.name}_ENTITY.toLowerCase()+'_form.html', controller: ${entity.name}_ENTITY+'Ctrl'});
-    ${_}routeProvider.when( ${entity.name}_ADMIN_URL + '/:id', {templateUrl: 'admin/partials/'+${entity.name}_ENTITY.toLowerCase()+'/'+${entity.name}_ENTITY.toLowerCase()+'_form.html', controller: ${entity.name}_ENTITY+'Ctrl'});	
+    ${_}routeProvider.when( ${entity.name}_ADMIN_URL,    {templateUrl: '${adminPrefix}/partials/'+${entity.name}_ENTITY.toLowerCase()+'/'+${entity.name}_ENTITY.toLowerCase()+'_list.html', controller: ${entity.name}_ENTITY+'Ctrl'});
+	${_}routeProvider.when( ${entity.name}_ADMIN_URL + '/select', {templateUrl: '${adminPrefix}/partials/'+${entity.name}_ENTITY.toLowerCase()+'/'+${entity.name}_ENTITY.toLowerCase()+'_list.html', controller: ${entity.name}_ENTITY+'Ctrl'});
+    ${_}routeProvider.when( ${entity.name}_ADMIN_URL + '/new', {templateUrl: '${adminPrefix}/partials/'+${entity.name}_ENTITY.toLowerCase()+'/'+${entity.name}_ENTITY.toLowerCase()+'_form.html', controller: ${entity.name}_ENTITY+'Ctrl'});
+    ${_}routeProvider.when( ${entity.name}_ADMIN_URL + '/:id', {templateUrl: '${adminPrefix}/partials/'+${entity.name}_ENTITY.toLowerCase()+'/'+${entity.name}_ENTITY.toLowerCase()+'_form.html', controller: ${entity.name}_ENTITY+'Ctrl'});	
 }]);

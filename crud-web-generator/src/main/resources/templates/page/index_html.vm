@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="stylesheet" href="./admin/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="./admin/css/bootstrap-theme.min.css" />
-	<link rel="stylesheet" href="./admin/css/crud-admin.css" />
+    <link rel="stylesheet" href="./${adminPrefix}/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./${adminPrefix}/css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="./${adminPrefix}/css/crud-admin.css" />
   </head>
   <body ng-app="myApp" ng-init="initialise()">        
   <div id="wrapper">
@@ -48,21 +48,21 @@
 
     </div>
     <!-- /#wrapper -->
-	<script src="./admin/libs/jquery.min.js"></script>
-	<script src="./admin/libs/bootstrap.min.js"></script>
-	<script src="./admin/libs/menu.js"></script>
-    <script src="admin/libs/angular.min.js"></script>   
-    <script src="admin/libs/angular-resource.min.js"></script>
-    <script src="admin/libs/angular-route.min.js"></script>
-    <script src="admin/libs/lodash.min.js"></script>
-	<script src="admin/libs/pluralize.min.js"></script>
-    <script src="admin/js/app.js"></script>
-    <script src="admin/js/messages_handler.js"></script>
-    <script src="admin/js/error_catcher.js"></script>
-	<script src="admin/js/services.js"></script>
+	<script src="./${adminPrefix}/libs/jquery.min.js"></script>
+	<script src="./${adminPrefix}/libs/bootstrap.min.js"></script>
+	<script src="./${adminPrefix}/libs/menu.js"></script>
+    <script src="${adminPrefix}/libs/angular.min.js"></script>   
+    <script src="${adminPrefix}/libs/angular-resource.min.js"></script>
+    <script src="${adminPrefix}/libs/angular-route.min.js"></script>
+    <script src="${adminPrefix}/libs/lodash.min.js"></script>
+	<script src="${adminPrefix}/libs/pluralize.min.js"></script>
+    <script src="${adminPrefix}/js/app.js"></script>
+    <script src="${adminPrefix}/js/messages_handler.js"></script>
+    <script src="${adminPrefix}/js/error_catcher.js"></script>
+	<script src="${adminPrefix}/js/services.js"></script>
 #foreach($entity in ${entities})
-	<script src="admin/js/${entity.name.toLowerCase()}/${entity.name.toLowerCase()}_module.js"></script>
-	<script src="admin/js/${entity.name.toLowerCase()}/${entity.name.toLowerCase()}_controller.js"></script>
+	<script src="${adminPrefix}/js/${entity.name.toLowerCase()}/${entity.name.toLowerCase()}_module.js"></script>
+	<script src="${adminPrefix}/js/${entity.name.toLowerCase()}/${entity.name.toLowerCase()}_controller.js"></script>
 #end
 </body>
 </html>

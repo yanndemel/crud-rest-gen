@@ -129,7 +129,7 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 				function(success) {
 					${_}rootScope.modifiedItems.push({item : success.data, selectField : null});
 					console.log("Edited item = " + success);
-					window.location = "admin#/" + uncapitalize(entityName) + "/" + itemId;
+					window.location = "${adminPrefix}#/" + uncapitalize(entityName) + "/" + itemId;
 				});		
 	}
 

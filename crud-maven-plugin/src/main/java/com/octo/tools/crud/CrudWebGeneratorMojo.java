@@ -58,6 +58,13 @@ public class CrudWebGeneratorMojo
     private String logoPath;
     
     
+    /**
+     * Prefix used to deploy the application
+     */
+    @Parameter( property = "contextPath", defaultValue = "admin", required = false )
+    private String contextPath;
+    
+    
 
     public void execute()
         throws MojoExecutionException
@@ -65,7 +72,7 @@ public class CrudWebGeneratorMojo
         
         
         try {
-			new CrudGenerator().generate(persistentUnitName, outputDirectory, restApiUrl, logoPath);
+			new CrudGenerator().generate(persistentUnitName, outputDirectory, restApiUrl, logoPath, contextPath);
 		} catch (Exception e) {
 			throw new MojoExecutionException("Exception during generation", e);
 		}

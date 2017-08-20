@@ -11,10 +11,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -40,7 +38,6 @@ import javax.validation.constraints.Size;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.context.AbstractContext;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.RuntimeConstants;
@@ -59,15 +56,19 @@ public class CrudGenerator {
 	private String restUrl;
 
 	private String logoPath;
+	
+	private String adminPrefix;
 
 	private TreeMap<String, Map<String, String>> entitiesByPackage;
 
-	public void generate(String persistenceUnitName, String destDirRelativePath, String restUrl, String logoPath) throws Exception {
+	public void generate(String persistenceUnitName, String destDirRelativePath, 
+			String restUrl, String logoPath, String contextPath) throws Exception {
 		
 		assert(persistenceUnitName != null);
 		assert(destDirRelativePath != null);
 		assert(restUrl != null);
 		assert(logoPath != null);
+		assert(adminPrefix != null);
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(persistenceUnitName);
 		EntityManager em = emf.createEntityManager();
@@ -77,6 +78,8 @@ public class CrudGenerator {
         this.restUrl = restUrl;
         
         this.logoPath = logoPath;
+        
+        this.adminPrefix = adminPrefix;
         
         List<Map<String, Object>> entities = initPersistenceInfo(em);
         
@@ -119,7 +122,7 @@ public class CrudGenerator {
         if(!js.exists())
         	js.mkdir();
         
-        VelocityContext context = new VelocityContext();
+        VelocityContext context = newVelocityContext();
         context.put("entities", entities);
         context.put("restUrl", restUrl);
         
@@ -138,6 +141,12 @@ public class CrudGenerator {
 		writer.close();
 	}
 
+	private VelocityContext newVelocityContext() {
+		VelocityContext context = new VelocityContext();
+		context.put("adminPrefix", adminPrefix);
+		return context;
+	}
+
 	private String getResourceFile(String relativePath) throws URISyntaxException {
 		File f = new File(resourcesDir + "templates/" + relativePath);
 		if(f.exists() && f.isFile())
@@ -154,7 +163,7 @@ public class CrudGenerator {
               
         Template formTemplate = ve.getTemplate(getResourceFile("page/ENTITY_form_html.vm"));
         Template listTemplate = ve.getTemplate(getResourceFile("page/ENTITY_list_html.vm"));
-        VelocityContext context = new VelocityContext();
+        VelocityContext context = newVelocityContext();
         for(Map<String, Object> map : entities) {
         	String name = (String) map.get("name");
         	File dir = new File(partials, name.toLowerCase());
@@ -203,7 +212,7 @@ public class CrudGenerator {
               
         Template ctlrTemplate = ve.getTemplate(getResourceFile("js/ENTITY_controller_js.vm"));
         Template moduleTemplate = ve.getTemplate(getResourceFile("js/ENTITY_module_js.vm"));
-        VelocityContext context = new VelocityContext();
+        VelocityContext context = newVelocityContext();
         for(Map<String, Object> map : entities) {
         	String name = (String) map.get("name");
         	File dir = new File(js, name.toLowerCase());
