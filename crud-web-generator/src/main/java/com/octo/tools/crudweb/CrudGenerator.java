@@ -57,7 +57,7 @@ public class CrudGenerator {
 
 	private String logoPath;
 	
-	private String adminPrefix;
+	private String contextPath;
 
 	private TreeMap<String, Map<String, String>> entitiesByPackage;
 
@@ -68,7 +68,7 @@ public class CrudGenerator {
 		assert(destDirRelativePath != null);
 		assert(restUrl != null);
 		assert(logoPath != null);
-		assert(adminPrefix != null);
+		assert(contextPath != null);
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(persistenceUnitName);
 		EntityManager em = emf.createEntityManager();
@@ -79,7 +79,7 @@ public class CrudGenerator {
         
         this.logoPath = logoPath;
         
-        this.adminPrefix = adminPrefix;
+        this.contextPath = contextPath;
         
         List<Map<String, Object>> entities = initPersistenceInfo(em);
         
@@ -143,7 +143,7 @@ public class CrudGenerator {
 
 	private VelocityContext newVelocityContext() {
 		VelocityContext context = new VelocityContext();
-		context.put("adminPrefix", adminPrefix);
+		context.put("adminPrefix", contextPath);
 		return context;
 	}
 
