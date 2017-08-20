@@ -183,7 +183,7 @@ public class CrudGenerator {
         }
         
         Template indexTemplate = ve.getTemplate(getResourceFile("page/index_html.vm"));
-        context = new VelocityContext();
+        context = newVelocityContext();
         context.put("entities", entities);   
         context.put("entitiesByPackage", entitiesByPackage);   
         context.put("logoPath", logoPath);
@@ -194,7 +194,7 @@ public class CrudGenerator {
 		writer.close();
 		
 		Template welcomeTemplate = ve.getTemplate(getResourceFile("page/welcome_html.vm"));
-        context = new VelocityContext();
+        context = newVelocityContext();
         context.put("logoPath", logoPath);
         path = Paths.get(root.getPath(), "partials", "welcome.html");
 		System.out.println("File " + path);
