@@ -212,6 +212,24 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 		}
 	}
 	
+	var fillLinkedEntities = function() {			
+#if(${entity.hasLinks})
+#foreach($info in ${entity.info})
+#if(${info.link}) 		
+		${_}http.get(${_}scope.item._links.${info.name}.href + "?projection=${info.type}Excerpt")
+			.success(function(data) {
+				var url = data._links.self.href;
+				${_}scope.item["${info.name}"] = success.data.shortLabel;								
+			})
+			.error(function (error, status){        		
+        		console.log("error : "+error+" status "+status); 
+  			}); 
+		
+#end
+#end
+#end
+	}
+
 	 // Main
 	MessageHandler.cleanMessage();
     if( ${_}location.path().endsWith('/new') ) {
