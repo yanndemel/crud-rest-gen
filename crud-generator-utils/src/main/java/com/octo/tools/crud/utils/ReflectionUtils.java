@@ -47,8 +47,7 @@ public class ReflectionUtils {
 	 */
 	public static List<Field> getAllFields(Class<?> type) {
 		return getAllFields(new ArrayList<Field>(), type);
-	}
-
+	}	
 	
 	/**
 	 * @param javaType entity class
@@ -129,13 +128,7 @@ public class ReflectionUtils {
 		return field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(ManyToMany.class);
 	}
 
-	/**
-	 * @param field Field to test
-	 * @return true if field is annotated with {@link ManyToOne} or {@link OneToOne}
-	 */
-	public static boolean hasLinks(Field field) {
-		return field.isAnnotationPresent(ManyToOne.class) || field.isAnnotationPresent(OneToOne.class);
-	}
+	
 
 	
 	/**

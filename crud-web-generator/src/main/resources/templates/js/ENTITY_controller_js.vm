@@ -69,7 +69,8 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 			var selectField = ${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].selectField;
 			var href = CommonServices.getHRef(item);
 			if(item.shortLabel == null || item.shortLabel == "") {
-				CommonServices.getDescription(href, capitalize(selectField)).then(function(success) {
+				CommonServices.getDescription(href).then(function(success) {
+					item.shortLabel = success.data.shortLabel;
 					updateLinkedEntity(selectField, item, href);					
 				});	
 			} else {

@@ -36,6 +36,13 @@ myAppServices.factory('CommonServices', ['${_}http', 'restURL',
 		var href = _getHRef(item);
 		return _getId(href);
 	}
+
+	function _getEntityName(url) {
+		var name = url.substring(0, url.lastIndexOf("/"));
+		name = name.substring(name.lastIndexOf("/") + 1);
+		name = name.substring(0, name.length - 1);
+		return capitalize(name);
+	}
 	
 	return {
 		
@@ -71,11 +78,12 @@ myAppServices.factory('CommonServices', ['${_}http', 'restURL',
 		 * @return all items
 		 */
     	getAll: function(endPointName, entityName) {
-        	return ${_}http.get(_getEntityUrl(endPointName)+'/?projection=' + uncapitalize(entityName) + 'Excerpt');
+        	return ${_}http.get(_getEntityUrl(endPointName), { params: { projection : entityName + 'Excerpt'}});
     	},
 
-		getDescription: function(url, entityName) {
-        	return ${_}http.get(url + '/?projection=' + uncapitalize(entityName) + 'Excerpt');
+		getDescription: function(url) {
+			
+        	return ${_}http.get(url, { params: { projection : _getEntityName(url) + 'Excerpt' }});
     	},
 
         /**
@@ -110,7 +118,7 @@ myAppServices.factory('CommonServices', ['${_}http', 'restURL',
 		 */
     	update: function(endPointName, item) {
 			var url = _getEntityUrl(endPointName) + '/' + _getItemId(item);
-			return ${_}http.put(url, item);
+			return ${_}http.patch(url, item);
     	},
 
 		/**
@@ -138,10 +146,11 @@ function(${_}http, restURL) {
 	}
 
 	Item.query = function(endpoint, entityName, page, sort, callback) {
-		var url = restURL + endpoint + "/?projection=" + uncapitalize(entityName) + "Excerpt";
+		var url = restURL + endpoint + "/?projection=" + entityName + "Excerpt";
+		var params = { params: { projection : entityName + 'Excerpt'}}
 		if(page != null)
-			url += "&page="+page;
-		return ${_}http.get(url).then(
+			params = { params: { projection: entityName + 'Excerpt', page: page}};
+		return ${_}http.get(url, params).then(
 				function(data) {
 					Item.page = data.data.page;
 					callback(data.data._embedded[plural(entityName)]);

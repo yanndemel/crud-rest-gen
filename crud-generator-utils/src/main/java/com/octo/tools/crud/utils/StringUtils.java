@@ -20,6 +20,13 @@ public class StringUtils {
 		return o== null ? null : o.toString();
 	}
 	
+	/**
+	 * @param o the object
+	 * @return null if o is null, else o.toString()
+	 */
+	public static String getId(Object o) {
+		return o== null ? null : o.toString();
+	}	
 	
 	
 	/**

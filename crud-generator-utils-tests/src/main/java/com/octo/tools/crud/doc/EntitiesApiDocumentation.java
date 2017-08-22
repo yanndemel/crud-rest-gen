@@ -107,7 +107,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 						.content(this.objectMapper.writeValueAsString(paramsMap)))
 				.andExpect(status().isNoContent())
 				.andDo(document(info.getSimpleName() + "-update-example", requestFields(
-						getRequestFieldDescriptors(info.getEntityClass(), getParamsDescMap(info.getEntityClass())))));
+						getRequestFieldDescriptors(info.getEntityClass(), getParamsDescMap(info.getEntityClass(), true)))));
 		entityHelper.deleteLinkedEntities(location);
 		entityHelper.reset();
 	}
@@ -115,10 +115,11 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 	private void getExample(EntityInfo info) throws JsonProcessingException, Exception, NoSuchFieldException {
 		logger.debug("----->getExample");
 		entityHelper.createLinkedEntities(info.getEntityClass());
-		Map<String, String> paramsMap = getParamsDescMap(info.getEntityClass());
+		Map<String, String> paramsMap = getParamsDescMap(info.getEntityClass(), true);
 		String location = entityHelper.createSampleEntity(info);
 		verifiySampleEntity(location)
-				.andDo(document(info.getSimpleName() + "-get-example", links(halLinks(), getLinksForSingleItem(info)),
+				.andDo(document(info.getSimpleName() + "-get-example", 
+						links(halLinks(), getLinksForSingleItem(info)),
 						responseFields(getLinkedFieldDescriptors(info.getEntityClass(), paramsMap))));
 		entityHelper.deleteLinkedEntities(location);
 		entityHelper.reset();
@@ -150,7 +151,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		entityHelper.createLinkedEntities(info.getEntityClass());
 		Map<String, String> paramsMap = entityHelper.getParamsMap(info.getEntityClass());
 		ResultActions resultAction = entityHelper.createEntity(info.getPluralName(), paramsMap);
-		Map<String, String> descParamsMap = getParamsDescMap(info.getEntityClass());
+		Map<String, String> descParamsMap = getParamsDescMap(info.getEntityClass(), true);
 		resultAction.andDo(document(info.getPluralName() + "-create-example",
 				requestFields(getRequestFieldDescriptors(info.getEntityClass(), descParamsMap))));
 		MockHttpServletResponse response = resultAction.andReturn().getResponse();
@@ -166,27 +167,27 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		for (String att : paramsMap.keySet()) {
 			String desc = paramsMap.get(att);
 			Field field = getField(entityClass, att);
-			if(entityHelper.isFieldExposed(field)) {
-				Class<?> fieldType = field.getType();
-				boolean linked = ReflectionUtils.hasLinks(field);
+			boolean isManyToOne = field.isAnnotationPresent(ManyToOne.class);
+			if(entityHelper.isFieldExposed(field, true)) {
+				Class<?> fieldType = field.getType();				
 				boolean collection = ReflectionUtils.hasCollections(field);
 				boolean number = ReflectionUtils.isNumber(fieldType);
 				boolean bool = ReflectionUtils.isBoolean(fieldType);
-				Object jsonType = getJsonType(linked, collection, number, bool);
-				String path = linked || collection ? "_embedded." + att : att;
+				Object jsonType = getJsonType(isManyToOne, collection, number, bool);
+				String path = isManyToOne || collection ? "_embedded." + att : att;
 				FieldDescriptor type = fieldWithPath(path).description(desc).type(jsonType);
-				if (!isMandatory(field))
+				if (isManyToOne || !isMandatory(field))
 					type.optional();
 				list.add(type);
 			}			
 		}		
-		list.add(fieldWithPath("_links").description("links to other resources"));
+		list.add(fieldWithPath("_links").description("links to other resources"));		
 		Collections.sort(list, (p1, p2) -> p1.getPath().compareTo(p2.getPath()));
 		return list.toArray(new FieldDescriptor[0]);
 	}
 
-	public static Object getJsonType(boolean linked, boolean collection, boolean number, boolean bool) {
-		Object jsonType = linked ? JsonFieldType.OBJECT
+	public static Object getJsonType(boolean isManyToOne, boolean collection, boolean number, boolean bool) {
+		Object jsonType = isManyToOne ? JsonFieldType.OBJECT
 				: (collection ? JsonFieldType.ARRAY
 						: (number ? JsonFieldType.NUMBER : (bool ? JsonFieldType.BOOLEAN : JsonFieldType.STRING)));
 		return jsonType;
@@ -280,11 +281,11 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 				.andExpect(jsonPath("_links.self.href", Matchers.is(location)));
 	}
 
-	public Map<String, String> getParamsDescMap(Class entityClass) {
+	public Map<String, String> getParamsDescMap(Class entityClass, boolean includeManyToOne) {
 		Map<String, String> params = new HashMap<>();
 		List<Field> allFields = ReflectionUtils.getAllFields(entityClass);
 		for (Field f : allFields) {
-			if (entityHelper.isFieldExposed(f))
+			if (entityHelper.isFieldExposed(f, includeManyToOne))
 				params.put(f.getName(), MessageFormat.format(DESC_MSG, f.getName(),
 						ADocEntityGenerator.getName1stLower(entityClass.getSimpleName())));
 		}

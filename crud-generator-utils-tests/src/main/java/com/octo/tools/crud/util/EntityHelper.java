@@ -191,7 +191,7 @@ public class EntityHelper {
 		Map<String, String> params = new HashMap<>();
 		List<Field> allFields = ReflectionUtils.getAllFields(clazz);
 		for (Field f : allFields) {
-			if (isFieldExposed(f) && !f.isAnnotationPresent(OneToMany.class)  
+			if (isFieldExposed(f, true) && !f.isAnnotationPresent(OneToMany.class)  
 					&& !f.isAnnotationPresent(ManyToMany.class)) {
 				if(!f.getType().equals(clazz))
 					params.put(f.getName(), getFieldValue(clazz, f, forUpdate));				
@@ -416,9 +416,10 @@ public class EntityHelper {
 
 
 
-	public boolean isFieldExposed(Field f) {
+	public boolean isFieldExposed(Field f, boolean includeManyToOne) {
 		return !f.isAnnotationPresent(Id.class) && !f.isAnnotationPresent(Transient.class)
-				&& !f.isAnnotationPresent(Version.class) && !f.isAnnotationPresent(JsonIgnore.class);
+				&& !f.isAnnotationPresent(Version.class) && !f.isAnnotationPresent(JsonIgnore.class)
+				&& (includeManyToOne || !f.isAnnotationPresent(ManyToOne.class));
 	}
 	
 	public void deleteLinkedEntities(String location) throws Exception {

@@ -14,6 +14,7 @@ import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -81,10 +82,22 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 	private String packageName;
 	
 	/**
+	 * Name of the entities to exclude from Repository generation
+	 */
+	@Parameter(property = "excludedEntities", required = false)
+	private List<String> excludedEntities;
+	
+	/**
 	 * Set to false if you don't want Projections (*Excerpt.java source files) to be generated
 	 */
 	@Parameter(property = "projections", defaultValue = "true", required = false)
 	private boolean projections;
+	
+	/**
+	 * Set to false if you don't want Excerpts (automatically call projections) to be generated
+	 */
+	@Parameter(property = "excerpts", defaultValue = "true", required = false)
+	private boolean excerpts;
 	
 	/**
 	 * Set to false if you don't want to add generated sources to the compilation path
@@ -98,8 +111,10 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 
 		try {
 			generateURLsContstants(em);
-			if(projections)
-				generateProjectionExcepts(em);
+			if(projections) {
+				List<String> classNames = generateProjectionExcepts(em);
+				generateProjectionInit(em,classNames);
+			}
 			generateRepositories(em);
 			if(compile)
 				project.addCompileSourceRoot(outputDirectory);
@@ -109,17 +124,48 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 
 	}
 
+	private void generateProjectionInit(EntityManager em, List<String> classNames) throws IOException {
+		if(!classNames.isEmpty()) {
+			String filename = "ProjectionConfig.java";
+			File dir = new File(getRootDirectoryPath() + "/projection");
+			if (!dir.exists())
+				dir.mkdirs();
+			Path path = Paths.get(dir.getPath(), filename);
+			System.out.println("File " + path);
+			StringBuilder proj = new StringBuilder(); 
+			for(String name : classNames) {
+				proj.append("\t\trestConfig.getProjectionConfiguration().addProjection(").append(name).append(".class);\n");				
+			}
+			
+			BufferedWriter writer = Files.newBufferedWriter(path);
+			InputStream in = getClass().getClassLoader().getResourceAsStream("ProjectionConfig.template");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+			while (reader.ready()) {
+				String s = reader.readLine();
+				s = s.replaceAll("\\$\\$PACKAGE\\$\\$", packageName)
+						.replaceAll("\\$\\$PROJECTIONS\\$\\$", proj.toString());
+				writer.write(s + "\n");
+			}
+			reader.close();
+			writer.close();
+		}
+		
+	}
+
 	/*
 	 * Method used to generate Exceprt java source code in 
 	 * ${packageName}.projection 
 	 * 
 	 */
-	private void generateProjectionExcepts(EntityManager em) throws Exception {
+	private List<String> generateProjectionExcepts(EntityManager em) throws Exception {
 		Set<EntityType<?>> entityList = em.getMetamodel().getEntities();
+		List<String> l = new ArrayList<>();
 		for (EntityType type : entityList) {
 			Class javaType = type.getJavaType();
 			if (ReflectionUtils.isEntityExposed(javaType)) {
-				String filename = javaType.getSimpleName() + "Excerpt" + ".java";
+				String exerptName = javaType.getSimpleName() + "Excerpt";
+				String filename = exerptName + ".java";
 				File dir = new File(getRootDirectoryPath() + "/projection");
 				if (!dir.exists())
 					dir.mkdirs();
@@ -144,7 +190,7 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 					}
 				}
 				if (lastField != null)
-					projection.append(lastField);
+					projection.append(lastField);				
 				projection.append(getComment("Short label of " + javaType.getSimpleName(),
 						"the short label of " + javaType.getSimpleName()));
 				projection.append("\t@Value(\"#{T(com.octo.tools.crud.utils.StringUtils).toString(target)}\")\n");
@@ -162,10 +208,12 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 							.replaceAll("\\$\\$PROJECTION\\$\\$", projection.toString());
 					writer.write(s + "\n");
 				}
+				l.add(exerptName);
 				reader.close();
 				writer.close();
 			}
 		}
+		return l;
 	}
 
 	private void generateRepositories(EntityManager em) throws MojoExecutionException, IOException {
@@ -174,12 +222,12 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 		Set<EntityType<?>> entityList = em.getMetamodel().getEntities();
 		for (EntityType type : entityList) {
 			Class javaType = type.getJavaType();
-			if (ReflectionUtils.isEntityExposed(javaType)) {
+			if (ReflectionUtils.isEntityExposed(javaType) && !isExcluded(javaType.getName())) {
 				String filename = javaType.getSimpleName() + "Repository.java";
 				Path path = Paths.get(dir.getPath(), filename);
 				System.out.println("File " + path);
 				BufferedWriter writer = Files.newBufferedWriter(path);
-				InputStream in = getClass().getClassLoader().getResourceAsStream(projections ? "Repository.template" : "Repository.noProjection.template");
+				InputStream in = getClass().getClassLoader().getResourceAsStream(excerpts ? "Repository.template" : "Repository.noProjection.template");
 				BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
 				while (reader.ready()) {
@@ -193,6 +241,10 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 				writer.close();
 			}
 		}
+	}
+
+	private boolean isExcluded(String name) {		
+		return excludedEntities != null ? excludedEntities.contains(name) : false;
 	}
 
 	private File getRootDirectory() {
