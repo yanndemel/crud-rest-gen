@@ -1,0 +1,27 @@
+package $$PACKAGE$$.projection;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
+import org.springframework.stereotype.Component;
+
+/**
+ * Initialize Projections
+ *
+ * @author OCTO
+ *
+ */
+@Component
+public class ProjectionConfig {
+	
+	@Autowired
+	private RepositoryRestConfiguration restConfig;
+	
+	@PostConstruct
+	public void initProjections() {
+$$PROJECTIONS$$		
+	}
+	
+	
+}
