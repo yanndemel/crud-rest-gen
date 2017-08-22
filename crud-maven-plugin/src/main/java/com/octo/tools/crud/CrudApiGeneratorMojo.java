@@ -96,7 +96,7 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 	/**
 	 * Set to false if you don't want Excerpts (automatically call projections) to be generated
 	 */
-	@Parameter(property = "excerpts", defaultValue = "true", required = false)
+	@Parameter(property = "excerpts", defaultValue = "false", required = false)
 	private boolean excerpts;
 	
 	/**
