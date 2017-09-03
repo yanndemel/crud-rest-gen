@@ -65,9 +65,7 @@ messageHandler.factory('MessageHandler',['$rootScope', function($rootScope) {
      */
     $this.manageError = function(http) {
         if( http.status === 404 ) {
-            if( http.data == null || http.data === "" ) {
-                $this.addError('Server not responding');
-            } else {
+            if( http.data != null && http.data.length > 0 ) {                
                 $this.addError('Invalid URL : '+http.config.url);
             }
         } else if( http.status === 400 ) {

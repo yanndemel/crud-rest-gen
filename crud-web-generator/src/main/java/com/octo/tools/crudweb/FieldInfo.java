@@ -6,6 +6,7 @@ public class FieldInfo {
 	private String type;
 	private String uncapitType;
 	private boolean collection;
+	private boolean list;
 	private boolean link;
 	private String capitName;
 	private boolean notNull = false;
@@ -149,5 +150,13 @@ public class FieldInfo {
 	
 	public boolean getIsStep() {
 		return step != null;
+	}
+
+	public boolean getIsList() {
+		return list;
+	}
+
+	public void setList(boolean list) {
+		this.list = list;
 	}
 }

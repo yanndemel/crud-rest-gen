@@ -51,7 +51,9 @@
 #end
 
 					<input type="number" id="${htmlId}" name="${htmlName}" ng-model="item.${htmlName}" class="form-control" ${required} ${min} ${max} ${step} ></input>
-#else					
+#elseif(${info.isList})					
+					<input name="${htmlName}" ng-list id="${htmlId}" ng-model="item.${htmlName}" class="form-control" ${required} minlength="${info.sizeMin}" maxlength="${info.sizeMax}" ></input>
+#else
 					<input type="text" pattern="${pattern}" id="${htmlId}" name="${htmlName}" ng-model="item.${htmlName}" class="form-control" ${required} minlength="${info.sizeMin}" maxlength="${info.sizeMax}" ></input>
 #end
 #end

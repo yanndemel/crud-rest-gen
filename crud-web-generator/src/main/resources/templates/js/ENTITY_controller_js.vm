@@ -219,7 +219,7 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 		${_}http.get(${_}scope.item._links.${info.name}.href + "?projection=${info.type}Excerpt")
 			.success(function(data) {
 				var url = data._links.self.href;
-				${_}scope.item["${info.name}"] = success.data.shortLabel;								
+				${_}scope.item["${info.name}"] = data.shortLabel;								
 			})
 			.error(function (error, status){        		
         		console.log("error : "+error+" status "+status); 
@@ -246,10 +246,15 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 			initList(response);
 		});
     } else if( ${_}routeParams.id != null ) {
+		if(${_}routeParams.ext) {
+			openEditForm("${entity.name}", ${_}routeParams.id);
+			return;
+		}
         // Edit page
     	console.log("Edit page");
  		${_}scope.mode = 'edit';
-		initModifiedItem();		
+		initModifiedItem();
+		fillLinkedEntities();		
     } else {
 		${_}scope.mode = 'list';
 		${_}rootScope.modifiedItems = [];

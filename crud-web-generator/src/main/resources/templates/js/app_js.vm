@@ -59,13 +59,17 @@ myApp.run(function(${_}rootScope) {
     ${_}rootScope.modifiedItems = [];
 });
 
-myApp.run(function (${_}rootScope, ${_}location) {
+myApp.run(function (${_}rootScope, ${_}location, ${_}window) {
 
 	var history = [];
     
     ${_}rootScope.${_}on('${_}routeChangeSuccess', function() {
 		console.log("---->"+${_}location.${_}${_}path);
         history.push(${_}location.${_}${_}path);
+		var token = ${_}location.search().authToken;
+		if (token) {
+			${_}window.localStorage.auth_token = token;
+		}
     });
 
     ${_}rootScope.goBack = function () {
@@ -76,12 +80,27 @@ myApp.run(function (${_}rootScope, ${_}location) {
 
 });
 
+myApp.factory('MyHttpInterceptor', function(${_}q, ${_}location, ${_}window) {
+return {
+    request : function(config) {
+			
+        config.params = config.params || {};
+
+        if (${_}window.localStorage.auth_token) {
+            config.params.authToken = ${_}window.localStorage.auth_token;
+        }
+        return config || ${_}q.when(config);
+    }
+  };
+});
+
 /**
  * Main configuration
  */
-myApp.config(['${_}routeProvider', function(${_}routeProvider) {
+myApp.config(['${_}routeProvider', '${_}httpProvider', function(${_}routeProvider, ${_}httpProvider) {
   ${_}routeProvider.when('/', {templateUrl: '${adminPrefix}/partials/welcome.html'});
   ${_}routeProvider.otherwise({redirectTo: '/'});
+  ${_}httpProvider.interceptors.push('MyHttpInterceptor');
 }]);
 
 

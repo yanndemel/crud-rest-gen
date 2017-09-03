@@ -94,7 +94,7 @@ myAppServices.factory('CommonServices', ['${_}http', 'restURL',
 		 * @return item
 		 */
     	get: function(endPointName, entityName, id) {
-    	    var url = _getEntityUrl(endPointName) + '/' + id+'/?projection=' + uncapitalize(entityName) + 'Excerpt';
+    	    var url = _getEntityUrl(endPointName) + '/' + id+'?projection=' + entityName + 'Excerpt';
         	return ${_}http.get(url);
     	},
 

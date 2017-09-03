@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Persistence;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.persistence.metamodel.EntityType;
 import javax.validation.constraints.DecimalMax;
@@ -261,7 +263,8 @@ public class CrudGenerator {
             			fi = new FieldInfo(f.getName(), f.getType().getSimpleName(), false, true);
             			hasLink = true;
             		}
-            		else if(!f.isAnnotationPresent(Id.class) && !f.isAnnotationPresent(Version.class)) {
+            		else if(!f.isAnnotationPresent(Id.class) && !f.isAnnotationPresent(Version.class)
+            				&& !f.isAnnotationPresent(Transient.class)) {
             			fi = new FieldInfo(f.getName(), f.getType().getSimpleName(), false, false);
             		}
             		if(fi != null) {
@@ -301,7 +304,9 @@ public class CrudGenerator {
             					fi.setMin(Double.valueOf((f.getAnnotation(DecimalMin.class)).value()));
             				
             			}
-            			
+            			if(!fi.isCollection() && Collection.class.isAssignableFrom(f.getType())) {            		
+            				fi.setList(true);
+            			}
             						
             		}
             	}
