@@ -94,8 +94,8 @@ myAppServices.factory('CommonServices', ['${_}http', 'restURL',
 		 * @return item
 		 */
     	get: function(endPointName, entityName, id) {
-    	    var url = _getEntityUrl(endPointName) + '/' + id+'?projection=' + entityName + 'Excerpt';
-        	return ${_}http.get(url);
+    	    var url = _getEntityUrl(endPointName) + '/' + id;
+        	return ${_}http.get(url, { params: { projection : entityName + 'Excerpt' });
     	},
 
         /**
@@ -146,7 +146,7 @@ function(${_}http, restURL) {
 	}
 
 	Item.query = function(endpoint, entityName, page, sort, callback) {
-		var url = restURL + endpoint + "/?projection=" + entityName + "Excerpt";
+		var url = restURL + endpoint;
 		var params = { params: { projection : entityName + 'Excerpt'}}
 		if(page != null)
 			params = { params: { projection: entityName + 'Excerpt', page: page}};
