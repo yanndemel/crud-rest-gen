@@ -59,18 +59,21 @@ public class CrudGenerator {
 
 	private String logoPath;
 	
+	private String welcomeMsg;
+	
 	private String contextPath;
 
 	private TreeMap<String, Map<String, String>> entitiesByPackage;
 
 	public void generate(String persistenceUnitName, String destDirRelativePath, 
-			String restUrl, String logoPath, String contextPath) throws Exception {
+			String restUrl, String logoPath, String contextPath, String welcomeMsg) throws Exception {
 		
 		assert(persistenceUnitName != null);
 		assert(destDirRelativePath != null);
 		assert(restUrl != null);
 		assert(logoPath != null);
 		assert(contextPath != null);
+		assert(welcomeMsg != null);
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(persistenceUnitName);
 		EntityManager em = emf.createEntityManager();
@@ -80,6 +83,8 @@ public class CrudGenerator {
         this.restUrl = restUrl;
         
         this.logoPath = logoPath;
+        
+        this.welcomeMsg = welcomeMsg;
         
         this.contextPath = contextPath;
         
@@ -198,6 +203,7 @@ public class CrudGenerator {
 		Template welcomeTemplate = ve.getTemplate(getResourceFile("page/welcome_html.vm"));
         context = newVelocityContext();
         context.put("logoPath", logoPath);
+        context.put("welcomeMsg", welcomeMsg);
         path = Paths.get(root.getPath(), "partials", "welcome.html");
 		System.out.println("File " + path);
 		writer = Files.newBufferedWriter(path);

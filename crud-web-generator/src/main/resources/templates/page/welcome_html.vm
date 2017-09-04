@@ -1,5 +1,10 @@
-	<img src="${logoPath}" />
-	<h3>
-		Welcome to the CRUD administration application
-	</h3>
+<div class="container">
+	<div class="jumbotron">
+		<img src="${logoPath}" />
+    	<h3>${welcomeMsg}</h3>        
+	</div>	
+</div>
+	
+	
+	
 

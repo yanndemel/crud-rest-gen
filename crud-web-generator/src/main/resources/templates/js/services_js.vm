@@ -81,8 +81,7 @@ myAppServices.factory('CommonServices', ['${_}http', 'restURL',
         	return ${_}http.get(_getEntityUrl(endPointName), { params: { projection : entityName + 'Excerpt'}});
     	},
 
-		getDescription: function(url) {
-			
+		getDescription: function(url) {			
         	return ${_}http.get(url, { params: { projection : _getEntityName(url) + 'Excerpt' }});
     	},
 
@@ -95,7 +94,7 @@ myAppServices.factory('CommonServices', ['${_}http', 'restURL',
 		 */
     	get: function(endPointName, entityName, id) {
     	    var url = _getEntityUrl(endPointName) + '/' + id;
-        	return ${_}http.get(url, { params: { projection : entityName + 'Excerpt' });
+        	return ${_}http.get(url, { params: { projection : entityName + 'Excerpt' }});
     	},
 
         /**
@@ -147,9 +146,9 @@ function(${_}http, restURL) {
 
 	Item.query = function(endpoint, entityName, page, sort, callback) {
 		var url = restURL + endpoint;
-		var params = { params: { projection : entityName + 'Excerpt'}}
+		var params = { params: { projection : entityName + 'Excerpt' }};
 		if(page != null)
-			params = { params: { projection: entityName + 'Excerpt', page: page}};
+			params = { params: { projection: entityName + 'Excerpt', page: page }};
 		return ${_}http.get(url, params).then(
 				function(data) {
 					Item.page = data.data.page;

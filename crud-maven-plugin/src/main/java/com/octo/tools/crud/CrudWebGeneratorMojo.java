@@ -57,6 +57,12 @@ public class CrudWebGeneratorMojo
     @Parameter( property = "logoPath", defaultValue = "admin/img/logo.png", required = false )
     private String logoPath;
     
+    /**
+     * Welcome message displayed in the welcome page of the admin GUI
+     */
+    @Parameter( property = "welcomeMsg", defaultValue = "<h3>Welcome to the CRUD Administration application<h3>", required = false )
+    private String welcomeMsg;
+    
     
     /**
      * Prefix used to deploy the application
@@ -72,7 +78,7 @@ public class CrudWebGeneratorMojo
         
         
         try {
-			new CrudGenerator().generate(persistentUnitName, outputDirectory, restApiUrl, logoPath, contextPath);
+			new CrudGenerator().generate(persistentUnitName, outputDirectory, restApiUrl, logoPath, contextPath, welcomeMsg);
 		} catch (Exception e) {
 			throw new MojoExecutionException("Exception during generation", e);
 		}
