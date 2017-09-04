@@ -68,7 +68,7 @@ myApp.run(function (${_}rootScope, ${_}location, ${_}window) {
         history.push(${_}location.${_}${_}path);
 		var token = ${_}location.search().authToken;
 		if (token) {
-			${_}window.localStorage.auth_token = token;
+			${_}window.localStorage.authToken = token;
 		}
     });
 
@@ -86,8 +86,8 @@ return {
 			
         config.params = config.params || {};
 
-        if (${_}window.localStorage.auth_token) {
-            config.params.authToken = ${_}window.localStorage.auth_token;
+        if (${_}window.localStorage.authToken) {
+            config.params.authToken = ${_}window.localStorage.authToken;
         }
         return config || ${_}q.when(config);
     }
