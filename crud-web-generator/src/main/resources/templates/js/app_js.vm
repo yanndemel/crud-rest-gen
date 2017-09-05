@@ -42,6 +42,16 @@ var floor10 = function(value, exp) {
 	return decimalAdjust('floor', value, exp);
 };
 
+var getParameterByName = function(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\${_}&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|${_})"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
 // Declare app level module which depends on filters, and services
 var myApp = angular.module('myApp', [
    'ngRoute'
@@ -66,9 +76,14 @@ myApp.run(function (${_}rootScope, ${_}location, ${_}window) {
     ${_}rootScope.${_}on('${_}routeChangeSuccess', function() {
 		console.log("---->"+${_}location.${_}${_}path);
         history.push(${_}location.${_}${_}path);
-		var token = ${_}location.search().authToken;
-		if (token) {
+		var token = getParameterByName('authToken');		
+		if (token != null && token.length > 0) {
 			${_}window.localStorage.authToken = token;
+			var url = ${_}window.location.origin + ${_}window.location.pathname;
+			var ext = getParameterByName('ext');
+			if(ext != null)
+				url += "?ext";
+			${_}window.location.href = url;	
 		}
     });
 
