@@ -93,7 +93,7 @@ return {
         config.params = config.params || {};
 
         if (${_}window.localStorage.authToken) {
-            config.params.authToken = ${_}window.localStorage.authToken;
+			config.headers['Authorization'] = 'Bearer ' + ${_}window.localStorage.authToken;
         }
         return config || ${_}q.when(config);
     }

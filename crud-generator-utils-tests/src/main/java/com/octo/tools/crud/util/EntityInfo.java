@@ -13,10 +13,10 @@ public class EntityInfo {
 	private boolean search;
 	private boolean paged;
 	private boolean hasOnlyManyToOne;
-	private Map<String, String> dataSet;
-	private Map<String, String> updateDataSet;
-	private Map<String, String> overrideDataSet;
-	private Map<String, String> updateOverrideDataSet;
+	private Map<String, Object> dataSet;
+	private Map<String, Object> updateDataSet;
+	private Map<String, Object> overrideDataSet;
+	private Map<String, Object> updateOverrideDataSet;
 	
 	public String getSimpleName1stUpper() {
 		return simpleName1stUpper;
@@ -80,21 +80,21 @@ public class EntityInfo {
 		this.paged = paged;
 	}
 
-	public Map<String, String> getDataSet() {
+	public Map<String, Object> getDataSet() {
 		return dataSet;
 	}
 
-	public void setDataSet(Map<String, String> dataSet) {
+	public void setDataSet(Map<String, Object> dataSet) {
 		this.dataSet = dataSet;
 	}
 
-	public String getValue(String fieldName, boolean forUpdate) {
+	public Object getValue(String fieldName, boolean forUpdate) {
 		if (forUpdate && updateDataSet != null && updateDataSet.containsKey(fieldName))
 			return updateDataSet != null ? updateDataSet.get(fieldName) : null;		
 		return dataSet.get(fieldName);
 	}
 	
-	public String getOverrideValue(String fieldName, boolean forUpdate) {
+	public Object getOverrideValue(String fieldName, boolean forUpdate) {
 		if (forUpdate)
 			return updateOverrideDataSet != null ? updateOverrideDataSet.get(fieldName) : null;		
 		return overrideDataSet != null ? overrideDataSet.get(fieldName) : null;
@@ -107,24 +107,24 @@ public class EntityInfo {
 			overrideDataSet.clear();
 	}
 	
-	public void setOverrideValue(String fieldName, boolean forUpdate, String value) {
+	public void setOverrideValue(String fieldName, boolean forUpdate, Object value) {
 		if (forUpdate) {
 			if(updateOverrideDataSet == null)
-				updateOverrideDataSet = new HashMap<String, String>();
+				updateOverrideDataSet = new HashMap<String, Object>();
 			updateOverrideDataSet.put(fieldName, value);		
 		}
 		else {
 			if(overrideDataSet == null)
-				overrideDataSet = new HashMap<String, String>();
+				overrideDataSet = new HashMap<String, Object>();
 			overrideDataSet.put(fieldName, value);
 		}
 	}
 
-	public Map<String, String> getUpdateDataSet() {
+	public Map<String, Object> getUpdateDataSet() {
 		return updateDataSet;
 	}
 
-	public void setUpdateDataSet(Map<String, String> updateDataSet) {
+	public void setUpdateDataSet(Map<String, Object> updateDataSet) {
 		this.updateDataSet = updateDataSet;
 	}
 

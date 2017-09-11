@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hamcrest.Matchers;
@@ -39,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.constraints.ConstraintDescriptions;
@@ -52,6 +55,8 @@ import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.octo.tools.common.AbstractCrudTest;
+import com.octo.tools.common.MockNotFoundException;
+import com.octo.tools.crud.rest.annotation.RestResourceMapper;
 import com.octo.tools.crud.util.EntityInfo;
 import com.octo.tools.crud.utils.ReflectionUtils;
 
@@ -73,8 +78,8 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 			ADocEntityGenerator.TARGET_GENERATED_SNIPPETS);
 
 	protected void seUpMockMvc() {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
-				.apply(documentationConfiguration(this.restDocumentation)).build();
+		setDefaultMockMvc(MockMvcBuilders.webAppContextSetup(this.context)
+				.apply(documentationConfiguration(this.restDocumentation)).build());
 	}
 	
 
@@ -83,13 +88,37 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		
 		for (EntityInfo info : entityInfoList) {
 
-			listExample(info);
+			try {
+				listExample(info);
+			} catch (MockNotFoundException e) {
+				logger.debug("Disabling listExample for entity "+info.getEntityClass().getName(), e);
+				entityHelper.clearLinkedEntities();
+				entityHelper.reset();
+			}
 
-			createExample(info);
+			try {
+				createExample(info);
+			} catch (MockNotFoundException e) {
+				logger.debug("Disabling createExample for entity "+info.getEntityClass().getName(), e);
+				entityHelper.clearLinkedEntities();
+				entityHelper.reset();
+			}
 
-			getExample(info);
+			try {
+				getExample(info);
+			} catch (MockNotFoundException e) {
+				logger.debug("Disabling getExample for entity "+info.getEntityClass().getName(), e);
+				entityHelper.clearLinkedEntities();
+				entityHelper.reset();
+			}
 
-			updateExample(info);
+			try {
+				updateExample(info);
+			} catch (MockNotFoundException e) {
+				logger.debug("Disabling updateExample for entity "+info.getEntityClass().getName(), e);
+				entityHelper.clearLinkedEntities();
+				entityHelper.reset();
+			}
 
 		}
 
@@ -99,29 +128,32 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		logger.debug("----->updateExample");
 		entityHelper.createLinkedEntities(info.getEntityClass());
 		String location = entityHelper.createSampleEntity(info);
-		verifiySampleEntity(location);
-		Map<String, String> paramsMap = entityHelper.getParamsMap(info.getEntityClass(), true);
+		String entityClassName = info.getEntityClass().getName();
+		verifiySampleEntity(location, entityClassName);
+		Map<String, Object> paramsMap = entityHelper.getParamsMap(info.getEntityClass(), true);
 
-		this.mockMvc
+		getMockMvc(entityClassName, HttpMethod.PATCH)
 				.perform(patch(entityHelper.url(location)).contentType(MediaTypes.HAL_JSON)
 						.content(this.objectMapper.writeValueAsString(paramsMap)))
 				.andExpect(status().isNoContent())
 				.andDo(document(info.getSimpleName() + "-update-example", requestFields(
 						getRequestFieldDescriptors(info.getEntityClass(), getParamsDescMap(info.getEntityClass(), true)))));
-		entityHelper.deleteLinkedEntities(location);
+		entityHelper.deleteLinkedEntities(location, entityClassName);
 		entityHelper.reset();
 	}
+
 
 	private void getExample(EntityInfo info) throws JsonProcessingException, Exception, NoSuchFieldException {
 		logger.debug("----->getExample");
 		entityHelper.createLinkedEntities(info.getEntityClass());
 		Map<String, String> paramsMap = getParamsDescMap(info.getEntityClass(), true);
 		String location = entityHelper.createSampleEntity(info);
-		verifiySampleEntity(location)
+		String entityClassName = info.getEntityClass().getName();
+		verifiySampleEntity(location, entityClassName)
 				.andDo(document(info.getSimpleName() + "-get-example", 
 						links(halLinks(), getLinksForSingleItem(info)),
 						responseFields(getLinkedFieldDescriptors(info.getEntityClass(), paramsMap))));
-		entityHelper.deleteLinkedEntities(location);
+		entityHelper.deleteLinkedEntities(location, entityClassName);
 		entityHelper.reset();
 	}
 
@@ -149,15 +181,15 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 
 	private void createExample(EntityInfo info) throws Exception, JsonProcessingException, NoSuchFieldException {
 		entityHelper.createLinkedEntities(info.getEntityClass());
-		Map<String, String> paramsMap = entityHelper.getParamsMap(info.getEntityClass());
-		ResultActions resultAction = entityHelper.createEntity(info.getPluralName(), paramsMap);
+		Map<String, Object> paramsMap = entityHelper.getParamsMap(info.getEntityClass());
+		ResultActions resultAction = entityHelper.createEntity(info.getPluralName(), paramsMap, info.getEntityClass().getName());
 		Map<String, String> descParamsMap = getParamsDescMap(info.getEntityClass(), true);
 		resultAction.andDo(document(info.getPluralName() + "-create-example",
 				requestFields(getRequestFieldDescriptors(info.getEntityClass(), descParamsMap))));
 		MockHttpServletResponse response = resultAction.andReturn().getResponse();
 		String location = response.getHeader("Location");
 		
-		entityHelper.deleteLinkedEntities(location);
+		entityHelper.deleteLinkedEntities(location, info.getEntityClass().getName());
 		entityHelper.reset();
 	}
 
@@ -168,14 +200,25 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 			String desc = paramsMap.get(att);
 			Field field = getField(entityClass, att);
 			boolean isManyToOne = field.isAnnotationPresent(ManyToOne.class);
+			FieldDescriptor type;
 			if(entityHelper.isFieldExposed(field, true)) {
-				Class<?> fieldType = field.getType();				
-				boolean collection = ReflectionUtils.hasCollections(field);
-				boolean number = ReflectionUtils.isNumber(fieldType);
-				boolean bool = ReflectionUtils.isBoolean(fieldType);
-				Object jsonType = getJsonType(isManyToOne, collection, number, bool);
-				String path = isManyToOne || collection ? "_embedded." + att : att;
-				FieldDescriptor type = fieldWithPath(path).description(desc).type(jsonType);
+				Class<?> fieldType = field.getType();
+				if(entityHelper.isTransientObjectField(field)) {
+					type = fieldWithPath(att).description(desc);
+					FieldDescriptor transientObjectFieldDescriptor = getTransientObjectFieldDescriptor(entityClass, field, type);
+					if(transientObjectFieldDescriptor != null)
+						type = transientObjectFieldDescriptor;
+					else
+						type = type.type(JsonFieldType.STRING);
+				}
+				else {
+					boolean collection = ReflectionUtils.hasCollections(field);
+					boolean number = ReflectionUtils.isNumber(fieldType);
+					boolean bool = ReflectionUtils.isBoolean(fieldType);
+					Object jsonType = getJsonType(isManyToOne, collection, number, bool);					
+					String path = isManyToOne || (collection && !field.isAnnotationPresent(RestResourceMapper.class)) ? "_embedded." + att : att;
+					type = fieldWithPath(path).description(desc).type(jsonType);
+				}
 				if (isManyToOne || !isMandatory(field))
 					type.optional();
 				list.add(type);
@@ -189,7 +232,8 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 	public static Object getJsonType(boolean isManyToOne, boolean collection, boolean number, boolean bool) {
 		Object jsonType = isManyToOne ? JsonFieldType.OBJECT
 				: (collection ? JsonFieldType.ARRAY
-						: (number ? JsonFieldType.NUMBER : (bool ? JsonFieldType.BOOLEAN : JsonFieldType.STRING)));
+						: (number ? JsonFieldType.NUMBER : 
+							(bool ? JsonFieldType.BOOLEAN : JsonFieldType.STRING)));
 		return jsonType;
 	}
 
@@ -200,20 +244,53 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		
 		for (String att : paramsMap.keySet()) {
 			String desc = paramsMap.get(att);
-			Field field = getField(entityClass, att);
+			Field field = getField(entityClass, att);			
 			if (!field.isAnnotationPresent(OneToMany.class)) {
 				boolean optional = !isMandatory(field) ? true : false;
 				Class<?> fieldType = field.getType();
+				FieldDescriptor type = fields.withPath(att).description(desc);
 				//For requests : all params are sent as String
-				FieldDescriptor type = optional
-						? fields.withPath(att).description(desc).type(JsonFieldType.STRING).optional()
-						: fields.withPath(att).description(desc).type(JsonFieldType.STRING);
+				if(Boolean.class.equals(fieldType) || boolean.class.equals(fieldType))
+					type = type.type(JsonFieldType.BOOLEAN);
+				else if(Number.class.isAssignableFrom(fieldType) || fieldType.isPrimitive())
+					type = type.type(JsonFieldType.NUMBER);
+				else if(Collection.class.isAssignableFrom(fieldType))
+					type = type.type(JsonFieldType.ARRAY);
+				else if(entityHelper.isTransientObjectField(field)) {
+					FieldDescriptor transientObjectFieldDescriptor = getTransientObjectFieldDescriptor(entityClass, field, type);
+					if(transientObjectFieldDescriptor != null)
+						type = transientObjectFieldDescriptor;
+					else
+						type = type.type(JsonFieldType.STRING);
+				}
+				else
+					type = type.type(JsonFieldType.STRING);
+						
+				if(optional)
+					type = type.optional();
 				list.add(type);
 			}
 
 		}
 		Collections.sort(list, (p1, p2) -> p1.getPath().compareTo(p2.getPath()));
 		return list.toArray(new FieldDescriptor[0]);
+	}
+
+
+	private FieldDescriptor getTransientObjectFieldDescriptor(Class entityClass, Field field, FieldDescriptor type) {
+		for(Field ff : ReflectionUtils.getAllFields(entityClass)) {
+			RestResourceMapper ann = ff.getAnnotation(RestResourceMapper.class);
+			if(ann != null) {
+				if(ann.resolveToProperty().equals(field.getName())) {
+					if(Collection.class.isAssignableFrom(ff.getType())) {
+						return type.type(JsonFieldType.ARRAY);									
+					} else {
+						return type.type(JsonFieldType.STRING);
+					}					
+				}
+			}
+		}
+		return null;
 	}
 
 	private Field getField(Class entityClass, String att) throws NoSuchFieldException {
@@ -236,13 +313,13 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 	private void listExample(EntityInfo info) throws JsonProcessingException, Exception {
 		entityHelper.createLinkedEntities(info.getEntityClass());
 
-		logger.debug("listExemple for " + info);
+		logger.debug("listExample for " + info);
 		String location = entityHelper.createSampleEntity(info);
-		this.mockMvc.perform(get(entityHelper.url(info.getPluralName()))).andExpect(status().isOk())
+		getMockMvc(info.getEntityClass().getName(), HttpMethod.GET).perform(get(entityHelper.url(info.getPluralName()))).andExpect(status().isOk())
 				.andDo(document(info.getPluralName() + "-list-example", links(getLinksForList(info)),
 						responseFields(getFieldsForList(info))));
 
-		entityHelper.deleteLinkedEntities(location);
+		entityHelper.deleteLinkedEntities(location, info.getEntityClass().getName());
 		entityHelper.reset();
 
 	}
@@ -275,9 +352,9 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		return list.toArray(new LinkDescriptor[0]);
 	}
 
-	private ResultActions verifiySampleEntity(String location) throws Exception {
+	private ResultActions verifiySampleEntity(String location, String entityClassName) throws Exception {
 		logger.debug("Getting resource at url " + location);
-		return this.mockMvc.perform(get(entityHelper.url(location))).andDo(print()).andExpect(status().isOk())
+		return getMockMvc(entityClassName, HttpMethod.GET).perform(get(entityHelper.url(location))).andDo(print()).andExpect(status().isOk())
 				.andExpect(jsonPath("_links.self.href", Matchers.is(location)));
 	}
 
@@ -287,7 +364,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		for (Field f : allFields) {
 			if (entityHelper.isFieldExposed(f, includeManyToOne))
 				params.put(f.getName(), MessageFormat.format(DESC_MSG, f.getName(),
-						ADocEntityGenerator.getName1stLower(entityClass.getSimpleName())));
+						getName1stLower(entityClass.getSimpleName())));
 		}
 		return params;
 	}

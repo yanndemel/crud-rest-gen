@@ -26,18 +26,21 @@ public class $$ENTITY$$AuditController extends $$AUDIT_CONTROLLER$$<$$ENTITY$$$$
 	public $$ENTITY$$AuditController() {
 		super($$ENTITY$$.class, $$ENTITY$$AuditController.class);
 	}
-	
-	@Override
+		
 	@RequestMapping(method = RequestMethod.GET, value = URLs.$$ENTITY_UPPER_PLURAL$$_SEARCH) 
-	public @ResponseBody ResponseEntity<?> getRevisionsForEntity(@RequestParam("entityId") Long id) {
+	public @ResponseBody ResponseEntity<?> getRevisionsForEntity(@RequestParam("entityId") Long id,
+			@RequestParam(name = "lastDelRev", required = false, defaultValue = "false") Boolean lastDelRev) {
+		if(lastDelRev)
+			return super.getLastRevisionForDeletedEntity(id);
 		return super.getRevisionsForEntity(id);
-	}
+	}		
+		
 		
 	@Override
 	@RequestMapping(method = RequestMethod.GET, value = URLs.$$ENTITY_UPPER_PLURAL$$_ID) 
 	public @ResponseBody ResponseEntity<?> getRevisionEntity(@PathVariable("id") Long revId) {
 		return super.getRevisionEntity(revId);
-	}
+	}	
 	
 	@Override
 	@RequestMapping(method = RequestMethod.GET, value = URLs.$$ENTITY_UPPER_PLURAL$$) 

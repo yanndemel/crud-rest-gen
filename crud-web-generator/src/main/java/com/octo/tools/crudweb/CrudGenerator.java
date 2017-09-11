@@ -262,7 +262,7 @@ public class CrudGenerator {
             	for(Field f : fields) {
             		FieldInfo fi = null;
             		if(f.isAnnotationPresent(OneToMany.class) || f.isAnnotationPresent(ManyToMany.class)) {
-            			fi = new FieldInfo(f.getName(), ReflectionUtils.getGenericCollectionType(f), true, false);
+            			fi = new FieldInfo(f.getName(), ReflectionUtils.getGenericCollectionTypeName(f), true, false);
             			hasColl = true;
             		}
             		else if(f.isAnnotationPresent(ManyToOne.class) || f.isAnnotationPresent(OneToOne.class)) {

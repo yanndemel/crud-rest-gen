@@ -9,12 +9,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.RevisionEntity;
@@ -125,7 +124,8 @@ public class ReflectionUtils {
 	 * @return true if field is annotated with {@link OneToMany} or {@link ManyToMany}
 	 */
 	public static boolean hasCollections(Field field) {
-		return field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(ManyToMany.class);
+		return field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(ManyToMany.class)
+				|| field.isAnnotationPresent(ElementCollection.class);
 	}
 
 	
@@ -137,11 +137,27 @@ public class ReflectionUtils {
 	 * @return the simple name of the first parameterized type of the collection, null if f is not a generic parameterized type
 	 * @throws ClassNotFoundException if the parameterized type is not found in the classpath
 	 */
-	public static String getGenericCollectionType(Field f) throws ClassNotFoundException {
+	public static String getGenericCollectionTypeName(Field f) throws ClassNotFoundException {
 		ParameterizedType genericType = (ParameterizedType) f.getGenericType();
 		if(genericType != null) {
 			for(Type t : genericType.getActualTypeArguments()) {
 				return Class.forName(t.getTypeName()).getSimpleName();
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Get the simple name of the class T when a field is a Collection<T>
+	 * @param f the field holding the Collection
+	 * @return the class of the first parameterized type of the collection, null if f is not a generic parameterized type
+	 * @throws ClassNotFoundException if the parameterized type is not found in the classpath
+	 */
+	public static Class getGenericCollectionType(Field f) throws ClassNotFoundException {
+		ParameterizedType genericType = (ParameterizedType) f.getGenericType();
+		if(genericType != null) {
+			for(Type t : genericType.getActualTypeArguments()) {
+				return Class.forName(t.getTypeName());
 			}
 		}
 		return null;

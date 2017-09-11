@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.hypermedia.LinkDescriptor;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -45,13 +46,13 @@ public class BaseApiDocumentation extends AbstractCrudTest {
 		
 	@Before
 	public void setUp() {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
-				.apply(documentationConfiguration(this.restDocumentation)).build();
+		setDefaultMockMvc(MockMvcBuilders.webAppContextSetup(this.context)
+				.apply(documentationConfiguration(this.restDocumentation)).build());
 	}
 	
 	@Test
 	public void errorExample() throws Exception {
-		this.mockMvc
+		getMockMvc("", HttpMethod.GET)
 				.perform(get("/error")
 						.requestAttr(RequestDispatcher.ERROR_STATUS_CODE, 400)
 						.requestAttr(RequestDispatcher.ERROR_REQUEST_URI,
@@ -75,7 +76,7 @@ public class BaseApiDocumentation extends AbstractCrudTest {
 	@Test
 	public void indexExample() throws Exception {
 		
-		this.mockMvc.perform(get(""))
+		getMockMvc("", HttpMethod.GET).perform(get(""))
 			.andExpect(status().isOk())
 			.andDo(print()).andDo(document("index-example",
 					links(
@@ -87,7 +88,7 @@ public class BaseApiDocumentation extends AbstractCrudTest {
 
 	private LinkDescriptor[] linkResources() throws ClassNotFoundException {
 		List<LinkDescriptor> list = new ArrayList<LinkDescriptor>();
-		List<EntityInfo> entityInfoList = ADocEntityGenerator.getEntityInfoList(em);
+		List<EntityInfo> entityInfoList = getEntityInfoList(em);
 		for(EntityInfo entity : entityInfoList) {
 			list.add(linkWithRel(entity.getPluralName()).description("The <<resources-"+entity.getPluralName()+","+entity.getSimpleName1stUpper()+" resource>>"));
 		}

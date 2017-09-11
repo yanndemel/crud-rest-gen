@@ -8,16 +8,20 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 
 import org.hibernate.Session;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.RevisionType;
+import org.hibernate.envers.exception.AuditException;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQueryCreator;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -44,12 +48,27 @@ public abstract class AbstractAuditController<T, R> {
 	}
 
 
-	public ResponseEntity<?> getRevisionsForEntity(
-    			Long id) {
+    protected ResponseEntity<?> getRevisionsForEntity(Long entityId) {
 		AuditQueryCreator auditQueryCreator = getAuditQueryCreator();
-		List<Object[]> resultList = auditQueryCreator.forRevisionsOfEntity(entityClass, false, true).add(AuditEntity.id().eq(id)).getResultList();
+		List<Object[]> resultList = auditQueryCreator.forRevisionsOfEntity(entityClass, false, true).add(AuditEntity.id().eq(entityId)).getResultList();
 		Resources<AuditResourceSupport<T>> resources = getAuditInfoList(resultList);
 		return ResponseEntity.ok(resources);
+	}
+	
+	protected ResponseEntity<?> getLastRevisionForDeletedEntity(Long entityId) {		
+		AuditQueryCreator auditQueryCreator = getAuditQueryCreator();
+		try {
+			Object[] revData = (Object[]) auditQueryCreator.forRevisionsOfEntity(entityClass, false, true)
+					.add(AuditEntity.id().eq(entityId))
+					.add(AuditEntity.revisionType().eq(RevisionType.DEL))
+					.getSingleResult();
+			if(revData == null)
+				return ResponseEntity.notFound().build();
+			AuditResourceSupport<T> auditInfo = getAuditInfo(revData);
+			return ResponseEntity.ok(new Resource<>(auditInfo));
+		} catch (NoResultException e) {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
 
@@ -60,18 +79,23 @@ public abstract class AbstractAuditController<T, R> {
 		List<AuditResourceSupport<T>> auditInfoList = new ArrayList<>(size);
 		List<Link> links = new ArrayList<>(size); 
 		for(Object[] revData : resultList) {
-			T entity = (T)revData[0];
-			R revEntity = (R)revData[1];
-			revEntity = unproxy(revEntity); 
-			AuditResourceSupport<T> auditResourceSupport = newAuditResourceSupport((RevisionType)revData[2], entity, revEntity);
-			auditResourceSupport.add(newSelfLink(getRevisionEntityId(revEntity)));
+			AuditResourceSupport<T> auditResourceSupport = getAuditInfo(revData);
 			auditInfoList.add(auditResourceSupport);
 		}
 		return new Resources<>(auditInfoList, links);
 	}
 
-	public static <T> T unproxy(T entity) {
-	    
+
+	private AuditResourceSupport<T> getAuditInfo(Object[] revData) {
+		T entity = (T)revData[0];
+		R revEntity = (R)revData[1];
+		revEntity = unproxy(revEntity); 
+		AuditResourceSupport<T> auditResourceSupport = newAuditResourceSupport((RevisionType)revData[2], entity, revEntity);
+		auditResourceSupport.add(newSelfLink(getRevisionEntityId(revEntity)));
+		return auditResourceSupport;
+	}
+
+	private static <T> T unproxy(T entity) {
 	    if (entity instanceof HibernateProxy) {
 	        entity = (T) ((HibernateProxy) entity).getHibernateLazyInitializer()
 	                .getImplementation();

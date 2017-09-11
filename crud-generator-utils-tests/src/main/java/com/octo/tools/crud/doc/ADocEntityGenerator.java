@@ -29,8 +29,13 @@ import org.atteo.evo.inflector.English;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.reflections.Reflections;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.http.HttpMethod;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.octo.tools.common.AbstractCrudTest;
@@ -49,7 +54,7 @@ public class ADocEntityGenerator extends AbstractCrudTest {
 	public static final String TARGET_GENERATED_SNIPPETS = "target/generated-snippets";
 	
 	@Before
-	public void setUp() throws ClassNotFoundException, IOException {}
+	public void setUp() throws ClassNotFoundException, IOException {	}
 	
 	@Test
 	public void generateADocs() throws IOException, URISyntaxException, ClassNotFoundException {
@@ -85,71 +90,5 @@ public class ADocEntityGenerator extends AbstractCrudTest {
 	}
 	
 	
-
-	public static List<EntityInfo> getEntityInfoList(EntityManager em) throws ClassNotFoundException {
-		Set<EntityType<?>> entityList = em.getMetamodel().getEntities();
-		List<EntityInfo> list = new ArrayList<EntityInfo>();
-		for (EntityType type : entityList) {
-			Class javaType = type.getJavaType();
-			if (ReflectionUtils.isEntityExposed(javaType)) {
-				EntityInfo info = new EntityInfo();
-				String entity1 = javaType.getSimpleName();
-				String entities1 = getPluralName(entity1);
-				String entity = getName1stLower(entity1);
-				String entities = getName1stLower(entities1);
-				info.setEntityClass(javaType);
-				info.setSimpleName(entity);
-				info.setSimpleName1stUpper(entity1);
-				info.setPluralName(entities);
-				info.setPluralName1stUpper(entities1);
-				info.setSearch(hasSearch(javaType));
-				info.setPaged(isPaged(javaType));
-				info.setHasOnlyManyToOne(hasOnlyManyToOne(javaType));
-				list.add(info);
-			}
-		}
-		Collections.sort(list, (p1, p2) -> p1.getSimpleName().compareTo(p2.getSimpleName()));
-		return list;
-	}
-
-	private static boolean hasOnlyManyToOne(Class javaType) {
-		int total = 0;
-		int many = 0;
-		for(Field f : ReflectionUtils.getAllFields(javaType)) {
-			if(!f.isAnnotationPresent(Id.class) && !f.isAnnotationPresent(Transient.class)
-					&& !f.isAnnotationPresent(Version.class)) {
-				total++;
-				if(f.isAnnotationPresent(ManyToOne.class))
-					many++;
-			}
-		}
-		return total == many;
-	}
-
-	private static boolean isPaged(Class javaType) throws ClassNotFoundException {		
-		return PagingAndSortingRepository.class.isAssignableFrom(getRepository(javaType));
-	}
-
-	private static boolean hasSearch(Class javaType) throws ClassNotFoundException {
-		Class repoClass = getRepository(javaType);
-		Method[] methods = repoClass.getDeclaredMethods();
-		for(Method m : methods) {
-			if(m.getName().startsWith("findBy"))
-				return true;
-		}
-		return false;
-	}
-
-	private static Class getRepository(Class javaType) throws ClassNotFoundException {
-		return Class.forName(System.getProperty("packageName") + "." + javaType.getSimpleName()+"Repository");
-	}
-
-	public static String getName1stLower(String name) {
-		return name.substring(0, 1).toLowerCase() + name.substring(1);
-	}
-
-	static String getPluralName(String name) {
-		return English.plural(name);		
-	}
 
 }
