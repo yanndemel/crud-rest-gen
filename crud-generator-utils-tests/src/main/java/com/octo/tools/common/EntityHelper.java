@@ -24,7 +24,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.AssertFalse;
 import javax.validation.constraints.AssertTrue;
@@ -58,6 +57,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.tools.crud.rest.annotation.RestResourceMapper;
+import com.octo.tools.crud.rest.resource.RestRemoteResource;
+import com.octo.tools.crud.rest.resource.util.RestResourceUtils;
 import com.octo.tools.crud.util.AlreadyCreatedException;
 import com.octo.tools.crud.util.DeleteInfo;
 import com.octo.tools.crud.util.EntityInfo;
@@ -404,6 +405,7 @@ public class EntityHelper {
 				if(col.unique())
 					fi.unique = true;
 			}			
+			boolean remoteResourceField = RestResourceUtils.isRemoteResourceField(f);
 			if (a.annotationType().equals(ManyToOne.class)) {
 				if (alreadyLinked(type)) {
 					value = createLinkedEntity(forUpdate, getEntityInfo(clazz), type);
@@ -425,15 +427,15 @@ public class EntityHelper {
 						val.add(currentTest.getObjectMapper().readValue(remoteObject, new TypeReference<HashMap<String, Object>>() {}));
 					}
 				}		
-			} else if(isTransientObjectField(f)) {
+			} else if(remoteResourceField) {
 				for(Field ff : ReflectionUtils.getAllFields(clazz)) {
 					RestResourceMapper ann = ff.getAnnotation(RestResourceMapper.class);
 					if(ann != null) {
 						if(ann.resolveToProperty().equals(f.getName())) {
 							if(Collection.class.isAssignableFrom(ff.getType())) {
-								return new Object[0];									
+								return new RestRemoteResource[0];									
 							} else {
-								return new Object();
+								return new RestRemoteResource();
 							}					
 						}
 					}
@@ -451,6 +453,10 @@ public class EntityHelper {
 		Object value;
 		if(ReflectionUtils.isBoolean(f.getType()))
 			value = forUpdate ? false : true;
+		else if(f.getType().isEnum()) {
+			Object[] enumConstants = f.getType().getEnumConstants();
+			value = forUpdate && enumConstants.length > 1? enumConstants[1] : enumConstants[0];
+		}
 		else {
 			String tstStr = forUpdate ? "Test2" : "Test";
 			if (Number.class.isAssignableFrom(type) || type.isPrimitive()) {
@@ -524,10 +530,6 @@ public class EntityHelper {
 		}
 		random = 0;
 		allEntities.clear();
-	}
-
-	public boolean isTransientObjectField(Field field) {
-		return field.isAnnotationPresent(Transient.class) && field.getType().equals(Object.class);
-	}
+	}	
 
 }

@@ -6,41 +6,22 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-import javax.persistence.metamodel.EntityType;
-
-import org.atteo.evo.inflector.English;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.reflections.Reflections;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.data.rest.core.annotation.RestResource;
-import org.springframework.http.HttpMethod;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.octo.tools.common.AbstractCrudTest;
 import com.octo.tools.crud.util.EntityInfo;
-import com.octo.tools.crud.utils.ReflectionUtils;
 
 /*
  * 

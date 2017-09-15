@@ -153,8 +153,13 @@ public class ReflectionUtils {
 	 * @return the class of the first parameterized type of the collection, null if f is not a generic parameterized type
 	 * @throws ClassNotFoundException if the parameterized type is not found in the classpath
 	 */
-	public static Class getGenericCollectionType(Field f) throws ClassNotFoundException {
-		ParameterizedType genericType = (ParameterizedType) f.getGenericType();
+	public static Class<?> getGenericCollectionType(Field f) throws ClassNotFoundException {
+		ParameterizedType genericType;
+		try {
+			genericType = (ParameterizedType) f.getGenericType();
+		} catch (Exception e) {
+			return null;
+		}
 		if(genericType != null) {
 			for(Type t : genericType.getActualTypeArguments()) {
 				return Class.forName(t.getTypeName());

@@ -29,7 +29,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hamcrest.Matchers;
@@ -57,6 +56,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.octo.tools.common.AbstractCrudTest;
 import com.octo.tools.common.MockNotFoundException;
 import com.octo.tools.crud.rest.annotation.RestResourceMapper;
+import com.octo.tools.crud.rest.resource.util.RestResourceUtils;
 import com.octo.tools.crud.util.EntityInfo;
 import com.octo.tools.crud.utils.ReflectionUtils;
 
@@ -203,7 +203,8 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 			FieldDescriptor type;
 			if(entityHelper.isFieldExposed(field, true)) {
 				Class<?> fieldType = field.getType();
-				if(entityHelper.isTransientObjectField(field)) {
+				boolean remoteResourceField = RestResourceUtils.isRemoteResourceField(field);
+				if(remoteResourceField) {
 					type = fieldWithPath(att).description(desc);
 					FieldDescriptor transientObjectFieldDescriptor = getTransientObjectFieldDescriptor(entityClass, field, type);
 					if(transientObjectFieldDescriptor != null)
@@ -248,6 +249,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 			if (!field.isAnnotationPresent(OneToMany.class)) {
 				boolean optional = !isMandatory(field) ? true : false;
 				Class<?> fieldType = field.getType();
+				boolean remoteResourceField = RestResourceUtils.isRemoteResourceField(field);
 				FieldDescriptor type = fields.withPath(att).description(desc);
 				//For requests : all params are sent as String
 				if(Boolean.class.equals(fieldType) || boolean.class.equals(fieldType))
@@ -256,7 +258,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 					type = type.type(JsonFieldType.NUMBER);
 				else if(Collection.class.isAssignableFrom(fieldType))
 					type = type.type(JsonFieldType.ARRAY);
-				else if(entityHelper.isTransientObjectField(field)) {
+				else if(remoteResourceField) {
 					FieldDescriptor transientObjectFieldDescriptor = getTransientObjectFieldDescriptor(entityClass, field, type);
 					if(transientObjectFieldDescriptor != null)
 						type = transientObjectFieldDescriptor;
@@ -285,7 +287,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 					if(Collection.class.isAssignableFrom(ff.getType())) {
 						return type.type(JsonFieldType.ARRAY);									
 					} else {
-						return type.type(JsonFieldType.STRING);
+						return type.type(JsonFieldType.OBJECT);
 					}					
 				}
 			}
