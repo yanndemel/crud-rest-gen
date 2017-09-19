@@ -25,6 +25,8 @@ import org.atteo.evo.inflector.English;
 import org.junit.After;
 import org.junit.Before;
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -34,6 +36,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,6 +46,8 @@ import com.octo.tools.crud.utils.ReflectionUtils;
 
 public abstract class AbstractCrudTest {
 
+	private static final Logger logger = LoggerFactory.getLogger(AbstractCrudTest.class);
+	
 	@Autowired
 	protected ObjectMapper objectMapper;
 	@Autowired
@@ -81,6 +86,7 @@ public abstract class AbstractCrudTest {
 		objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
 		objectMapper.configure(JsonParser.Feature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER, true);
 		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+		objectMapper.setSerializationInclusion(Include.NON_NULL);
 	}
 	
 	protected void initDataSets() throws IOException {
@@ -163,7 +169,7 @@ public abstract class AbstractCrudTest {
 		return entityInfoList;
 	}
 	
-	public List<EntityInfo> getEntityInfoList(EntityManager em) throws ClassNotFoundException {
+	public List<EntityInfo> getEntityInfoList(EntityManager em) {
 		Set<EntityType<?>> entityList = em.getMetamodel().getEntities();
 		List<EntityInfo> list = new ArrayList<EntityInfo>();
 		Reflections reflections = new Reflections(packageName);
@@ -182,8 +188,13 @@ public abstract class AbstractCrudTest {
 				info.setSimpleName1stUpper(entity1);
 				info.setPluralName(entities);
 				info.setPluralName1stUpper(entities1);
-				info.setSearch(hasSearch(javaType));
-				info.setPaged(isPaged(javaType));
+				try {
+					info.setSearch(hasSearch(javaType));
+					info.setPaged(isPaged(javaType));
+				} catch (ClassNotFoundException e) {
+					logger.error("ClassNotFound", e);
+					continue;
+				}
 				info.setHasOnlyManyToOne(hasOnlyManyToOne(javaType));
 				list.add(info);
 			}

@@ -140,7 +140,7 @@ public class EntityHelper {
 		return getParamsMap(clazz, false);
 	}
 	
-	private void deleteEntity(String location, String entityClass) throws Exception {
+	public void deleteEntity(String location, String entityClass) throws Exception {
 		logger.debug("Deleting entity " + location);
 		this.currentTest.getMockMvc(entityClass, HttpMethod.DELETE).perform(MockMvcRequestBuilders.delete(location)).andExpect(status().is2xxSuccessful());
 	}
@@ -239,7 +239,7 @@ public class EntityHelper {
 					else {
 						try {													
 							Class<?> fieldClass = f.getType();
-							value = createSampleEntity(value.toString(), fieldClass);
+							value = createSampleEntity(value, fieldClass);
 							info.setOverrideValue(f.getName(), forUpdate, value);
 							return value;
 						} catch(AlreadyCreatedException ace) {
@@ -284,20 +284,24 @@ public class EntityHelper {
 	}		
 
 
-	public String createSampleEntity(String value, Class<?> clazz) throws JsonProcessingException, Exception {
+	public String createSampleEntity(Object value, Class<?> clazz) throws JsonProcessingException, Exception {
 		EntityInfo entityInfo = getEntityInfo(clazz);
 		createLinkedEntities(entityInfo.getEntityClass(), true);
 		Map<String, Object> map = getParamsMap(entityInfo.getEntityClass());
-		Map<String, Object> valMap = this.currentTest.getObjectMapper().readValue(value, new TypeReference<HashMap<String, Object>>() {});
+		Map<String, Object> valMap;
+		if(value instanceof Map) 
+			valMap = (Map<String, Object>) value;
+		else
+			valMap = this.currentTest.getObjectMapper().readValue(value.toString(), new TypeReference<HashMap<String, Object>>() {});
 		if(valMap != null) {
 			for(String k : map.keySet()) {
 				if(!valMap.containsKey(k))
 					valMap.put(k, map.get(k));
 			}
 		}
-		value = createSampleEntity(entityInfo.getPluralName(), valMap, entityInfo.getEntityClass().getName());
-		linkedEntities.add(new DeleteInfo(clazz, value));
-		return value;
+		String location = createSampleEntity(entityInfo.getPluralName(), valMap, entityInfo.getEntityClass().getName());
+		linkedEntities.add(new DeleteInfo(clazz, location));
+		return location;
 	}
 
 
@@ -530,6 +534,18 @@ public class EntityHelper {
 		}
 		random = 0;
 		allEntities.clear();
-	}	
+	}
+
+
+	public List<DeleteInfo> getLinkedEntities() {
+		return linkedEntities;
+	}
+
+
+	public Map<String, Map<String, Map<String, Object>>> getAllEntities() {
+		return allEntities;
+	}
+	
+	
 
 }
