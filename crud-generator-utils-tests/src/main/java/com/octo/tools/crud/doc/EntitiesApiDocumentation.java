@@ -124,7 +124,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 
 	}
 
-	private void updateExample(EntityInfo info) throws JsonProcessingException, Exception, NoSuchFieldException {
+	protected void updateExample(EntityInfo info) throws JsonProcessingException, Exception, NoSuchFieldException {
 		logger.debug("----->updateExample");
 		entityHelper.createLinkedEntities(info.getEntityClass());
 		String location = entityHelper.createSampleEntity(info);
@@ -143,7 +143,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 	}
 
 
-	private void getExample(EntityInfo info) throws JsonProcessingException, Exception, NoSuchFieldException {
+	protected void getExample(EntityInfo info) throws JsonProcessingException, Exception, NoSuchFieldException {
 		logger.debug("----->getExample");
 		entityHelper.createLinkedEntities(info.getEntityClass());
 		Map<String, String> paramsMap = getParamsDescMap(info.getEntityClass(), true);
@@ -157,7 +157,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		entityHelper.reset();
 	}
 
-	private LinkDescriptor[] getLinksForSingleItem(EntityInfo info) {
+	protected LinkDescriptor[] getLinksForSingleItem(EntityInfo info) {
 
 		List<LinkDescriptor> list = new ArrayList<LinkDescriptor>();
 		list.add(linkWithRel("self").description(
@@ -179,7 +179,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 
 	}
 
-	private void createExample(EntityInfo info) throws Exception, JsonProcessingException, NoSuchFieldException {
+	protected void createExample(EntityInfo info) throws Exception, JsonProcessingException, NoSuchFieldException {
 		entityHelper.createLinkedEntities(info.getEntityClass());
 		Map<String, Object> paramsMap = entityHelper.getParamsMap(info.getEntityClass());
 		ResultActions resultAction = entityHelper.createEntity(info.getPluralName(), paramsMap, info.getEntityClass().getName());
@@ -193,7 +193,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		entityHelper.reset();
 	}
 
-	private FieldDescriptor[] getLinkedFieldDescriptors(Class entityClass, Map<String, String> paramsMap)
+	protected FieldDescriptor[] getLinkedFieldDescriptors(Class entityClass, Map<String, String> paramsMap)
 			throws NoSuchFieldException {
 		List<FieldDescriptor> list = new ArrayList<FieldDescriptor>();
 		for (String att : paramsMap.keySet()) {
@@ -238,7 +238,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		return jsonType;
 	}
 
-	private FieldDescriptor[] getRequestFieldDescriptors(Class entityClass, Map<String, String> paramsMap)
+	protected FieldDescriptor[] getRequestFieldDescriptors(Class entityClass, Map<String, String> paramsMap)
 			throws NoSuchFieldException, SecurityException {
 		List<FieldDescriptor> list = new ArrayList<FieldDescriptor>();
 		ConstrainedFields fields = new ConstrainedFields(entityClass);
@@ -279,7 +279,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 	}
 
 
-	private FieldDescriptor getTransientObjectFieldDescriptor(Class entityClass, Field field, FieldDescriptor type) {
+	protected FieldDescriptor getTransientObjectFieldDescriptor(Class entityClass, Field field, FieldDescriptor type) {
 		for(Field ff : ReflectionUtils.getAllFields(entityClass)) {
 			RestResourceMapper ann = ff.getAnnotation(RestResourceMapper.class);
 			if(ann != null) {
@@ -295,7 +295,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		return null;
 	}
 
-	private Field getField(Class entityClass, String att) throws NoSuchFieldException {
+	protected Field getField(Class entityClass, String att) throws NoSuchFieldException {
 		for (Field f : ReflectionUtils.getAllFields(entityClass)) {
 			if (f.getName().equals(att))
 				return f;
@@ -304,7 +304,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 
 	}
 
-	private boolean isMandatory(Field field) {
+	protected boolean isMandatory(Field field) {
 		Column col = field.getAnnotation(Column.class);
 		boolean mandatory = field.isAnnotationPresent(NotNull.class);
 		if (col != null)
@@ -312,7 +312,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		return mandatory;
 	}
 
-	private void listExample(EntityInfo info) throws JsonProcessingException, Exception {
+	protected void listExample(EntityInfo info) throws JsonProcessingException, Exception {
 		entityHelper.createLinkedEntities(info.getEntityClass());
 
 		logger.debug("listExample for " + info);
@@ -326,7 +326,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 
 	}
 
-	private FieldDescriptor[] getFieldsForList(EntityInfo info) {
+	protected FieldDescriptor[] getFieldsForList(EntityInfo info) {
 		List<FieldDescriptor> list = new ArrayList<FieldDescriptor>();
 		list.add(fieldWithPath("_embedded." + info.getPluralName()).description("An array of <<resources-"
 				+ info.getPluralName() + ", " + info.getSimpleName1stUpper() + " resources>>"));
@@ -339,7 +339,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 
 	}
 
-	private LinkDescriptor[] getLinksForList(EntityInfo info) {
+	protected LinkDescriptor[] getLinksForList(EntityInfo info) {
 		List<LinkDescriptor> list = new ArrayList<LinkDescriptor>();
 		list.add(linkWithRel("self").description("Canonical link for this resource"));
 		list.add(linkWithRel("profile").description("The ALPS profile for this resource"));
@@ -354,7 +354,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		return list.toArray(new LinkDescriptor[0]);
 	}
 
-	private ResultActions verifiySampleEntity(String location, String entityClassName) throws Exception {
+	protected ResultActions verifiySampleEntity(String location, String entityClassName) throws Exception {
 		logger.debug("Getting resource at url " + location);
 		return getMockMvc(entityClassName, HttpMethod.GET).perform(get(entityHelper.url(location))).andDo(print()).andExpect(status().isOk())
 				.andExpect(jsonPath("_links.self.href", Matchers.is(location)));
