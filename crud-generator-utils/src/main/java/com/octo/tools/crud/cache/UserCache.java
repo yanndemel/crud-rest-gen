@@ -11,7 +11,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-import com.github.kevinsawicki.http.HttpRequest;
+import com.octo.tools.crud.utils.HttpRequest;
 
 @Service
 @EnableCaching

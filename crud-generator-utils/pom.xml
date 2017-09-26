@@ -34,11 +34,6 @@
 			<version>${evoinflector.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.github.kevinsawicki</groupId>
-			<artifactId>http-request</artifactId>
-			<version>${http-request.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>com.github.scribejava</groupId>
 			<artifactId>scribejava-apis</artifactId>
 			<version>${scribe.version}</version>

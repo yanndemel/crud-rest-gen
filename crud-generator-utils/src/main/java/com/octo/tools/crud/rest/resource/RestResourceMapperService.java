@@ -21,9 +21,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.kevinsawicki.http.HttpRequest;
 import com.octo.tools.crud.cache.UserCache;
 import com.octo.tools.crud.rest.annotation.RestResourceMapper;
+import com.octo.tools.crud.utils.HttpRequest;
 
 @Service
 public class RestResourceMapperService {
