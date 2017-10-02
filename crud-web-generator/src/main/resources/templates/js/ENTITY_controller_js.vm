@@ -85,6 +85,20 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 			${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].selectField = fieldName;
 			window.location = url;			
 		}			
+	}	
+	
+	${_}scope.removeTarget = function(fieldName) {		
+		${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].item[fieldName] = null;
+		if(${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].item._links == null) {
+			${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].item._links = [];
+			${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].item._links[fieldName] = [];
+		}
+		if(${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].item._links[fieldName] == null)
+			${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].item._links[fieldName] = [];
+		
+		if(${_}rootScope.modifiedItems.length > 0) {
+			${_}rootScope.modifiedItems[${_}rootScope.modifiedItems.length - 1].fieldName = null;		
+		}			
 	}	  
 	   
   

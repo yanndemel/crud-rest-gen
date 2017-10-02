@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -78,7 +79,7 @@ public class CrudGenerator {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(persistenceUnitName);
 		EntityManager em = emf.createEntityManager();
 		
-        this.ve  = new VelocityEngine();
+        getVe();
         
         this.restUrl = restUrl;
         
@@ -90,13 +91,7 @@ public class CrudGenerator {
         
         List<Map<String, Object>> entities = initPersistenceInfo(em);
         
-        File root = new File(destDirRelativePath);        
-        root.delete();
-        root.mkdirs();
-        
-        copyResources(root);
-        
-        ve.init();
+        File root = init(destDirRelativePath);
         
         generateAppAndSrvJS(ve, entities, root);
 		
@@ -109,12 +104,27 @@ public class CrudGenerator {
          
 	}
 
+	public File init(String destDirRelativePath) throws IOException, URISyntaxException {
+		File root = new File(destDirRelativePath);        
+        root.delete();
+        root.mkdirs();
+        
+        copyResources(root);
+        
+        ve.init();
+		return root;
+	}
+
+	public VelocityEngine getVe() {
+		this.ve  = new VelocityEngine();
+        return ve;
+	}
+
 	private void copyResources(File root) throws IOException, URISyntaxException {
 		File srcDir = new File(resourcesDir + "static");
 		if(srcDir.exists() && srcDir.isDirectory())
 			FileUtils.copy(srcDir, root);
 		else {
-			
 			FileUtils.copyResourcesToDirectory("static", root.getPath());
 			ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
 			ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
@@ -123,7 +133,7 @@ public class CrudGenerator {
 
 
 
-	private void generateAppAndSrvJS(VelocityEngine ve, List<Map<String, Object>> entities, File root)
+	public void generateAppAndSrvJS(VelocityEngine ve, List<Map<String, Object>> entities, File root)
 			throws IOException, ResourceNotFoundException, ParseErrorException, URISyntaxException {
 		File js = new File(root, "js");
         if(!js.exists())
@@ -162,7 +172,7 @@ public class CrudGenerator {
 			return "templates/" + relativePath;
 	}
 	
-	private void generateHTML(VelocityEngine ve, List<Map<String, Object>> entities, File root)
+	public void generateHTML(VelocityEngine ve, List<Map<String, Object>> entities, File root)
 			throws IOException, ResourceNotFoundException, ParseErrorException, URISyntaxException {
 		File partials = new File(root, "partials");
 		if(!partials.exists())
@@ -170,24 +180,8 @@ public class CrudGenerator {
               
         Template formTemplate = ve.getTemplate(getResourceFile("page/ENTITY_form_html.vm"));
         Template listTemplate = ve.getTemplate(getResourceFile("page/ENTITY_list_html.vm"));
-        VelocityContext context = newVelocityContext();
-        for(Map<String, Object> map : entities) {
-        	String name = (String) map.get("name");
-        	File dir = new File(partials, name.toLowerCase());
-        	if(!dir.exists())
-        		dir.mkdir();
-        	context.put("entity", map);
-            Path path = Paths.get(dir.getPath(), name.toLowerCase() + "_form.html");
-    		System.out.println("File " + path);
-    		BufferedWriter writer = Files.newBufferedWriter(path);
-    		formTemplate.merge( context, writer );
-    		writer.close();
-    		path = Paths.get(dir.getPath(), name.toLowerCase() + "_list.html");
-    		System.out.println("File " + path);
-    		writer = Files.newBufferedWriter(path);
-    		listTemplate.merge( context, writer );
-    		writer.close();
-        }
+        VelocityContext context;
+		generateHTML(entities, partials, formTemplate, listTemplate);
         
         Template indexTemplate = ve.getTemplate(getResourceFile("page/index_html.vm"));
         context = newVelocityContext();
@@ -211,8 +205,30 @@ public class CrudGenerator {
 		writer.close();
         
 	}
+
+	public void generateHTML(List<Map<String, Object>> entities, File partials, Template formTemplate,
+			Template listTemplate) throws IOException {
+		VelocityContext context = newVelocityContext();
+        for(Map<String, Object> map : entities) {
+        	String name = (String) map.get("name");
+        	File dir = new File(partials, name.toLowerCase());
+        	if(!dir.exists())
+        		dir.mkdir();
+        	context.put("entity", map);
+            Path path = Paths.get(dir.getPath(), name.toLowerCase() + "_form.html");
+    		System.out.println("File " + path);
+    		BufferedWriter writer = Files.newBufferedWriter(path);
+    		formTemplate.merge( context, writer );
+    		writer.close();
+    		path = Paths.get(dir.getPath(), name.toLowerCase() + "_list.html");
+    		System.out.println("File " + path);
+    		writer = Files.newBufferedWriter(path);
+    		listTemplate.merge( context, writer );
+    		writer.close();
+        }
+	}
 	
-	private void generateControllersAndModulesJS(VelocityEngine ve, List<Map<String, Object>> entities, File root)
+	public void generateControllersAndModulesJS(VelocityEngine ve, List<Map<String, Object>> entities, File root)
 			throws IOException, ResourceNotFoundException, ParseErrorException, URISyntaxException {
 		File js = new File(root, "js");
 		if(!js.exists())
@@ -240,7 +256,7 @@ public class CrudGenerator {
         }
 	}
 
-	private List<Map<String, Object>> initPersistenceInfo(EntityManager em) throws ClassNotFoundException {
+	public List<Map<String, Object>> initPersistenceInfo(EntityManager em) throws ClassNotFoundException {
 		Set<EntityType<?>> allEntities = em.getMetamodel().getEntities();
 		entitiesByPackage = new TreeMap<>();
         Map<String, Object> entityInfo;        
@@ -313,7 +329,10 @@ public class CrudGenerator {
             			if(!fi.isCollection() && Collection.class.isAssignableFrom(f.getType())) {            		
             				fi.setList(true);
             			}
-            						
+            			if(f.getType().isEnum()) {
+            				fi.setEnumField(true);
+            				fi.setEnumValues(Arrays.asList(ReflectionUtils.getNames((Class<? extends Enum<?>>) f.getType())));
+            			}
             		}
             	}
             	Collections.sort(fieldInfoList, (p1, p2) -> p1.getName().compareTo(p2.getName()));
@@ -345,5 +364,10 @@ public class CrudGenerator {
 		return name.substring(0, 1).toLowerCase() + name.substring(1);
 	}
 
+	public void setResourcesDir(String resourcesDir) {
+		this.resourcesDir = resourcesDir;
+	}
+
+	
 
 }

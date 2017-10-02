@@ -1,5 +1,7 @@
 package com.octo.tools.crudweb;
 
+import java.util.List;
+
 public class FieldInfo {
 
 	private String name;
@@ -17,6 +19,8 @@ public class FieldInfo {
 	private Double max = null;
 	private Double min = null;
 	private Double step = null;
+	private boolean enumField = false;
+	private List<String> enumValues;
 	
 	public FieldInfo(String name, String type, boolean collection, boolean link) {
 		super();
@@ -158,5 +162,21 @@ public class FieldInfo {
 
 	public void setList(boolean list) {
 		this.list = list;
+	}
+
+	public boolean isEnumField() {
+		return enumField;
+	}
+
+	public void setEnumField(boolean enumField) {
+		this.enumField = enumField;
+	}
+
+	public List<String> getEnumValues() {
+		return enumValues;
+	}
+
+	public void setEnumValues(List<String> enumValues) {
+		this.enumValues = enumValues;
 	}
 }

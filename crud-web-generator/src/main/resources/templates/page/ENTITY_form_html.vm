@@ -29,6 +29,12 @@
 					<textarea id="${htmlId}" name="${htmlName}" ng-model="item.${htmlName}" class="form-control" ></textarea>
 #elseif( ${info.type} == "Boolean" || ${info.type} == "boolean" )
 					<input type="checkbox" id="${htmlId}" name="${htmlName}" ng-model="item.${htmlName}" class="form-control" ></input>
+#elseif( ${info.enumField} )
+					<select id="${htmlId}" name="${htmlName}" ng-model="item.${htmlName}" class="form-control">
+#foreach($enumVal in ${info.enumValues})								
+						<option value="$enumVal">$enumVal</option>
+#end
+					</select>
 #else
 #set( $pattern = ".{0}|.{"+ ${info.sizeMin} +","+${info.sizeMax}+"}")
 #set( $required = "")
@@ -75,6 +81,9 @@
 							</button>
 							<button type="button" class="btn-group btn-group-sm" ng-click="selectTarget('${info.name}', '#/${info.uncapitType}/select')" >
 								<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Choose
+							</button>
+							<button type="button" class="btn-group btn-group-sm" ng-click="removeTarget('${info.name}')" >
+								<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete
 							</button>
       					</div>
   				</div>
