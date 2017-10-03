@@ -76,7 +76,7 @@
 				<div class="form-group">
 						<span class="col-sm-6" style="vertical-align: baseline;">{{item.${info.name}}}</span>
      					<div class="btn-group" role="group">
-       						<button type="button" class="btn-group btn-group-sm" ng-click="editLinkedEntity('${info.name}', item._links.${info.name}.href)" ng-show="item.${info.name} != null">
+       						<button type="button" class="btn-group btn-group-sm" ng-click="editLinkedEntity('${info.type}', item._links.${info.name}.href)" ng-show="item.${info.name} != null">
 								<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
 							</button>
 							<button type="button" class="btn-group btn-group-sm" ng-click="selectTarget('${info.name}', '#/${info.uncapitType}/select')" >
