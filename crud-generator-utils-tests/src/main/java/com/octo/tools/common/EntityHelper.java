@@ -231,11 +231,11 @@ public class EntityHelper {
 			if(info.getEntityClass().equals(clazz) && info.getDataSet() != null) {
 				Object value = info.getValue(f.getName(), forUpdate);				
 				if(!f.isAnnotationPresent(ManyToOne.class) && !f.isAnnotationPresent(OneToMany.class)) {
-					return convert(value, f.getType());					
+					return convert(value, f);					
 				} else if(value != null) {							
 					Object overrideValue = info.getOverrideValue(f.getName(), forUpdate);
 					if(overrideValue != null)
-						return convert(overrideValue, f.getType());	
+						return convert(overrideValue, f);	
 					else {
 						try {													
 							Class<?> fieldClass = f.getType();
@@ -267,15 +267,26 @@ public class EntityHelper {
 	}
 
 
-	private Object convert(Object value, Class<?> fieldType) {
+	private Object convert(Object value, Field f) {
+		if(f.getType().isEnum()) {
+			String[] names = ReflectionUtils.getNames((Class<? extends Enum<?>>)f.getType());
+			if(value != null) {
+				for(String s : names) {
+					if(value.equals(s))
+						return s;				
+				}	
+			}
+			return names[0];
+		}
 		if(value == null)
-			return value;
-		if(ReflectionUtils.isBoolean(fieldType))
+			return null;
+		Class<?> type = f.getType();
+		if(ReflectionUtils.isBoolean(type))
 			return ReflectionUtils.isBoolean(value.getClass()) ? value : Boolean.parseBoolean(value.toString());
-		if(ReflectionUtils.isNumber(fieldType)) {
+		if(ReflectionUtils.isNumber(type)) {
 			if(ReflectionUtils.isNumber(value.getClass()))
 				return value;
-			if(Long.class.equals(fieldType) || Integer.class.equals(fieldType))
+			if(Long.class.equals(type) || Integer.class.equals(type))
 				return Integer.parseInt(value.toString());
 			else
 				return Double.parseDouble(value.toString());

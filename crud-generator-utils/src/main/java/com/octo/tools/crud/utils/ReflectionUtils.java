@@ -9,8 +9,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
 import javax.persistence.ManyToMany;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
@@ -170,6 +172,10 @@ public class ReflectionUtils {
 	
 	public static String[] getNames(Class<? extends Enum<?>> e) {
 	    return Arrays.stream(e.getEnumConstants()).map(Enum::name).toArray(String[]::new);
+	}
+
+	public static  boolean isSingleTableInheritance(Class javaType) {		
+		return javaType.isAnnotationPresent(Inheritance.class) && javaType.isAnnotationPresent(DiscriminatorColumn.class);
 	}
 
 }

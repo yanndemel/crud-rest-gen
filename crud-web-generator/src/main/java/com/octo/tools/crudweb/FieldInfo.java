@@ -21,6 +21,8 @@ public class FieldInfo {
 	private Double step = null;
 	private boolean enumField = false;
 	private List<String> enumValues;
+	private Class fieldType;
+	private List<String> childEntities = null;
 	
 	public FieldInfo(String name, String type, boolean collection, boolean link) {
 		super();
@@ -30,6 +32,11 @@ public class FieldInfo {
 		this.collection = collection;
 		this.link = link;
 		this.uncapitType = type.substring(0, 1).toLowerCase() + type.substring(1);
+	}
+	
+	public FieldInfo(String name, String type, boolean collection, boolean link, Class fieldType) {
+		this(name, type, collection, link);
+		this.fieldType = fieldType;
 	}
 
 	public String getName() {
@@ -179,4 +186,21 @@ public class FieldInfo {
 	public void setEnumValues(List<String> enumValues) {
 		this.enumValues = enumValues;
 	}
+
+	public Class getFieldType() {
+		return fieldType;
+	}
+
+	public List<String> getChildEntities() {
+		return childEntities;
+	}
+
+	public void setChildEntities(List<String> childEntities) {
+		this.childEntities = childEntities;
+	}
+
+	public boolean getHasChildren() {
+		return childEntities != null && !childEntities.isEmpty();
+	}
+	
 }

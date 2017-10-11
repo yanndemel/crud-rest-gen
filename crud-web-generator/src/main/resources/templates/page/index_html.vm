@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="./${adminPrefix}/css/bootstrap.min.css" />
     <link rel="stylesheet" href="./${adminPrefix}/css/bootstrap-theme.min.css" />
 	<link rel="stylesheet" href="./${adminPrefix}/css/crud-admin.css" />
+	<script src="https://use.fontawesome.com/f8a0acfa52.js"></script>
   </head>
   <body ng-app="myApp" ng-init="initialise()">        
   <div id="wrapper">
@@ -61,8 +62,10 @@
     <script src="${adminPrefix}/js/error_catcher.js"></script>
 	<script src="${adminPrefix}/js/services.js"></script>
 #foreach($entity in ${entities})
+#if(!${entity.singleTableInheritance})
 	<script src="${adminPrefix}/js/${entity.name.toLowerCase()}/${entity.name.toLowerCase()}_module.js"></script>
 	<script src="${adminPrefix}/js/${entity.name.toLowerCase()}/${entity.name.toLowerCase()}_controller.js"></script>
+#end
 #end
 </body>
 </html>

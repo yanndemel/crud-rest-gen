@@ -61,7 +61,9 @@ var myApp = angular.module('myApp', [
   ,'errorCatcher.module'
   ,'exceptionCatcher.module'
 #foreach($entity in ${entities})
+#if(!${entity.singleTableInheritance})
   ,'${entity.uncapitName}.module'
+#end
 #end
 ]);
 

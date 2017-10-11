@@ -13,9 +13,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.EntityManager;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.persistence.Version;
@@ -195,12 +199,24 @@ public abstract class AbstractCrudTest {
 					logger.error("ClassNotFound", e);
 					continue;
 				}
-				info.setHasOnlyManyToOne(hasOnlyManyToOne(javaType));
+				info.setHasOnlyManyToOne(hasOnlyManyToOne(javaType));				
+				info.setSingleTableInheritance(ReflectionUtils.isSingleTableInheritance(javaType));
 				list.add(info);
 			}
 		}
+		list.forEach(info->{
+			if(info.isSingleTableInheritance()) {
+				info.setChildEntities(getChildEntities(info, list));
+			}
+		});
 		Collections.sort(list, (p1, p2) -> p1.getSimpleName().compareTo(p2.getSimpleName()));
 		return list;
+	}
+
+	private List<EntityInfo> getChildEntities(EntityInfo info, List<EntityInfo> list) {
+		return list.stream().filter((i)->info.getEntityClass().isAssignableFrom(i.getEntityClass()) 
+				&& i.getEntityClass().isAnnotationPresent(DiscriminatorValue.class))
+				.collect(Collectors.toList());
 	}
 
 	private void setDisabledHttpMethodsPerRepo(Class entityClass, Set<Class<?>> allRepos) {

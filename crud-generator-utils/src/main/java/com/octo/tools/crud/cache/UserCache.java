@@ -47,7 +47,7 @@ public class UserCache {
 	
 	private String getConnectedUserToken() {
 		String authToken = authKey.get();
-		logger.debug("getConnectedUserToken = "+authToken);
+		//logger.debug("getConnectedUserToken = "+authToken);
 		return authToken;
 	}
 	

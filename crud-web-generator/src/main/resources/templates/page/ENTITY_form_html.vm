@@ -79,9 +79,17 @@
        						<button type="button" class="btn-group btn-group-sm" ng-click="editLinkedEntity('${info.type}', item._links.${info.name}.href)" ng-show="item.${info.name} != null">
 								<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
 							</button>
+#if(!${info.hasChildren})							
 							<button type="button" class="btn-group btn-group-sm" ng-click="selectTarget('${info.name}', '#/${info.uncapitType}/select')" >
 								<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Choose
 							</button>
+#else
+#foreach($child in ${info.childEntities})
+							<button type="button" class="btn-group btn-group-sm" ng-click="selectTarget('${info.name}', '#/${child}/select')" >
+								<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Choose
+							</button>
+#end
+#end
 							<button type="button" class="btn-group btn-group-sm" ng-click="removeTarget('${info.name}')" >
 								<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete
 							</button>

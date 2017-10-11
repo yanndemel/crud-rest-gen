@@ -16,6 +16,8 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
     ${_}scope.mode = null;
     
     ${_}scope.page = null;
+    
+    ${_}scope.asc = true;
 
 	var prepareLinkedEntities = function(callback) {
 #if(${entity.hasLinks})
@@ -222,6 +224,15 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 		if(pageNumber >= 0 && pageNumber < ${_}scope.page.totalPages) {
 			Item.query(${entity.name}_ENDPOINT, "${entity.name}", pageNumber, null, function(response) {
 				initList(response);
+			});
+		}
+	}
+	
+	${_}scope.sort = function(fieldName, pageNumber) {		
+		if(${_}scope.page.totalPages > 0) {
+			Item.query(${entity.name}_ENDPOINT, "${entity.name}", pageNumber, fieldName + (${_}scope.asc ? ",asc" : ",desc"), function(response) {
+				initList(response);
+				${_}scope.asc = !${_}scope.asc; 
 			});
 		}
 	}

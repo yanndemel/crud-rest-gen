@@ -1,6 +1,7 @@
 package com.octo.tools.crud.util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EntityInfo {
@@ -17,6 +18,8 @@ public class EntityInfo {
 	private Map<String, Object> updateDataSet;
 	private Map<String, Object> overrideDataSet;
 	private Map<String, Object> updateOverrideDataSet;
+	private boolean singleTableInheritance;
+	private List<EntityInfo> childEntities;
 	
 	public String getSimpleName1stUpper() {
 		return simpleName1stUpper;
@@ -134,6 +137,22 @@ public class EntityInfo {
 
 	public void setHasOnlyManyToOne(boolean hasOnlyManyToOne) {
 		this.hasOnlyManyToOne = hasOnlyManyToOne;
+	}
+
+	public List<EntityInfo> getChildEntities() {
+		return childEntities;
+	}
+
+	public void setChildEntities(List<EntityInfo> childEntities) {
+		this.childEntities = childEntities;
+	}
+
+	public boolean isSingleTableInheritance() {
+		return singleTableInheritance;
+	}
+
+	public void setSingleTableInheritance(boolean singleTableInheritance) {
+		this.singleTableInheritance = singleTableInheritance;
 	}
 	
 	

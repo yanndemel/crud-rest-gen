@@ -17,8 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Id;
@@ -268,6 +270,7 @@ public class CrudGenerator {
             	entities.add(entityInfo);            	
             	String packageName = clazz.getPackage().getName();
         		String name = clazz.getSimpleName();
+        		entityInfo.put("entityClass", clazz);
 				entityInfo.put("name", name);
             	entityInfo.put("uncapitName", uncapitalize(name));
             	entityInfo.put("pluralName", uncapitalize(StringUtils.plural(name)));
@@ -282,7 +285,7 @@ public class CrudGenerator {
             			hasColl = true;
             		}
             		else if(f.isAnnotationPresent(ManyToOne.class) || f.isAnnotationPresent(OneToOne.class)) {
-            			fi = new FieldInfo(f.getName(), f.getType().getSimpleName(), false, true);
+            			fi = new FieldInfo(f.getName(), f.getType().getSimpleName(), false, true, f.getType());
             			hasLink = true;
             		}
             		else if(!f.isAnnotationPresent(Id.class) && !f.isAnnotationPresent(Version.class)
@@ -339,18 +342,41 @@ public class CrudGenerator {
             	entityInfo.put("info", fieldInfoList);
             	entityInfo.put("hasLinks", hasLink);
             	entityInfo.put("hasCollections", hasColl);
+            	entityInfo.put("singleTableInheritance", ReflectionUtils.isSingleTableInheritance(clazz));
             	String parentPackage = packageName.substring(packageName.lastIndexOf(".")+1);
+            	
             	StringBuilder sb = new StringBuilder(parentPackage.substring(0, 1).toUpperCase()).append(parentPackage.substring(1));
 				addToEntitiesByPackage(sb.toString(), entityInfo);
         	}
         	
         	
-        }
+        }       
+        entities.forEach( map -> {
+        	if(true == (boolean)map.get("hasLinks")) {
+        		List<FieldInfo> fieldInfoList = (List<FieldInfo>) map.get("info");
+        		fieldInfoList.forEach(f -> {
+        			if(f.isLink() && ReflectionUtils.isSingleTableInheritance(f.getFieldType())) {
+        				f.setChildEntities(getChildEntities(f.getFieldType(), entities));
+        			}
+        		});
+        	}
+        });
         Collections.sort(entities, (p1, p2) -> ((String)p1.get("name")).compareTo((String)p2.get("name")));               
 		return entities;
 	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private List<String> getChildEntities(Class entityClass, List<Map<String, Object>> list) {
+		return list.stream().filter((map)->{
+			Class subClass = (Class)map.get("entityClass");
+			return entityClass.isAssignableFrom(subClass) 
+						&& subClass.isAnnotationPresent(DiscriminatorValue.class);
+					}).map(entity -> (String)entity.get("uncapitName")).collect(Collectors.toList());
+	}
 
 	private void addToEntitiesByPackage(String name, Map<String, Object> entityInfo) {
+		if(ReflectionUtils.isSingleTableInheritance((Class) entityInfo.get("entityClass")))
+				return;
 		Map<String, String> map = entitiesByPackage.get(name);
 		if(map == null) {
 			map = new TreeMap<>();

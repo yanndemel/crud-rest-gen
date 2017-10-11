@@ -147,8 +147,13 @@ function(${_}http, restURL) {
 	Item.query = function(endpoint, entityName, page, sort, callback) {
 		var url = restURL + endpoint;
 		var params = { params: { projection : entityName + 'Excerpt' }};
-		if(page != null)
-			params = { params: { projection: entityName + 'Excerpt', page: page }};
+		if(page != null) {
+			params = { params: { projection: entityName + 'Excerpt', page: page }};			
+		}
+		if(sort != null) {						
+			params.params["sort"] = sort;
+		}
+		
 		return ${_}http.get(url, params).then(
 				function(data) {
 					Item.page = data.data.page;
