@@ -86,7 +86,7 @@
 #else
 #foreach($child in ${info.childEntities})
 							<button type="button" class="btn-group btn-group-sm" ng-click="selectTarget('${info.name}', '#/${child}/select')" >
-								<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Choose
+								<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Choose ${child}
 							</button>
 #end
 #end

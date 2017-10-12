@@ -1,5 +1,7 @@
 package com.octo.tools.crud.utils;
 
+import java.text.Normalizer;
+
 import org.atteo.evo.inflector.English;
 
 /**
@@ -38,6 +40,11 @@ public class StringUtils {
 			return name;
 		}
 		return English.plural(name);
+	}
+
+	public static String removeAccents(String name) {
+		String normalize = Normalizer.normalize(name, Normalizer.Form.NFD);
+		return normalize.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
 	}
 	
 }
