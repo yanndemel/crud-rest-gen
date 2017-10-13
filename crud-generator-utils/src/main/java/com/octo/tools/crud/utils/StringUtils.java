@@ -46,5 +46,16 @@ public class StringUtils {
 		String normalize = Normalizer.normalize(name, Normalizer.Form.NFD);
 		return normalize.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
 	}
+
+	public static String concatFirstUpper(String lastName, String firstName) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(lastName.toUpperCase());
+		if(firstName != null) {
+			if(sb.length() > 0)
+				sb.append(" ");
+			sb.append(firstName);
+		}		
+		return sb.toString();
+	}
 	
 }
