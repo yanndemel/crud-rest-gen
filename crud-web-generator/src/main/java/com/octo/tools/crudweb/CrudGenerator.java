@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import javax.persistence.Column;
@@ -48,6 +49,7 @@ import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.octo.tools.crud.utils.ReflectionUtils;
 import com.octo.tools.crud.utils.StringUtils;
 
@@ -276,17 +278,24 @@ public class CrudGenerator {
             	entityInfo.put("pluralName", uncapitalize(StringUtils.plural(name)));
             	List<Field> fields = ReflectionUtils.getAllFields(clazz);
             	List<FieldInfo> fieldInfoList = new ArrayList<FieldInfo>();
-            	boolean hasLink = false;
-            	boolean hasColl = false;
-            	for(Field f : fields) {
+            	AtomicBoolean hasLink = new AtomicBoolean(false);
+            	AtomicBoolean hasColl = new AtomicBoolean(false);
+            	fields.stream().filter(f -> !f.isAnnotationPresent(JsonIgnore.class))
+				.forEach(f -> {
+					
             		FieldInfo fi = null;
             		if(f.isAnnotationPresent(OneToMany.class) || f.isAnnotationPresent(ManyToMany.class)) {
-            			fi = new FieldInfo(f.getName(), ReflectionUtils.getGenericCollectionTypeName(f), true, false);
-            			hasColl = true;
+            			try {
+							fi = new FieldInfo(f.getName(), ReflectionUtils.getGenericCollectionTypeName(f), true, false);
+						} catch (ClassNotFoundException e) {
+							System.err.println(e.getMessage());
+							return;
+						}
+            			hasColl.set(true);
             		}
             		else if(f.isAnnotationPresent(ManyToOne.class) || f.isAnnotationPresent(OneToOne.class)) {
             			fi = new FieldInfo(f.getName(), f.getType().getSimpleName(), false, true, f.getType());
-            			hasLink = true;
+            			hasLink.set(true);
             		}
             		else if(!f.isAnnotationPresent(Id.class) && !f.isAnnotationPresent(Version.class)
             				&& !f.isAnnotationPresent(Transient.class)) {
@@ -337,7 +346,7 @@ public class CrudGenerator {
             				fi.setEnumValues(Arrays.asList(ReflectionUtils.getNames((Class<? extends Enum<?>>) f.getType())));
             			}
             		}
-            	}
+            	});
             	Collections.sort(fieldInfoList, (p1, p2) -> p1.getName().compareTo(p2.getName()));
             	entityInfo.put("info", fieldInfoList);
             	entityInfo.put("hasLinks", hasLink);
