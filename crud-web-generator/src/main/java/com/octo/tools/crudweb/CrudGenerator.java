@@ -349,8 +349,8 @@ public class CrudGenerator {
             	});
             	Collections.sort(fieldInfoList, (p1, p2) -> p1.getName().compareTo(p2.getName()));
             	entityInfo.put("info", fieldInfoList);
-            	entityInfo.put("hasLinks", hasLink);
-            	entityInfo.put("hasCollections", hasColl);
+            	entityInfo.put("hasLinks", hasLink.get());
+            	entityInfo.put("hasCollections", hasColl.get());
             	entityInfo.put("singleTableInheritance", ReflectionUtils.isSingleTableInheritance(clazz));
             	String parentPackage = packageName.substring(packageName.lastIndexOf(".")+1);
             	
