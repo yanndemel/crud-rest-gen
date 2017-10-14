@@ -17,6 +17,7 @@
 		</div>
 		<div class="alert alert-info" role="alert"
 			ng-hide="items && items.length > 0">There are no items yet.</div>
+		<div class="table-responsive">
 		<table class="table-striped">
 			<thead>
 				<tr>
@@ -63,6 +64,7 @@
 					</tr>
 				</tbody>
 			</table>
+			</div>
 			<nav ng-style="(page == null || page.totalPages <= 1) && {'display' : 'none'}">
 			<div class="nav navbar-nav" >
 			  <ul class="pagination" >

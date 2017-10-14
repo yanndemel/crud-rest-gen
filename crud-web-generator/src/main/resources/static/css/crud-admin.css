@@ -6,12 +6,18 @@ input:valid {
 	border: 1px solid green;
 }
 
+th, td {
+   padding-left: 2px;
+}
+
 .selected {
 	cursor: pointer;
 	color: blue;
 	font-style: italic;
 	font-weight: bold;
 }
+
+
 
 .create {
 	line-height: 2.5;
