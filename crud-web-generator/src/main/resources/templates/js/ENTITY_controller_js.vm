@@ -18,6 +18,8 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
     ${_}scope.page = null;
     
     ${_}scope.asc = true;
+    
+    ${_}scope.sortField = null;
 
 	var prepareLinkedEntities = function(callback) {
 #if(${entity.hasLinks})
@@ -222,7 +224,8 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 
 	${_}scope.goToPage = function(pageNumber) {
 		if(pageNumber >= 0 && pageNumber < ${_}scope.page.totalPages) {
-			Item.query(${entity.name}_ENDPOINT, "${entity.name}", pageNumber, null, function(response) {
+			var sort = ${_}scope.sortField != null ? (${_}scope.sortField + (${_}scope.asc ? ",asc" : ",desc")) : null;
+			Item.query(${entity.name}_ENDPOINT, "${entity.name}", pageNumber, sort, function(response) {
 				initList(response);
 			});
 		}
@@ -230,9 +233,13 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 	
 	${_}scope.sort = function(fieldName, pageNumber) {		
 		if(${_}scope.page.totalPages > 0) {
+			if(fieldName != ${_}scope.sortField)
+				${_}scope.asc = true;
+			else
+				${_}scope.asc = !${_}scope.asc; 
 			Item.query(${entity.name}_ENDPOINT, "${entity.name}", pageNumber, fieldName + (${_}scope.asc ? ",asc" : ",desc"), function(response) {
 				initList(response);
-				${_}scope.asc = !${_}scope.asc; 
+				${_}scope.sortField = fieldName;
 			});
 		}
 	}

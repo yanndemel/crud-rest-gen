@@ -1,7 +1,6 @@
 package com.octo.tools.crud.cache;
 
 import java.util.Calendar;
-import java.util.Map;
 
 import javax.naming.AuthenticationException;
 import javax.servlet.http.HttpSession;
@@ -78,21 +77,21 @@ public class UserCache {
 		throw new AuthenticationException("Profile not found in cache...");
 	}
 	
-	public void storeTokenInCache(final OAuth2AccessToken tokens) {
-    	storeTokenInCache(tokens, cacheManager.getCache(UserCache.AZURE_TOKENS));
+	public void storeTokenInCache(final OAuth2AccessToken tokens, String sessionId) {
+    	storeTokenInCache(tokens, cacheManager.getCache(UserCache.AZURE_TOKENS), sessionId);
     }
     
-	private void storeTokenInCache(final OAuth2AccessToken tokens, Cache cache) {
+	private void storeTokenInCache(final OAuth2AccessToken tokens, Cache cache, String sessionId) {
 		logger.debug("Storing in cache {}", tokens.getAccessToken());
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.SECOND, tokens.getExpiresIn());
-		cache.put(tokens.getAccessToken(), new Token(tokens, cal.getTime()));
+		cache.put(tokens.getAccessToken(), new Token(tokens, cal.getTime(), sessionId));
 	}
 	
 	public void refreshTokenInCache(Token oldToken, OAuth2AccessToken newToken, HttpSession session) throws AuthenticationException {
 		Cache cache = cacheManager.getCache(UserCache.AZURE_TOKENS);
 		cache.evict(oldToken.getToken().getAccessToken());
-		storeTokenInCache(newToken, cache);
+		storeTokenInCache(newToken, cache, session.getId());
 		refreshUserProfileInCache(oldToken.getToken().getAccessToken(), newToken.getAccessToken());
 		session.setAttribute(SESSION_TOKEN_KEY, newToken.getAccessToken());
 	}

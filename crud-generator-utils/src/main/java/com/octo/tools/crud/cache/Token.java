@@ -10,14 +10,20 @@ public class Token implements Serializable {
 	private OAuth2AccessToken token;
 	
 	private Date expirationDate;
+	
+	private String sessionId;
 
 	public Token() {
 	}
 
-	public Token(OAuth2AccessToken token, Date expirationDate) {
+
+	public Token(OAuth2AccessToken token, Date expirationDate, String sessionId) {
+		super();
 		this.token = token;
 		this.expirationDate = expirationDate;
+		this.sessionId = sessionId;
 	}
+
 
 	public OAuth2AccessToken getToken() {
 		return token;
@@ -33,6 +39,16 @@ public class Token implements Serializable {
 
 	public void setExpirationDate(Date expirationDate) {
 		this.expirationDate = expirationDate;
+	}
+
+
+	public String getSessionId() {
+		return sessionId;
+	}
+
+
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
 	}
 	
 	
