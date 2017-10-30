@@ -15,11 +15,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.EntityManager;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.persistence.Version;
@@ -288,8 +286,11 @@ public abstract class AbstractCrudTest {
 		Class repoClass = getRepository(javaType);
 		Method[] methods = repoClass.getDeclaredMethods();
 		for(Method m : methods) {
-			if(m.getName().startsWith("findBy"))
-				return true;
+			if(m.getName().startsWith("findBy") && m.isAnnotationPresent(RestResource.class)) {
+				RestResource ress = m.getAnnotation(RestResource.class);				
+				if(ress.exported())
+					return true;
+			}
 		}
 		return false;
 	}
