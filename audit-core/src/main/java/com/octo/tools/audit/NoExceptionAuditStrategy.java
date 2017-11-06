@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.HibernateException;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.action.spi.BeforeTransactionCompletionProcess;
@@ -27,7 +26,7 @@ import org.hibernate.envers.internal.entities.mapper.relation.MiddleIdData;
 import org.hibernate.envers.internal.synchronization.SessionCacheCleaner;
 import org.hibernate.envers.internal.tools.query.Parameters;
 import org.hibernate.envers.internal.tools.query.QueryBuilder;
-import org.hibernate.envers.strategy.AuditStrategy;
+import org.hibernate.envers.strategy.ValidityAuditStrategy;
 import org.hibernate.event.spi.EventSource;
 import org.hibernate.jdbc.ReturningWork;
 import org.hibernate.persister.entity.Queryable;
@@ -40,7 +39,7 @@ import org.hibernate.type.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NoExceptionAuditStrategy implements AuditStrategy {
+public class NoExceptionAuditStrategy extends ValidityAuditStrategy {
 	
 	private static final Logger logger =  LoggerFactory.getLogger(NoExceptionAuditStrategy.class);
 	

@@ -127,7 +127,7 @@ public class RestResourceMapperService {
 			throws JsonParseException, JsonMappingException, IOException, HttpRequestException {
 		HttpRequest req = userCache.setHeaders(HttpRequest.get(restResourceURL));
 		if(req.ok()) {
-			logger.warn("The entity {} has been deleted -> returnning last revision", restResourceURL); 
+			logger.warn("The entity {} has been deleted -> returning last revision", restResourceURL); 
 			return req.body();
 		}
 		throw new HttpRequestException("Error while fetching last revision from history", restResourceURL, req.code(), req.body());     
