@@ -9,7 +9,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compile.version>1.8</compile.version>
-		<spring-boot.version>1.5.7.RELEASE</spring-boot.version>
+		<spring-boot.version>1.5.8.RELEASE</spring-boot.version>
 		<evoinflector.version>1.2.2</evoinflector.version>
 		<scribe.version>4.2.0</scribe.version>
 	</properties>
@@ -63,6 +63,13 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<repositories>
+		<repository>
+			<id>central</id>
+			<name>Central repo</name>
+	      <url>https://repo.maven.apache.org/maven2</url>
+		</repository>
+	</repositories>
 	<scm>
 		<url>https://github.com/yanndemel/crud-rest-gen</url>
 		<connection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</connection>

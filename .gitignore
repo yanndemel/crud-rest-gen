@@ -4,6 +4,8 @@
 *.war
 *.ear
 *.class
+*.log
+*.releaseBackup
 
 # eclipse specific git ignore
 .project
