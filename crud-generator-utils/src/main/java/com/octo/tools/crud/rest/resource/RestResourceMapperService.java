@@ -30,6 +30,8 @@ public class RestResourceMapperService {
 		    
     private static final Logger logger = LoggerFactory.getLogger(RestResourceMapperService.class);
     
+    private static RestRemoteResource NOT_FOUND = new RestRemoteResource(true);
+    
     @Autowired
     private Environment env;
     
@@ -112,10 +114,12 @@ public class RestResourceMapperService {
 						return new RestRemoteResource(true, mapToJson(lastEntityRevision));	
 				}				
 			}			
-		} catch (HttpRequest.HttpRequestException e) {
-			throw new HttpRequestException(e.getMessage(), restResourceURL, req.code(), req.body(), e);
+		} catch (Exception e) {
+			//throw new HttpRequestException(e.getMessage(), restResourceURL, req.code(), req.body(), e);
+			logger.error("Exception in getResolvedResource {}", restResourceURL, e);			
 		}
-    	throw new HttpRequestException("Error resolving URL", restResourceURL, req.code(), req.body());     	    
+    	return NOT_FOUND;
+    	//throw new HttpRequestException("Error resolving URL", restResourceURL, req.code(), req.body());     	    
     }
 
 	private Map<String, Object> mapToJson(String json)

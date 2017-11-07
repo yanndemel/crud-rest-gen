@@ -37,7 +37,6 @@ import org.springframework.hateoas.ResourceProcessor;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.tools.crud.rest.annotation.RestResourceMapper;
 import com.octo.tools.crud.rest.resource.util.FieldInfo;
 import com.octo.tools.crud.rest.resource.util.RestResourceUtils;
@@ -53,9 +52,6 @@ public class RestResourceMapperConfig {
 
 	@Autowired
 	private EntityManager em;
-
-	@Autowired
-	private ObjectMapper mapper;
 
 	private Map<String, List<FieldInfo>> fieldGetterSetterByClassName;
 

@@ -7,11 +7,17 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class RestRemoteResource {
 	
 	private boolean deleted;
+	private boolean notFound;
 	
 	@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 	private Map<String, Object> data;
 	
 	public RestRemoteResource() {
+	}
+	
+	public RestRemoteResource(boolean notFound) {
+		super();
+		this.notFound = notFound;
 	}
 
 	public RestRemoteResource(boolean deleted, Map<String, Object> data) {
@@ -40,6 +46,14 @@ public class RestRemoteResource {
 
 	public void setData(Map<String, Object> data) {
 		this.data = data;
+	}
+
+	public boolean isNotFound() {
+		return notFound;
+	}
+
+	public void setNotFound(boolean notFound) {
+		this.notFound = notFound;
 	}
 
 	
