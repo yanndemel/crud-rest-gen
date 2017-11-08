@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 			} catch (MockNotFoundException e) {
 				logger.debug("Disabling listExample for entity "+info.getEntityClass().getName(), e);
 				entityHelper.clearLinkedEntities();
-				entityHelper.reset();
+				reset();
 			}
 
 			try {
@@ -101,7 +102,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 			} catch (MockNotFoundException e) {
 				logger.debug("Disabling createExample for entity "+info.getEntityClass().getName(), e);
 				entityHelper.clearLinkedEntities();
-				entityHelper.reset();
+				reset();
 			}
 
 			try {
@@ -109,7 +110,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 			} catch (MockNotFoundException e) {
 				logger.debug("Disabling getExample for entity "+info.getEntityClass().getName(), e);
 				entityHelper.clearLinkedEntities();
-				entityHelper.reset();
+				reset();
 			}
 
 			try {
@@ -117,7 +118,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 			} catch (MockNotFoundException e) {
 				logger.debug("Disabling updateExample for entity "+info.getEntityClass().getName(), e);
 				entityHelper.clearLinkedEntities();
-				entityHelper.reset();
+				reset();
 			}
 
 		}
@@ -139,7 +140,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 				.andDo(document(info.getSimpleName() + "-update-example", requestFields(
 						getRequestFieldDescriptors(info.getEntityClass(), getParamsDescMap(info.getEntityClass(), true)))));
 		entityHelper.deleteLinkedEntities(location, entityClassName);
-		entityHelper.reset();
+		reset();
 	}
 
 
@@ -154,7 +155,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 						links(halLinks(), getLinksForSingleItem(info)),
 						responseFields(getLinkedFieldDescriptors(info.getEntityClass(), paramsMap))));
 		entityHelper.deleteLinkedEntities(location, entityClassName);
-		entityHelper.reset();
+		reset();
 	}
 
 	protected LinkDescriptor[] getLinksForSingleItem(EntityInfo info) {
@@ -180,8 +181,9 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 	}
 
 	protected void createExample(EntityInfo info) throws Exception, JsonProcessingException, NoSuchFieldException {
+		logger.debug("----->createExample");
 		entityHelper.createLinkedEntities(info.getEntityClass());
-		Map<String, Object> paramsMap = entityHelper.getParamsMap(info.getEntityClass());
+		Map<String, Object> paramsMap = entityHelper.getParamsMap(info.getEntityClass());		
 		ResultActions resultAction = entityHelper.createEntity(info.getPluralName(), paramsMap, info.getEntityClass().getName());
 		Map<String, String> descParamsMap = getParamsDescMap(info.getEntityClass(), true);
 		resultAction.andDo(document(info.getPluralName() + "-create-example",
@@ -189,8 +191,19 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		MockHttpServletResponse response = resultAction.andReturn().getResponse();
 		String location = response.getHeader("Location");
 		
+		reset(info, location);		
+	}
+
+
+	public void reset(EntityInfo info, String location) throws Exception {
 		entityHelper.deleteLinkedEntities(location, info.getEntityClass().getName());
+		reset();
+	}
+
+
+	public void reset() throws IOException {
 		entityHelper.reset();
+		initDataSets();
 	}
 
 	protected FieldDescriptor[] getLinkedFieldDescriptors(Class entityClass, Map<String, String> paramsMap)
@@ -321,8 +334,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 				.andDo(document(info.getPluralName() + "-list-example", links(getLinksForList(info)),
 						responseFields(getFieldsForList(info))));
 
-		entityHelper.deleteLinkedEntities(location, info.getEntityClass().getName());
-		entityHelper.reset();
+		reset(info, location);
 
 	}
 
