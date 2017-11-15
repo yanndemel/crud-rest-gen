@@ -49,7 +49,8 @@ public class StringUtils {
 
 	public static String concatFirstUpper(String lastName, String firstName) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(lastName.toUpperCase());
+		if(lastName != null)			
+			sb.append(lastName.toUpperCase());
 		if(firstName != null) {
 			if(sb.length() > 0)
 				sb.append(" ");
