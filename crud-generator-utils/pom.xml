@@ -39,6 +39,11 @@
 			<version>${scribe.version}</version>
 		</dependency>
 		<dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<scope>test</scope>

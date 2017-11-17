@@ -1,56 +1,24 @@
 package com.octo.tools.crud.cache;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import com.github.scribejava.core.model.OAuth2AccessToken;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Token implements Serializable {
 
 	private OAuth2AccessToken token;
-	
-	private Date expirationDate;
-	
 	private String sessionId;
-
-	public Token() {
-	}
-
-
-	public Token(OAuth2AccessToken token, Date expirationDate, String sessionId) {
-		super();
-		this.token = token;
-		this.expirationDate = expirationDate;
-		this.sessionId = sessionId;
-	}
-
-
-	public OAuth2AccessToken getToken() {
-		return token;
-	}
-
-	public void setToken(OAuth2AccessToken token) {
-		this.token = token;
-	}
-
-	public Date getExpirationDate() {
-		return expirationDate;
-	}
-
-	public void setExpirationDate(Date expirationDate) {
-		this.expirationDate = expirationDate;
-	}
-
-
-	public String getSessionId() {
-		return sessionId;
-	}
-
-
-	public void setSessionId(String sessionId) {
-		this.sessionId = sessionId;
-	}
+	private long creationTime;
 	
-	
+	public boolean isExpired() {
+		return System.currentTimeMillis() >= creationTime + token.getExpiresIn() * 1000L;
+	}
 	
 }

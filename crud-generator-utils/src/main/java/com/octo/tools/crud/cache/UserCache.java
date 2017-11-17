@@ -1,7 +1,5 @@
 package com.octo.tools.crud.cache;
 
-import java.util.Calendar;
-
 import javax.naming.AuthenticationException;
 import javax.servlet.http.HttpSession;
 
@@ -69,7 +67,6 @@ public class UserCache {
 			Profile p = (Profile) valueWrapper.get();
 			if(p != null) {				
 				cache.evict(oldToken);
-				p.setAuthToken(newToken);
 				cache.put(newToken, p);
 				return;
 			}
@@ -83,9 +80,7 @@ public class UserCache {
     
 	private void storeTokenInCache(final OAuth2AccessToken tokens, Cache cache, String sessionId) {
 		logger.debug("Storing in cache {}", tokens.getAccessToken());
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.SECOND, tokens.getExpiresIn());
-		cache.put(tokens.getAccessToken(), new Token(tokens, cal.getTime(), sessionId));
+		cache.put(tokens.getAccessToken(), new Token(tokens, sessionId, System.currentTimeMillis()));
 	}
 	
 	public void refreshTokenInCache(Token oldToken, OAuth2AccessToken newToken, HttpSession session) throws AuthenticationException {
@@ -96,9 +91,19 @@ public class UserCache {
 		session.setAttribute(SESSION_TOKEN_KEY, newToken.getAccessToken());
 	}
 	
-	public void putProfileInCache(String authToken, String name, String userMail) {
+	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, HttpSession session) {
 		Cache cache = cacheManager.getCache(UserCache.PROFILES);		
-		cache.put(authToken, new Profile(name, userMail, authToken));
+		cache.put(authToken.getAccessToken(), new Profile(name, userMail));
+		if(session != null) {
+			storeTokenInCache(authToken, session.getId());
+			session.setAttribute(UserCache.SESSION_TOKEN_KEY, authToken.getAccessToken());
+		} else {
+			storeTokenInCache(authToken, null);
+		}
+	}
+	
+	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail) {
+		putProfileInCache(authToken, name, userMail, null);
 	}
 	
 	public Token getCachedAccessToken(String authToken) throws AuthenticationException {
@@ -109,6 +114,10 @@ public class UserCache {
 			throw new AuthenticationException("Token is null");
 		}
 		return token;
+	}
+	
+	public Token getCachedAccessToken() throws AuthenticationException {		
+		return getCachedAccessToken(getConnectedUserToken());
 	}
 
 	public void setAuthToken(String authToken) {
@@ -128,6 +137,16 @@ public class UserCache {
     			.accept(MediaType.APPLICATION_JSON_VALUE)
     			.trustAllCerts()
     			.trustAllHosts();
+	}
+
+	public void evictAuthTokenFromCache(String accessToken, HttpSession session) {
+		Cache cache = cacheManager.getCache(UserCache.AZURE_TOKENS);		
+		cache.evict(accessToken);
+		cache = cacheManager.getCache(UserCache.PROFILES);		
+		cache.evict(accessToken);
+		if(session != null)
+			session.invalidate();		
+		logger.debug("Access token evicted from caches and session has been invalidated");
 	}
 
 	
