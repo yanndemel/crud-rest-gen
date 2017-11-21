@@ -111,8 +111,10 @@ public class EntityHelper {
 	public ResultActions createEntity(String url, Map<String, Object> jsonData, String entityClassName)
 			throws Exception {
 		logger.debug("Creating entity "+entityClassName+" at url " + url + " with data {" + jsonData + "}");		
+		String body = this.currentTest.getObjectMapper().writeValueAsString(jsonData);
+		logger.debug("Body = {}", body);
 		ResultActions resultAction = currentTest.getMockMvc(entityClassName, HttpMethod.POST).perform(
-				post(url(url)).contentType(MediaType.APPLICATION_JSON).content(this.currentTest.getObjectMapper().writeValueAsString(jsonData)))
+				post(url(url)).contentType(MediaType.APPLICATION_JSON).content(body))
 				.andExpect(status().isCreated());		
 		return resultAction;
 	}

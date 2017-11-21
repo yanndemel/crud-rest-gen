@@ -178,7 +178,7 @@ public abstract class AbstractCrudTest {
 		Set<Class<?>> allRepos = reflections.getTypesAnnotatedWith(RepositoryRestResource.class);		
 		for (EntityType type : entityList) {
 			Class javaType = type.getJavaType();
-			if (ReflectionUtils.isEntityExposed(javaType)) {
+			if (isExposed(javaType)) {
 				setDisabledHttpMethodsPerRepo(javaType, allRepos);
 				EntityInfo info = new EntityInfo();
 				String entity1 = javaType.getSimpleName();
@@ -209,6 +209,10 @@ public abstract class AbstractCrudTest {
 		});
 		Collections.sort(list, (p1, p2) -> p1.getSimpleName().compareTo(p2.getSimpleName()));
 		return list;
+	}
+
+	public boolean isExposed(Class javaType) {
+		return ReflectionUtils.isEntityExposed(javaType);
 	}
 
 	private List<EntityInfo> getChildEntities(EntityInfo info, List<EntityInfo> list) {

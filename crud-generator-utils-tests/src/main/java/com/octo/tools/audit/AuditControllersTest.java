@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.hamcrest.Matchers;
+import org.hibernate.annotations.SelectBeforeUpdate;
+import org.hibernate.envers.Audited;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -42,11 +44,13 @@ public class AuditControllersTest extends AbstractCrudTest {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AuditControllersTest.class);
 	
+	
+	
 	@Test
 	public void testAudit() throws Exception {
 		for(EntityInfo info : entityInfoList) {
 			Class entityClass = info.getEntityClass();
-			if(ReflectionUtils.isEntityExposed(entityClass)) {
+			if(isAudited(entityClass)) {
 				try {
 					performAuditTest(info, entityClass);
 				} catch (MockNotFoundException e) {
@@ -56,6 +60,14 @@ public class AuditControllersTest extends AbstractCrudTest {
 				}
 			}
 		}
+	}
+
+	public boolean isAudited(Class entityClass) {
+		return entityClass != null && entityClass.isAnnotationPresent(Audited.class) && ReflectionUtils.isEntityExposed(entityClass);
+	}
+	
+	public boolean isExposed(Class javaType) {
+		return isAudited(javaType);
 	}
 
 	private void performAuditTest(EntityInfo info, Class entityClass) throws Exception, JsonProcessingException,
