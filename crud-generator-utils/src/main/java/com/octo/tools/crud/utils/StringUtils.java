@@ -59,4 +59,17 @@ public class StringUtils {
 		return sb.toString();
 	}
 	
+	public static boolean isUpperCase(String s) {
+		for (int i=0; i<s.length(); i++)
+	    {
+	        if (Character.isLowerCase(s.charAt(i)))
+	        {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
+	
+	
+	
 }
