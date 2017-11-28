@@ -244,22 +244,24 @@ public abstract class AbstractCrudTest {
 			if(methods != null && methods.length > 0) {
 				for(Method m : methods) {
 					RestResource restResourceAnn = m.getAnnotation(RestResource.class);
-					if(restResourceAnn != null && !restResourceAnn.exported()) {
-						if("save".equals(m.getName()) && m.getParameterTypes() != null
-								&& m.getParameterTypes().length == 1
-								&& m.getParameterTypes()[0].equals(entityClass)
-								&& m.getReturnType().equals(entityClass)) {
-							addCustomController(entityClass.getName(), HttpMethod.PATCH, null);
-							addCustomController(entityClass.getName(), HttpMethod.POST, null);
-							addCustomController(entityClass.getName(), HttpMethod.PUT, null);
-						} else if("delete".equals(m.getName()) 
-								&& m.getParameterTypes()!= null
-								&& m.getParameterTypes().length == 1)
-							addCustomController(entityClass.getName(), HttpMethod.DELETE, null);
-						else if("findOne".equals(m.getName()) && m.getParameterTypes() != null
-								&& m.getParameterTypes().length == 1								
-								&& m.getReturnType().equals(entityClass)) {
-							addCustomController(entityClass.getName(), HttpMethod.GET, null);
+					if(restResourceAnn != null) {
+						if(!restResourceAnn.exported()) {
+							if("save".equals(m.getName()) && m.getParameterTypes() != null
+									&& m.getParameterTypes().length == 1
+									&& m.getParameterTypes()[0].equals(entityClass)
+									&& m.getReturnType().equals(entityClass)) {
+								addCustomController(entityClass.getName(), HttpMethod.PATCH, null);
+								addCustomController(entityClass.getName(), HttpMethod.POST, null);
+								addCustomController(entityClass.getName(), HttpMethod.PUT, null);
+							} else if("delete".equals(m.getName()) 
+									&& m.getParameterTypes()!= null
+									&& m.getParameterTypes().length == 1)
+								addCustomController(entityClass.getName(), HttpMethod.DELETE, null);
+							else if("findOne".equals(m.getName()) && m.getParameterTypes() != null
+									&& m.getParameterTypes().length == 1								
+									&& m.getReturnType().equals(entityClass)) {
+								addCustomController(entityClass.getName(), HttpMethod.GET, null);
+							}
 						}
 					}
 				}	
@@ -290,7 +292,7 @@ public abstract class AbstractCrudTest {
 		Class repoClass = getRepository(javaType);
 		Method[] methods = repoClass.getDeclaredMethods();
 		for(Method m : methods) {
-			if(m.getName().startsWith("findBy") && m.isAnnotationPresent(RestResource.class)) {
+			if(m.isAnnotationPresent(RestResource.class)) {
 				RestResource ress = m.getAnnotation(RestResource.class);				
 				if(ress.exported())
 					return true;
