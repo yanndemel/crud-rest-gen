@@ -194,7 +194,7 @@ public abstract class AbstractCrudTest {
 					info.setSearch(hasSearch(javaType));
 					info.setPaged(isPaged(javaType));
 				} catch (ClassNotFoundException e) {
-					logger.error("ClassNotFound", e);
+					logger.debug("ClassNotFound", e);
 					continue;
 				}
 				info.setHasOnlyManyToOne(hasOnlyManyToOne(javaType));				
