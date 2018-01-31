@@ -12,6 +12,8 @@ import org.atteo.evo.inflector.English;
  */
 public class StringUtils {
 
+	public static final String VALUE_SEP = ",";
+
 	private StringUtils() {};
 	
 	/**
@@ -68,6 +70,16 @@ public class StringUtils {
 	        }
 	    }
 	    return true;
+	}
+
+	public static String extractFirstValue(String values) {
+		if(values == null)
+			return null;
+		int i = values.indexOf(VALUE_SEP);
+		if(i > 0) {
+			return values.substring(0, i);
+		}
+		return values;
 	}
 	
 	

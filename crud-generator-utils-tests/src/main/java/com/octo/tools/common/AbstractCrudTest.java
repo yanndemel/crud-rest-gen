@@ -294,10 +294,13 @@ public abstract class AbstractCrudTest {
 		for(Method m : methods) {
 			if(m.isAnnotationPresent(RestResource.class)) {
 				RestResource ress = m.getAnnotation(RestResource.class);				
-				if(ress.exported())
+				if(ress.exported()) {
+					logger.debug("-->hasSearch for {} is TRUE", javaType.getSimpleName());
 					return true;
+				}
 			}
 		}
+		logger.debug("-->hasSearch for {} is FALSE", javaType.getSimpleName());
 		return false;
 	}
 
