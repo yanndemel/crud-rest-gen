@@ -27,8 +27,12 @@
 					<input id="${htmlId}" bs-datepicker data-autoclose="1" ng-model="item.${htmlName}" name="${htmlName}" class="form-control" minlength="${info.sizeMin}" maxlength="${info.sizeMax}" ></input>
 #elseif( ${info.type} == "String" && ${info.sizeMax} > 255)
 					<textarea id="${htmlId}" name="${htmlName}" ng-model="item.${htmlName}" class="form-control" ></textarea>
-#elseif( ${info.type} == "Boolean" || ${info.type} == "boolean" )
+#elseif( ${info.type} == "boolean" )
 					<input type="checkbox" id="${htmlId}" name="${htmlName}" ng-model="item.${htmlName}" class="form-control" ></input>
+#elseif( ${info.type} == "Boolean" )
+					<select id="${htmlId}" name="${htmlName}" ng-model="item.${htmlName}" ng-options="boolToStr(item) for item in [true, false]" class="form-control">
+						<option value=""></option>						
+					</select>					
 #elseif( ${info.enumField} )
 					<select id="${htmlId}" name="${htmlName}" ng-model="item.${htmlName}" class="form-control">
 #foreach($enumVal in ${info.enumValues})								

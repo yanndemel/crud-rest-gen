@@ -152,6 +152,10 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 				});		
 	}
 
+	${_}scope.boolToStr = function(arg) {
+		return arg ? "true" : "false";
+	}
+
 	${_}scope.editLinkedEntity = function(entityName, url) {
 		${_}http.get(url).then(
 				function(success) {
