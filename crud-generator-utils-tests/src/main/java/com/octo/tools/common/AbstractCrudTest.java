@@ -204,7 +204,7 @@ public abstract class AbstractCrudTest {
 					continue;
 				info.setIdField(idField.getName());
 				info.setIdAuto(idField.isAnnotationPresent(GeneratedValue.class));
-				if(!info.isIdAuto() && (idField == null || !(idField.getType().equals(Long.class) || idField.getType().equals(long.class)))) {
+				if(!info.isIdAuto() && !(idField.getType().equals(Long.class) || idField.getType().equals(long.class))) {
 					continue;
 				}
 				try {
