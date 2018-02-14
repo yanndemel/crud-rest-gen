@@ -209,7 +209,7 @@ public abstract class AbstractCrudTest {
 						break;
 					}
 				}
-				if(!info.isIdAuto() && !(idField.getType().equals(Long.class) || idField.getType().equals(long.class))) {
+				if(!info.isIdAuto() && (idField == null || !(idField.getType().equals(Long.class) || idField.getType().equals(long.class)))) {
 					continue;
 				}
 				try {
