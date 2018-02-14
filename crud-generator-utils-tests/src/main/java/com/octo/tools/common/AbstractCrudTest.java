@@ -199,16 +199,11 @@ public abstract class AbstractCrudTest {
 				info.setSimpleName1stUpper(entity1);
 				info.setPluralName(entities);
 				info.setPluralName1stUpper(entities1);
-				Field[] fields = javaType.getDeclaredFields();
-				Field idField = null;
-				for(Field f : fields) {
-					if(f.isAnnotationPresent(Id.class)) {
-						idField = f;
-						info.setIdField(idField.getName());
-						info.setIdAuto(f.isAnnotationPresent(GeneratedValue.class));
-						break;
-					}
-				}
+				Field idField = getIdField(javaType);
+				if(idField == null)
+					continue;
+				info.setIdField(idField.getName());
+				info.setIdAuto(idField.isAnnotationPresent(GeneratedValue.class));
 				if(!info.isIdAuto() && (idField == null || !(idField.getType().equals(Long.class) || idField.getType().equals(long.class)))) {
 					continue;
 				}
@@ -231,6 +226,18 @@ public abstract class AbstractCrudTest {
 		});
 		Collections.sort(list, (p1, p2) -> p1.getSimpleName().compareTo(p2.getSimpleName()));
 		return list;
+	}
+
+	private Field getIdField(Class javaType) {
+		List<Field> allFields = ReflectionUtils.getAllFields(javaType);		
+		Field idField = null;
+		for(Field f : allFields) {
+			if(f.isAnnotationPresent(Id.class)) {
+				idField = f;						
+				break;
+			}
+		}
+		return idField;
 	}
 
 	public boolean isExposed(Class javaType) {
