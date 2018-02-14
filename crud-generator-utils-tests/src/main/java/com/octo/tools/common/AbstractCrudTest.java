@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.EntityManager;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
@@ -62,12 +63,20 @@ public abstract class AbstractCrudTest {
 	protected EntityHelper entityHelper;
 	
 	private String packageName;
+	
+	private long sequence;
 
 	public AbstractCrudTest() {
 		packageName = System.getProperty("packageName");
+		sequence = 0L;
 		assert(packageName != null);
 	}
 
+	protected Long nextVal() {
+		return ++this.sequence;
+	}
+	
+	
 	@Before
 	public void setUp() throws ClassNotFoundException, IOException {
 		configureMapper();
@@ -178,7 +187,7 @@ public abstract class AbstractCrudTest {
 		Set<Class<?>> allRepos = reflections.getTypesAnnotatedWith(RepositoryRestResource.class);		
 		for (EntityType type : entityList) {
 			Class javaType = type.getJavaType();
-			if (isExposed(javaType)) {
+			if (isExposed(javaType) && type.hasSingleIdAttribute()) {
 				setDisabledHttpMethodsPerRepo(javaType, allRepos);
 				EntityInfo info = new EntityInfo();
 				String entity1 = javaType.getSimpleName();
@@ -190,6 +199,19 @@ public abstract class AbstractCrudTest {
 				info.setSimpleName1stUpper(entity1);
 				info.setPluralName(entities);
 				info.setPluralName1stUpper(entities1);
+				Field[] fields = javaType.getDeclaredFields();
+				Field idField = null;
+				for(Field f : fields) {
+					if(f.isAnnotationPresent(Id.class)) {
+						idField = f;
+						info.setIdField(idField.getName());
+						info.setIdAuto(f.isAnnotationPresent(GeneratedValue.class));
+						break;
+					}
+				}
+				if(!info.isIdAuto() && !(idField.getType().equals(Long.class) || idField.getType().equals(long.class))) {
+					continue;
+				}
 				try {
 					info.setSearch(hasSearch(javaType));
 					info.setPaged(isPaged(javaType));

@@ -20,6 +20,8 @@ public class EntityInfo {
 	private Map<String, Object> updateOverrideDataSet;
 	private boolean singleTableInheritance;
 	private List<EntityInfo> childEntities;
+	private boolean idAuto;
+	private String idField;
 	
 	public String getSimpleName1stUpper() {
 		return simpleName1stUpper;
@@ -153,6 +155,22 @@ public class EntityInfo {
 
 	public void setSingleTableInheritance(boolean singleTableInheritance) {
 		this.singleTableInheritance = singleTableInheritance;
+	}
+
+	public boolean isIdAuto() {
+		return idAuto;
+	}
+
+	public void setIdAuto(boolean idAuto) {
+		this.idAuto = idAuto;
+	}
+
+	public String getIdField() {
+		return idField;
+	}
+
+	public void setIdField(String idField) {
+		this.idField = idField;
 	}
 	
 	

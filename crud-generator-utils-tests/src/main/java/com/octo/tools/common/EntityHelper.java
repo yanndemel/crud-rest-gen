@@ -20,6 +20,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -75,7 +76,7 @@ public class EntityHelper {
 	
 	private AbstractCrudTest currentTest;
 	
-	private int random;
+	private int random;	
 
 	private Map<String, Map<String, Map<String, Object>>> allEntities;
 
@@ -84,10 +85,9 @@ public class EntityHelper {
 		this.currentTest = test;
 		this.linkedEntities = new ArrayList<>();
 		this.random = 0;
-		this.allEntities = new HashMap<>();
+		this.allEntities = new HashMap<>();		
 	}
 
-	
 	public String createSampleEntity(String url, Map<String, Object> params, String entityClassName)
 			throws Exception, JsonProcessingException {
 		Map<String, Map<String, Object>> map = allEntities.get(url);
@@ -110,6 +110,15 @@ public class EntityHelper {
 	
 	public ResultActions createEntity(String url, Map<String, Object> jsonData, String entityClassName)
 			throws Exception {
+		List<EntityInfo> l = currentTest.getEntityInfoList();
+		for(EntityInfo i : l) {
+			if(i.getEntityClass().getName().equals(entityClassName)) {
+				if(!i.isIdAuto()) {
+					jsonData.put(i.getIdField(), currentTest.nextVal());
+				}
+				break;
+			}
+		}
 		logger.debug("Creating entity "+entityClassName+" at url " + url + " with data {" + jsonData + "}");		
 		String body = this.currentTest.getObjectMapper().writeValueAsString(jsonData);
 		logger.debug("Body = {}", body);
@@ -522,7 +531,7 @@ public class EntityHelper {
 
 
 	public boolean isFieldExposed(Field f, boolean includeManyToOne) {
-		return !f.isAnnotationPresent(Id.class)
+		return !f.isAnnotationPresent(GeneratedValue.class) 
 				&& !f.isAnnotationPresent(Version.class) && !f.isAnnotationPresent(JsonIgnore.class)
 				&& (includeManyToOne || !f.isAnnotationPresent(ManyToOne.class));
 	}
