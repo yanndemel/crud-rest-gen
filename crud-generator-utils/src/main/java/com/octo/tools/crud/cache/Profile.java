@@ -2,7 +2,6 @@ package com.octo.tools.crud.cache;
 
 import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +19,7 @@ public class Profile implements Serializable {
 	 * Sent to client with profile info (not stored in cache)
 	 * */
 	private String token;
+	private String refreshToken;
 	private long expiresIn;
 	
 	
@@ -30,9 +30,10 @@ public class Profile implements Serializable {
 	}
 
 	/*Use to send RefreshToken infos*/
-	public Profile(String token, long expiresIn) {
+	public Profile(String token, String refreshToken, long expiresIn) {
 		super();
 		this.token = token;
+		this.refreshToken = refreshToken;
 		this.expiresIn = expiresIn;
 	}
 	

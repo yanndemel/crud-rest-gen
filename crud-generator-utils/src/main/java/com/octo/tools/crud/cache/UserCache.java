@@ -89,7 +89,7 @@ public class UserCache {
 		storeTokenInCache(newToken, cache, session.getId());
 		refreshUserProfileInCache(oldToken.getToken().getAccessToken(), newToken.getAccessToken());
 		session.setAttribute(SESSION_TOKEN_KEY, newToken.getAccessToken());
-	}
+	}	
 	
 	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, HttpSession session) {
 		Cache cache = cacheManager.getCache(UserCache.PROFILES);		
