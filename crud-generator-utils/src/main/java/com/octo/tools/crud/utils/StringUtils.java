@@ -81,6 +81,10 @@ public class StringUtils {
 		}
 		return values;
 	}
+
+	public static String doubleToString(Double price) {		
+		return price % 1 == 0 ? Integer.toString(price.intValue()) : price.toString();
+	}
 	
 	
 	
