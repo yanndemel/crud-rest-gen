@@ -7,8 +7,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +39,9 @@ public class RestResourceMapperService {
 	@Autowired
 	private UserCache userCache;
 	
+	@Autowired
 	private ObjectMapper mapper;
 	
-	@PostConstruct
-	public void init() {
-		mapper = new ObjectMapper();
-	}
 
     public String getResourceURL(final RestResourceMapper restResourceMapper, final Object resourceId) {
         String path = restResourceMapper.path().replaceAll(RestResourceMapper.RESOURCE_ID_PLACEHOLDER, resourceId.toString());

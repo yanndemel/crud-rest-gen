@@ -7,9 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 
-import org.hibernate.envers.Audited;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.octo.tools.crud.rest.annotation.RestResourceMapper;
 import com.octo.tools.crud.rest.resource.RestRemoteResource;
 

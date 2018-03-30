@@ -33,7 +33,6 @@ public class MockRestResourceMapperService extends RestResourceMapperService {
 
 	@PostConstruct
 	public void init() {
-		super.init();
 		mockMvc = MockMvcBuilders.standaloneSetup(auditController).build();
 	}
 	
