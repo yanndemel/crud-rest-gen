@@ -35,8 +35,6 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
@@ -69,8 +67,11 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.web.util.UriUtils;
 
 /**
  * A fluid interface for making HTTP requests using an underlying
@@ -81,6 +82,8 @@ import org.springframework.http.MediaType;
  */
 public class HttpRequest {
 
+	
+	private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
 	/**
 	 * 'UTF-8' charset name
 	 */
@@ -273,7 +276,7 @@ public class HttpRequest {
 		return result;
 	}
 
-	private static StringBuilder addParam(final Object key, Object value, final StringBuilder result) {
+	private static StringBuilder addParam(final Object key, Object value, final StringBuilder result, boolean encode) {
 		if (value != null && value.getClass().isArray())
 			value = arrayToList(value);
 
@@ -283,8 +286,9 @@ public class HttpRequest {
 				result.append(key);
 				result.append("[]=");
 				Object element = iterator.next();
-				if (element != null)
-					result.append(element);
+				if (element != null) {
+					appendParam(result, encode, element);
+				}
 				if (iterator.hasNext())
 					result.append("&");
 			}
@@ -292,10 +296,21 @@ public class HttpRequest {
 			result.append(key);
 			result.append("=");
 			if (value != null)
-				result.append(value);
+				appendParam(result, encode, value);
 		}
 
 		return result;
+	}
+
+	private static void appendParam(final StringBuilder result, boolean encode, Object element) {
+		String encoded;
+		try {
+			encoded = UriUtils.encodeQueryParam(element.toString(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			logger.error("Exception while encoding parameter", e);
+			encoded = element.toString();
+		}
+		result.append(encode ? encoded : element);
 	}
 
 	/**
@@ -830,7 +845,7 @@ public class HttpRequest {
 	 * @return encoded URL
 	 * @throws HttpRequestException
 	 */
-	public static String encode(final CharSequence url) throws HttpRequestException {
+	/*public static String encode(final CharSequence url) throws HttpRequestException {
 		URL parsed;
 		try {
 			parsed = new URL(url.toString());
@@ -856,41 +871,7 @@ public class HttpRequest {
 			io.initCause(e);
 			throw new HttpRequestException(io);
 		}
-	}
-
-	/**
-	 * Append given map as query parameters to the base URL
-	 * <p>
-	 * Each map entry's key will be a parameter name and the value's
-	 * {@link Object#toString()} will be the parameter value.
-	 *
-	 * @param url
-	 * @param params
-	 * @return URL with appended query params
-	 */
-	public static String append(final CharSequence url, final Map<?, ?> params) {
-		final String baseUrl = url.toString();
-		if (params == null || params.isEmpty())
-			return baseUrl;
-
-		final StringBuilder result = new StringBuilder(baseUrl);
-
-		addPathSeparator(baseUrl, result);
-		addParamPrefix(baseUrl, result);
-
-		Entry<?, ?> entry;
-		Iterator<?> iterator = params.entrySet().iterator();
-		entry = (Entry<?, ?>) iterator.next();
-		addParam(entry.getKey().toString(), entry.getValue(), result);
-
-		while (iterator.hasNext()) {
-			result.append('&');
-			entry = (Entry<?, ?>) iterator.next();
-			addParam(entry.getKey().toString(), entry.getValue(), result);
-		}
-
-		return result.toString();
-	}
+	}*/
 
 	/**
 	 * Append given name/value pairs as query parameters to the base URL
@@ -903,7 +884,7 @@ public class HttpRequest {
 	 *            name/value pairs
 	 * @return URL with appended query params
 	 */
-	public static String append(final CharSequence url, final Object... params) {
+	public static String append(final CharSequence url, final boolean encode, final Object... params) {
 		final String baseUrl = url.toString();
 		if (params == null || params.length == 0)
 			return baseUrl;
@@ -916,11 +897,11 @@ public class HttpRequest {
 		addPathSeparator(baseUrl, result);
 		addParamPrefix(baseUrl, result);
 
-		addParam(params[0], params[1], result);
+		addParam(params[0], params[1], result, encode);
 
 		for (int i = 2; i < params.length; i += 2) {
 			result.append('&');
-			addParam(params[i], params[i + 1], result);
+			addParam(params[i], params[i + 1], result, encode);
 		}
 
 		return result.toString();
@@ -948,24 +929,6 @@ public class HttpRequest {
 		return new HttpRequest(url, HttpMethod.GET);
 	}
 
-	/**
-	 * Start a 'GET' request to the given URL along with the query params
-	 *
-	 * @param baseUrl
-	 * @param params
-	 *            The query parameters to include as part of the baseUrl
-	 * @param encode
-	 *            true to encode the full URL
-	 *
-	 * @see #append(CharSequence, Map)
-	 * @see #encode(CharSequence)
-	 *
-	 * @return request
-	 */
-	public static HttpRequest get(final CharSequence baseUrl, final Map<?, ?> params, final boolean encode) {
-		String url = append(baseUrl, params);
-		return get(encode ? encode(url) : url);
-	}
 
 	/**
 	 * Start a 'GET' request to the given URL along with the query params
@@ -983,8 +946,8 @@ public class HttpRequest {
 	 * @return request
 	 */
 	public static HttpRequest get(final CharSequence baseUrl, final boolean encode, final Object... params) {
-		String url = append(baseUrl, params);
-		return get(encode ? encode(url) : url);
+		String url = append(baseUrl, encode, params);
+		return get(url);
 	}
 
 	/**
@@ -1013,25 +976,6 @@ public class HttpRequest {
 	 * Start a 'PATCH' request to the given URL along with the query params
 	 *
 	 * @param baseUrl
-	 * @param params
-	 *            the query parameters to include as part of the baseUrl
-	 * @param encode
-	 *            true to encode the full URL
-	 *
-	 * @see #append(CharSequence, Map)
-	 * @see #encode(CharSequence)
-	 *
-	 * @return request
-	 */
-	public static HttpRequest patch(final CharSequence baseUrl, final Map<?, ?> params, final boolean encode) {
-		String url = append(baseUrl, params);
-		return patch(encode ? encode(url) : url);
-	}
-
-	/**
-	 * Start a 'PATCH' request to the given URL along with the query params
-	 *
-	 * @param baseUrl
 	 * @param encode
 	 *            true to encode the full URL
 	 * @param params
@@ -1044,8 +988,8 @@ public class HttpRequest {
 	 * @return request
 	 */
 	public static HttpRequest patch(final CharSequence baseUrl, final boolean encode, final Object... params) {
-		String url = append(baseUrl, params);
-		return patch(encode ? encode(url) : url);
+		String url = append(baseUrl, encode, params);
+		return patch(url);
 	}
 
 	/**
@@ -1074,25 +1018,6 @@ public class HttpRequest {
 	 * Start a 'POST' request to the given URL along with the query params
 	 *
 	 * @param baseUrl
-	 * @param params
-	 *            the query parameters to include as part of the baseUrl
-	 * @param encode
-	 *            true to encode the full URL
-	 *
-	 * @see #append(CharSequence, Map)
-	 * @see #encode(CharSequence)
-	 *
-	 * @return request
-	 */
-	public static HttpRequest post(final CharSequence baseUrl, final Map<?, ?> params, final boolean encode) {
-		String url = append(baseUrl, params);
-		return post(encode ? encode(url) : url);
-	}
-
-	/**
-	 * Start a 'POST' request to the given URL along with the query params
-	 *
-	 * @param baseUrl
 	 * @param encode
 	 *            true to encode the full URL
 	 * @param params
@@ -1105,8 +1030,8 @@ public class HttpRequest {
 	 * @return request
 	 */
 	public static HttpRequest post(final CharSequence baseUrl, final boolean encode, final Object... params) {
-		String url = append(baseUrl, params);
-		return post(encode ? encode(url) : url);
+		String url = append(baseUrl, encode, params);
+		return post(url);
 	}
 
 	/**
@@ -1135,25 +1060,6 @@ public class HttpRequest {
 	 * Start a 'PUT' request to the given URL along with the query params
 	 *
 	 * @param baseUrl
-	 * @param params
-	 *            the query parameters to include as part of the baseUrl
-	 * @param encode
-	 *            true to encode the full URL
-	 *
-	 * @see #append(CharSequence, Map)
-	 * @see #encode(CharSequence)
-	 *
-	 * @return request
-	 */
-	public static HttpRequest put(final CharSequence baseUrl, final Map<?, ?> params, final boolean encode) {
-		String url = append(baseUrl, params);
-		return put(encode ? encode(url) : url);
-	}
-
-	/**
-	 * Start a 'PUT' request to the given URL along with the query params
-	 *
-	 * @param baseUrl
 	 * @param encode
 	 *            true to encode the full URL
 	 * @param params
@@ -1166,8 +1072,8 @@ public class HttpRequest {
 	 * @return request
 	 */
 	public static HttpRequest put(final CharSequence baseUrl, final boolean encode, final Object... params) {
-		String url = append(baseUrl, params);
-		return put(encode ? encode(url) : url);
+		String url = append(baseUrl, encode, params);
+		return put(url);
 	}
 
 	/**
@@ -1196,25 +1102,6 @@ public class HttpRequest {
 	 * Start a 'DELETE' request to the given URL along with the query params
 	 *
 	 * @param baseUrl
-	 * @param params
-	 *            The query parameters to include as part of the baseUrl
-	 * @param encode
-	 *            true to encode the full URL
-	 *
-	 * @see #append(CharSequence, Map)
-	 * @see #encode(CharSequence)
-	 *
-	 * @return request
-	 */
-	public static HttpRequest delete(final CharSequence baseUrl, final Map<?, ?> params, final boolean encode) {
-		String url = append(baseUrl, params);
-		return delete(encode ? encode(url) : url);
-	}
-
-	/**
-	 * Start a 'DELETE' request to the given URL along with the query params
-	 *
-	 * @param baseUrl
 	 * @param encode
 	 *            true to encode the full URL
 	 * @param params
@@ -1227,8 +1114,8 @@ public class HttpRequest {
 	 * @return request
 	 */
 	public static HttpRequest delete(final CharSequence baseUrl, final boolean encode, final Object... params) {
-		String url = append(baseUrl, params);
-		return delete(encode ? encode(url) : url);
+		String url = append(baseUrl, encode, params);
+		return delete(url);
 	}
 
 	/**
@@ -1254,25 +1141,6 @@ public class HttpRequest {
 	}
 
 	/**
-	 * Start a 'HEAD' request to the given URL along with the query params
-	 *
-	 * @param baseUrl
-	 * @param params
-	 *            The query parameters to include as part of the baseUrl
-	 * @param encode
-	 *            true to encode the full URL
-	 *
-	 * @see #append(CharSequence, Map)
-	 * @see #encode(CharSequence)
-	 *
-	 * @return request
-	 */
-	public static HttpRequest head(final CharSequence baseUrl, final Map<?, ?> params, final boolean encode) {
-		String url = append(baseUrl, params);
-		return head(encode ? encode(url) : url);
-	}
-
-	/**
 	 * Start a 'GET' request to the given URL along with the query params
 	 *
 	 * @param baseUrl
@@ -1288,8 +1156,8 @@ public class HttpRequest {
 	 * @return request
 	 */
 	public static HttpRequest head(final CharSequence baseUrl, final boolean encode, final Object... params) {
-		String url = append(baseUrl, params);
-		return head(encode ? encode(url) : url);
+		String url = append(baseUrl, encode, params);
+		return head(url);
 	}
 
 	/**
