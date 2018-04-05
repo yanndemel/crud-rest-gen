@@ -46,7 +46,8 @@ public class StringUtils {
 
 	public static String removeAccents(String name) {
 		String normalize = Normalizer.normalize(name, Normalizer.Form.NFD);
-		return normalize.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+		return normalize.replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+				.replaceAll("(\\\\|/|\\.)", " ").trim();
 	}
 
 	public static String concatFirstUpper(String lastName, String firstName) {
