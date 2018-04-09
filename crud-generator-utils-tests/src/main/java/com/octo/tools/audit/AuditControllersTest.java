@@ -74,33 +74,36 @@ public class AuditControllersTest extends AbstractCrudTest {
 			ClassNotFoundException, IOException, JsonParseException, JsonMappingException {
 		entityHelper.createLinkedEntities(entityClass);
 		String location = entityHelper.createSampleEntity(info);
-		MockMvc getMockMvc = getMockMvc(entityClass.getName(), HttpMethod.GET);
-		logger.debug("Created entity : "+getMockMvc.perform(get(location)).andReturn().getResponse().getContentAsString());
-		Map<String, Object> paramsMap = entityHelper.getParamsMap(entityClass, true);
-		logger.debug("Updating "+location+" with params "+paramsMap);
-		getMockMvc(entityClass.getName(), HttpMethod.PATCH)
-				.perform(patch(entityHelper.url(location)).contentType(MediaTypes.HAL_JSON)
-						.content(this.objectMapper.writeValueAsString(paramsMap)))
-				.andExpect(status().isNoContent());
-		logger.debug("Updated entity : "+getMockMvc.perform(get(location)).andReturn().getResponse().getContentAsString());
-		ResultActions result = getMockMvc.perform(get(getRevisionsUrl(info.getPluralName().toUpperCase()))).andDo(print()).andExpect(status().isOk())
-				.andExpect(jsonPath("_embedded.auditResourceSupports[0].revType", Matchers.equalTo("ADD")));		
-		Map<String, Object> map = objectMapper.readValue(result.andReturn().getResponse().getContentAsString(), Map.class); 
-		List<Map<String, Object>> list = (List)((Map)map.get("_embedded")).get("auditResourceSupports");
-		Object entity = list.get(list.size() - 1).get("entity");
-		Object revId = ((Map)list.get(list.size() - 1)).get("revId");
-		Integer entityId = Integer.parseInt(location.substring(location.lastIndexOf("/") + 1));
-		getMockMvc.perform(get(getRevisionsForEntityUrl(info.getPluralName().toUpperCase(), location))).andDo(print()).andExpect(jsonPath("_embedded.auditResourceSupports", Matchers.hasSize(2))).andExpect(status().isOk());
+		if(location != null) {
+			MockMvc getMockMvc = getMockMvc(entityClass.getName(), HttpMethod.GET);
+			logger.debug("Created entity : "+getMockMvc.perform(get(location)).andReturn().getResponse().getContentAsString());
+			Map<String, Object> paramsMap = entityHelper.getParamsMap(entityClass, true);
+			logger.debug("Updating "+location+" with params "+paramsMap);
+			getMockMvc(entityClass.getName(), HttpMethod.PATCH)
+					.perform(patch(entityHelper.url(location)).contentType(MediaTypes.HAL_JSON)
+							.content(this.objectMapper.writeValueAsString(paramsMap)))
+					.andExpect(status().isNoContent());
+			logger.debug("Updated entity : "+getMockMvc.perform(get(location)).andReturn().getResponse().getContentAsString());
+			ResultActions result = getMockMvc.perform(get(getRevisionsUrl(info.getPluralName().toUpperCase()))).andDo(print()).andExpect(status().isOk())
+					.andExpect(jsonPath("_embedded.auditResourceSupports[0].revType", Matchers.equalTo("ADD")));		
+			Map<String, Object> map = objectMapper.readValue(result.andReturn().getResponse().getContentAsString(), Map.class); 
+			List<Map<String, Object>> list = (List)((Map)map.get("_embedded")).get("auditResourceSupports");
+			Object entity = list.get(list.size() - 1).get("entity");
+			Object revId = ((Map)list.get(list.size() - 1)).get("revId");
+			Integer entityId = Integer.parseInt(location.substring(location.lastIndexOf("/") + 1));
+			getMockMvc.perform(get(getRevisionsForEntityUrl(info.getPluralName().toUpperCase(), location))).andDo(print()).andExpect(jsonPath("_embedded.auditResourceSupports", Matchers.hasSize(2))).andExpect(status().isOk());
+			
+			getMockMvc.perform(get(getRevisionEntityUrl(info.getPluralName().toUpperCase(), revId.toString()))).andDo(print()).andExpect(status().isOk())
+				.andExpect(jsonPath("_embedded.auditResourceSupports[0].revType", Matchers.equalTo("MOD")));
+			
+			entityHelper.deleteLinkedEntities(location, entityClass.getName());
+			
+			ResultActions res = getMockMvc.perform(get(getLastRevisionForDeletedEntity(info.getPluralName().toUpperCase(), location))).andDo(print()).andExpect(jsonPath("entityId", Matchers.equalTo(entityId))).andExpect(status().isOk());
+			Map<String, Object> mapDel = objectMapper.readValue(res.andReturn().getResponse().getContentAsString(), Map.class); 
+			assertEquals(objectMapper.writeValueAsString(entity), objectMapper.writeValueAsString(mapDel.get("entity")));
+			entityHelper.reset();
+		}
 		
-		getMockMvc.perform(get(getRevisionEntityUrl(info.getPluralName().toUpperCase(), revId.toString()))).andDo(print()).andExpect(status().isOk())
-			.andExpect(jsonPath("_embedded.auditResourceSupports[0].revType", Matchers.equalTo("MOD")));
-		
-		entityHelper.deleteLinkedEntities(location, entityClass.getName());
-		
-		ResultActions res = getMockMvc.perform(get(getLastRevisionForDeletedEntity(info.getPluralName().toUpperCase(), location))).andDo(print()).andExpect(jsonPath("entityId", Matchers.equalTo(entityId))).andExpect(status().isOk());
-		Map<String, Object> mapDel = objectMapper.readValue(res.andReturn().getResponse().getContentAsString(), Map.class); 
-		assertEquals(objectMapper.writeValueAsString(entity), objectMapper.writeValueAsString(mapDel.get("entity")));
-		entityHelper.reset();
 	}
 	
 	private String getLastRevisionForDeletedEntity(String plural, String location) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException, ClassNotFoundException {

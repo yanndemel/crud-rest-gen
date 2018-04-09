@@ -129,18 +129,20 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		logger.debug("----->updateExample");
 		entityHelper.createLinkedEntities(info.getEntityClass());
 		String location = entityHelper.createSampleEntity(info);
-		String entityClassName = info.getEntityClass().getName();
-		verifiySampleEntity(location, entityClassName);
-		Map<String, Object> paramsMap = entityHelper.getParamsMap(info.getEntityClass(), true);
+		if(location != null) {
+			String entityClassName = info.getEntityClass().getName();
+			verifiySampleEntity(location, entityClassName);
+			Map<String, Object> paramsMap = entityHelper.getParamsMap(info.getEntityClass(), true);
 
-		getMockMvc(entityClassName, HttpMethod.PATCH)
-				.perform(patch(entityHelper.url(location)).contentType(MediaTypes.HAL_JSON)
-						.content(this.objectMapper.writeValueAsString(paramsMap)))
-				.andExpect(status().isNoContent())
-				.andDo(document(info.getSimpleName() + "-update-example", requestFields(
-						getRequestFieldDescriptors(info.getEntityClass(), getParamsDescMap(info.getEntityClass(), true)))));
-		entityHelper.deleteLinkedEntities(location, entityClassName);
-		reset();
+			getMockMvc(entityClassName, HttpMethod.PATCH)
+					.perform(patch(entityHelper.url(location)).contentType(MediaTypes.HAL_JSON)
+							.content(this.objectMapper.writeValueAsString(paramsMap)))
+					.andExpect(status().isNoContent())
+					.andDo(document(info.getSimpleName() + "-update-example", requestFields(
+							getRequestFieldDescriptors(info.getEntityClass(), getParamsDescMap(info.getEntityClass(), true)))));
+			entityHelper.deleteLinkedEntities(location, entityClassName);
+			reset();
+		}
 	}
 
 
@@ -149,13 +151,15 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		entityHelper.createLinkedEntities(info.getEntityClass());
 		Map<String, String> paramsMap = getParamsDescMap(info.getEntityClass(), true);
 		String location = entityHelper.createSampleEntity(info);
-		String entityClassName = info.getEntityClass().getName();
-		verifiySampleEntity(location, entityClassName)
-				.andDo(document(info.getSimpleName() + "-get-example", 
-						links(halLinks(), getLinksForSingleItem(info)),
-						responseFields(getLinkedFieldDescriptors(info.getEntityClass(), paramsMap))));
-		entityHelper.deleteLinkedEntities(location, entityClassName);
-		reset();
+		if(location != null) {
+			String entityClassName = info.getEntityClass().getName();
+			verifiySampleEntity(location, entityClassName)
+					.andDo(document(info.getSimpleName() + "-get-example", 
+							links(halLinks(), getLinksForSingleItem(info)),
+							responseFields(getLinkedFieldDescriptors(info.getEntityClass(), paramsMap))));
+			entityHelper.deleteLinkedEntities(location, entityClassName);
+			reset();	
+		}		
 	}
 
 	protected LinkDescriptor[] getLinksForSingleItem(EntityInfo info) {
@@ -330,12 +334,14 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 
 		logger.debug("listExample for " + info);
 		String location = entityHelper.createSampleEntity(info);
-		getMockMvc(info.getEntityClass().getName(), HttpMethod.GET).perform(get(entityHelper.url(info.getPluralName()))).andExpect(status().isOk())
-				.andDo(document(info.getPluralName() + "-list-example", links(getLinksForList(info)),
-						responseFields(getFieldsForList(info))));
+		if(location != null) {
+			getMockMvc(info.getEntityClass().getName(), HttpMethod.GET).perform(get(entityHelper.url(info.getPluralName()))).andExpect(status().isOk())
+			.andDo(document(info.getPluralName() + "-list-example", links(getLinksForList(info)),
+					responseFields(getFieldsForList(info))));
 
-		reset(info, location);
-
+			reset(info, location);	
+		}
+		
 	}
 
 	protected FieldDescriptor[] getFieldsForList(EntityInfo info) {

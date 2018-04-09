@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -89,22 +90,27 @@ public class EntityHelper {
 
 	public String createSampleEntity(String url, Map<String, Object> params, String entityClassName)
 			throws Exception, JsonProcessingException {
-		Map<String, Map<String, Object>> map = allEntities.get(url);
-		if(map != null) {
-			for(Entry<String, Map<String, Object>> e  : map.entrySet()) {
-				Map<String, Object> json = e.getValue();
-				if(json.equals(params))
-					throw new AlreadyCreatedException(e.getKey());
+		try {
+			Map<String, Map<String, Object>> map = allEntities.get(url);
+			if(map != null) {
+				for(Entry<String, Map<String, Object>> e  : map.entrySet()) {
+					Map<String, Object> json = e.getValue();
+					if(json.equals(params))
+						throw new AlreadyCreatedException(e.getKey());
+				}
+			} else {
+				map = new HashMap<>();
+				allEntities.put(url, map);
 			}
-		} else {
-			map = new HashMap<>();
-			allEntities.put(url, map);
+			ResultActions resultAction = createEntity(url, params, entityClassName);
+			String location = resultAction.andReturn().getResponse().getHeader("Location");
+			map.put(location, params);
+			logger.debug("Entity created at "+location);	
+			return location;
+		} catch (MockNotFoundException e) {
+			logger.debug("MockNotFoundException for entity "+entityClassName);	
+			return null;
 		}
-		ResultActions resultAction = createEntity(url, params, entityClassName);
-		String location = resultAction.andReturn().getResponse().getHeader("Location");
-		map.put(location, params);
-		logger.debug("Entity created at "+location);	
-		return location;
 	}
 	
 	public ResultActions createEntity(String url, Map<String, Object> jsonData, String entityClassName)
@@ -188,7 +194,9 @@ public class EntityHelper {
 		}
 		if (!rootClass) {
 			String location = createSampleEntity(getEntityInfo(entityClass), forUpdate);
-			linkedEntities.add(new DeleteInfo(entityClass, location));
+			if(location != null) {
+				linkedEntities.add(new DeleteInfo(entityClass, location));	
+			}			
 		}
 	}
 	public boolean alreadyLinked(Class target) {
@@ -321,7 +329,9 @@ public class EntityHelper {
 			}
 		}
 		String location = createSampleEntity(entityInfo.getPluralName(), valMap, entityInfo.getEntityClass().getName());
-		linkedEntities.add(new DeleteInfo(clazz, location));
+		if(location != null) {
+			linkedEntities.add(new DeleteInfo(clazz, location));	
+		}		
 		return location;
 	}
 
@@ -494,6 +504,8 @@ public class EntityHelper {
 				value = "0";
 			else if (Date.class.isAssignableFrom(type) || DateTime.class.isAssignableFrom(type))
 				value = printDate(cal, f);
+			else if (LocalDate.class.isAssignableFrom(type))
+				value = LocalDate.now().toString();
 			else
 				value = tstStr;
 		}
@@ -518,7 +530,9 @@ public class EntityHelper {
 				try {
 					EntityInfo entityInfo = getEntityInfo(fieldType);
 					value = createSampleEntity(entityInfo, true);
-					linkedEntities.add(new DeleteInfo(info.getEntityClass(), value));
+					if(value != null) {
+						linkedEntities.add(new DeleteInfo(info.getEntityClass(), value));	
+					}					
 				} catch (Exception e) {
 					logger.error("Exception while creating linked Entity (for Update));", e);
 				}
