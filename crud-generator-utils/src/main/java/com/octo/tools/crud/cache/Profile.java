@@ -14,6 +14,7 @@ public class Profile implements Serializable {
 	 * */
 	private String displayName;
 	private String email;	
+	private Long userId;
 	
 	/**
 	 * Sent to client with profile info (not stored in cache)
@@ -23,15 +24,18 @@ public class Profile implements Serializable {
 	private long expiresIn;
 	
 	
-	public Profile(String displayName, String email) {
+	public Profile(String displayName, String email, Long userId) {
 		super();
 		this.displayName = displayName;
 		this.email = email;
+		this.userId = userId;
 	}
 
 	/*Use to send RefreshToken infos*/
-	public Profile(String token, String refreshToken, long expiresIn) {
+	public Profile(String displayName, String email, String token, String refreshToken, long expiresIn) {
 		super();
+		this.displayName = displayName;
+		this.email = email;
 		this.token = token;
 		this.refreshToken = refreshToken;
 		this.expiresIn = expiresIn;
