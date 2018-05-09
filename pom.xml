@@ -40,6 +40,7 @@
 				<artifactId>maven-release-plugin</artifactId>
 				<configuration>
 					<pushChanges>false</pushChanges>
+					<dryRun>true</dryRun>
 				</configuration>
 			</plugin>
 		</plugins>
