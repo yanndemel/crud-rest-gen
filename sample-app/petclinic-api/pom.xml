@@ -3,7 +3,7 @@
 
 	<groupId>com.octo.tools.samples</groupId>
 	<artifactId>petclinic-api</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.2</version>
 	<!-- WAR if you intend to deploy in an external servlet container like tomcat -->
 	<packaging>war</packaging>
 
@@ -47,14 +47,14 @@
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-model</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.2</version>
 		</dependency>						
 
 		<!-- Classes used by generated controllers -->
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.2</version>
 		</dependency>
 		
 	</dependencies>
@@ -87,7 +87,7 @@
 				<plugin>
 					<groupId>com.octo.tools</groupId>
 					<artifactId>crud-maven-plugin</artifactId>
-					<version>0.0.2-SNAPSHOT</version>
+					<version>0.0.2</version>
 					<configuration>
 						<persistentUnitName>petclinic-model</persistentUnitName>
 						<packageName>${packageName}</packageName>
@@ -107,7 +107,7 @@
 						<dependency>
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-model</artifactId>
-							<version>0.0.2-SNAPSHOT</version>
+							<version>0.0.2</version>
 						</dependency>						
 						<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
 							Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 
@@ -126,5 +126,6 @@
 		<url>https://github.com/yanndemel/crud-rest-gen</url>
 		<connection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</developerConnection>
-	</scm>
+	  <tag>crud-parent-0.0.2</tag>
+  </scm>
 </project>
