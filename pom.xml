@@ -12,7 +12,6 @@
 		<spring-boot.version>1.5.10.RELEASE</spring-boot.version>
 		<evoinflector.version>1.2.2</evoinflector.version>
 		<scribe.version>4.2.0</scribe.version>
-		<project.scm.id>github</project.scm.id>
 	</properties>
 
 	<modules>
@@ -75,5 +74,6 @@
 		<url>https://github.com/yanndemel/crud-rest-gen</url>
 		<connection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</developerConnection>
+    <tag>crud-parent-0.0.2</tag>
   </scm>
 </project>
