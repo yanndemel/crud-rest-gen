@@ -159,7 +159,7 @@ public abstract class AbstractCrudTest {
 	
 	protected MockMvc getMockMvc(String entityClass, HttpMethod method) throws MockNotFoundException {
 		if(customControllersMockMvc == null)
-			return this.mockMvc;
+			return getDefaultMockMvc();
 		Map<HttpMethod, MockMvc> map = customControllersMockMvc.get(entityClass);
 		if(map != null && map.containsKey(method)) {
 			MockMvc mockMvc2 = map.get(method);
@@ -169,7 +169,15 @@ public abstract class AbstractCrudTest {
 			}
 			return mockMvc2;
 		}
+		return getDefaultMockMvc();
+	}
+	
+	private MockMvc getDefaultMockMvc() {
 		return this.mockMvc;
+	}
+	
+	protected WebApplicationContext getWebContext() {
+		return this.context;
 	}
 
 	public ObjectMapper getObjectMapper() {

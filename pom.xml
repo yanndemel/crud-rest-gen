@@ -9,7 +9,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compile.version>1.8</compile.version>
-		<spring-boot.version>1.5.10.RELEASE</spring-boot.version>
+		<spring-boot.version>2.0.2.RELEASE</spring-boot.version>
 		<evoinflector.version>1.2.2</evoinflector.version>
 		<scribe.version>4.2.0</scribe.version>
 		<project.scm.id>github</project.scm.id>

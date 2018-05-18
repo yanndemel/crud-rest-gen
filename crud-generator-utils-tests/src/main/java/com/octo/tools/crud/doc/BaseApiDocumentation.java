@@ -79,10 +79,7 @@ public class BaseApiDocumentation extends AbstractCrudTest {
 		getMockMvc("", HttpMethod.GET).perform(get(""))
 			.andExpect(status().isOk())
 			.andDo(print()).andDo(document("index-example",
-					links(
-							linkResources()),					
-					responseFields(
-							fieldWithPath("_links").description("<<resources-index-links,Links>> to other resources"))));
+					links(linkResources())));
 		
 	}
 

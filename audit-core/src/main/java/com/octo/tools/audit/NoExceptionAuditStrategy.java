@@ -14,6 +14,7 @@ import java.util.Map;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.action.spi.BeforeTransactionCompletionProcess;
+import org.hibernate.engine.jdbc.spi.JdbcServices;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.envers.RevisionType;
@@ -107,13 +108,13 @@ public class NoExceptionAuditStrategy extends ValidityAuditStrategy {
 							updateTableName = rootAuditedEntityQueryable.getTableName();
 						}
 
-						final Type revisionInfoIdType = sessionImplementor.getFactory().getEntityPersister( revisionInfoEntityName ).getIdentifierType();
+						final Type revisionInfoIdType = sessionImplementor.getFactory().getMetamodel().entityPersister( revisionInfoEntityName ).getIdentifierType();
 						final String revEndColumnName = rootAuditedEntityQueryable.toColumns( enversService.getAuditEntitiesConfiguration().getRevisionEndFieldName() )[0];
 
 						final boolean isRevisionEndTimestampEnabled = enversService.getAuditEntitiesConfiguration().isRevisionEndTimestampEnabled();
 
 						// update audit_ent set REVEND = ? [, REVEND_TSTMP = ?] where (prod_ent_id) = ? and REV <> ? and REVEND is null
-						final Update update = new Update( sessionImplementor.getFactory().getDialect() ).setTableName( updateTableName );
+						final Update update = new Update( sessionImplementor.getFactory().getServiceRegistry().getService( JdbcServices.class ).getDialect() ).setTableName( updateTableName );
 						// set REVEND = ?
 						update.addColumn( revEndColumnName );
 						// set [, REVEND_TSTMP = ?]
@@ -188,7 +189,7 @@ public class NoExceptionAuditStrategy extends ValidityAuditStrategy {
 											return -1;
 										}
 										finally {
-											sessionImplementor.getJdbcCoordinator().getResourceRegistry().release(
+											sessionImplementor.getJdbcCoordinator().getLogicalConnection().getResourceRegistry().release(
 													preparedStatement
 											);
 											sessionImplementor.getJdbcCoordinator().afterStatementExecution();
@@ -212,7 +213,7 @@ public class NoExceptionAuditStrategy extends ValidityAuditStrategy {
 	}
 
 	private Queryable getQueryable(String entityName, SessionImplementor sessionImplementor) {
-		return (Queryable) sessionImplementor.getFactory().getEntityPersister( entityName );
+		return (Queryable) sessionImplementor.getFactory().getMetamodel().entityPersister( entityName );
 	}
 
 	@Override
@@ -243,7 +244,7 @@ public class NoExceptionAuditStrategy extends ValidityAuditStrategy {
 		}
 
 		final SessionFactoryImplementor sessionFactory = ((SessionImplementor) session).getFactory();
-		final Type propertyType = sessionFactory.getEntityPersister( entityName ).getPropertyType( propertyName );
+		final Type propertyType = sessionFactory.getMetamodel().entityPersister( entityName ).getPropertyType( propertyName );
 		if ( propertyType.isCollectionType() ) {
 			CollectionType collectionPropertyType = (CollectionType) propertyType;
 			// Handling collection of components.

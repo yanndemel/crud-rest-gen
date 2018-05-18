@@ -54,7 +54,7 @@ public class ReflectionUtils {
 	 * @param javaType entity class
 	 * @return true if javaType is not annotated with {@link org.hibernate.envers.RevisionEntity}
 	 */
-	public static boolean isEntityExposed(Class javaType) {
+	public static boolean isEntityExposed(Class<?> javaType) {
 		return javaType != null && !javaType.isAnnotationPresent(RevisionEntity.class)
 				&& !javaType.equals(DefaultRevisionEntity.class);
 	}
@@ -101,14 +101,14 @@ public class ReflectionUtils {
 	 * @param c Instance class
 	 * @return true if c is a {@link Number} subclass (or primitive number type)
 	 */
-	public static boolean isNumber(Class c) {
+	public static boolean isNumber(Class<?> c) {
 		if(Number.class.isAssignableFrom(c) || 
 				(c.isPrimitive() && isPrimitiveNumber(c)))
 			return true;
 		return false;
 	}
 
-	private static boolean isPrimitiveNumber(Class c) {
+	private static boolean isPrimitiveNumber(Class<?> c) {
 		return c.equals(int.class) || c.equals(double.class) || c.equals(long.class) || c.equals(short.class);
 	}
 
@@ -174,7 +174,7 @@ public class ReflectionUtils {
 	    return Arrays.stream(e.getEnumConstants()).map(Enum::name).toArray(String[]::new);
 	}
 
-	public static  boolean isSingleTableInheritance(Class javaType) {		
+	public static  boolean isSingleTableInheritance(Class<?> javaType) {		
 		return javaType.isAnnotationPresent(Inheritance.class) && javaType.isAnnotationPresent(DiscriminatorColumn.class);
 	}
 

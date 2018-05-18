@@ -117,7 +117,7 @@ public class AuditGeneratorMojo extends AbstractMojo {
 		if (!dir.exists())
 			dir.mkdirs();
 		Set<EntityType<?>> entityList = em.getMetamodel().getEntities();
-		Class revisionEntityClass = getRevisionEntityClass(em);
+		Class<?> revisionEntityClass = getRevisionEntityClass(em);
 		String auditControllerShortName = null;
 		String revisionEntityParameter = "";
 		String importRevisionClass = "";
@@ -140,8 +140,8 @@ public class AuditGeneratorMojo extends AbstractMojo {
 		if(auditControllerShortName == null) {
 			auditControllerShortName = Class.forName(auditControllerClassName).getSimpleName();
 		}
-		for (EntityType type : entityList) {
-			Class javaType = type.getJavaType();
+		for (EntityType<?> type : entityList) {
+			Class<?> javaType = type.getJavaType();
 			if (ReflectionUtils.isEntityExposed(javaType) && javaType.isAnnotationPresent(Audited.class)) {
 				String filename = javaType.getSimpleName() + "AuditController.java";
 				Path path = Paths.get(dir.getPath(), filename);
@@ -170,9 +170,9 @@ public class AuditGeneratorMojo extends AbstractMojo {
 	}
 
 
-	private Class getRevisionEntityClass(EntityManager em) {
+	private Class<?> getRevisionEntityClass(EntityManager em) {
 		Set<EntityType<?>> entities = em.getMetamodel().getEntities();
-		for(EntityType entity : entities) {
+		for(EntityType<?> entity : entities) {
 			if(entity.getJavaType() != null && entity.getJavaType().isAnnotationPresent(RevisionEntity.class)) {
 				return  entity.getJavaType();
 			}

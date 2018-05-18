@@ -2,14 +2,14 @@ package com.octo.tools.crud.doc;
 
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.halLinks;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
-import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.relaxedLinks;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedRequestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedResponseFields;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -138,7 +138,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 					.perform(patch(entityHelper.url(location)).contentType(MediaTypes.HAL_JSON)
 							.content(this.objectMapper.writeValueAsString(paramsMap)))
 					.andExpect(status().isNoContent())
-					.andDo(document(info.getSimpleName() + "-update-example", requestFields(
+					.andDo(document(info.getSimpleName() + "-update-example", relaxedRequestFields(
 							getRequestFieldDescriptors(info.getEntityClass(), getParamsDescMap(info.getEntityClass(), true)))));
 			entityHelper.deleteLinkedEntities(location, entityClassName);
 			reset();
@@ -155,8 +155,8 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 			String entityClassName = info.getEntityClass().getName();
 			verifiySampleEntity(location, entityClassName)
 					.andDo(document(info.getSimpleName() + "-get-example", 
-							links(halLinks(), getLinksForSingleItem(info)),
-							responseFields(getLinkedFieldDescriptors(info.getEntityClass(), paramsMap))));
+							relaxedLinks(halLinks(), getLinksForSingleItem(info)),
+							relaxedResponseFields(getLinkedFieldDescriptors(info.getEntityClass(), paramsMap))));
 			entityHelper.deleteLinkedEntities(location, entityClassName);
 			reset();	
 		}		
@@ -191,7 +191,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		ResultActions resultAction = entityHelper.createEntity(info.getPluralName(), paramsMap, info.getEntityClass().getName());
 		Map<String, String> descParamsMap = getParamsDescMap(info.getEntityClass(), true);
 		resultAction.andDo(document(info.getPluralName() + "-create-example",
-				requestFields(getRequestFieldDescriptors(info.getEntityClass(), descParamsMap))));
+				relaxedRequestFields(getRequestFieldDescriptors(info.getEntityClass(), descParamsMap))));
 		MockHttpServletResponse response = resultAction.andReturn().getResponse();
 		String location = response.getHeader("Location");
 		
@@ -209,8 +209,8 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		entityHelper.reset();
 		initDataSets();
 	}
-
-	protected FieldDescriptor[] getLinkedFieldDescriptors(Class entityClass, Map<String, String> paramsMap)
+	
+	protected FieldDescriptor[] getLinkedFieldDescriptors(Class<?> entityClass, Map<String, String> paramsMap)
 			throws NoSuchFieldException {
 		List<FieldDescriptor> list = new ArrayList<FieldDescriptor>();
 		for (String att : paramsMap.keySet()) {
@@ -255,7 +255,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		return jsonType;
 	}
 
-	protected FieldDescriptor[] getRequestFieldDescriptors(Class entityClass, Map<String, String> paramsMap)
+	protected FieldDescriptor[] getRequestFieldDescriptors(Class<?> entityClass, Map<String, String> paramsMap)
 			throws NoSuchFieldException, SecurityException {
 		List<FieldDescriptor> list = new ArrayList<FieldDescriptor>();
 		ConstrainedFields fields = new ConstrainedFields(entityClass);
@@ -296,7 +296,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 	}
 
 
-	protected FieldDescriptor getTransientObjectFieldDescriptor(Class entityClass, Field field, FieldDescriptor type) {
+	protected FieldDescriptor getTransientObjectFieldDescriptor(Class<?> entityClass, Field field, FieldDescriptor type) {
 		for(Field ff : ReflectionUtils.getAllFields(entityClass)) {
 			RestResourceMapper ann = ff.getAnnotation(RestResourceMapper.class);
 			if(ann != null) {
@@ -312,7 +312,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		return null;
 	}
 
-	protected Field getField(Class entityClass, String att) throws NoSuchFieldException {
+	protected Field getField(Class<?> entityClass, String att) throws NoSuchFieldException {
 		for (Field f : ReflectionUtils.getAllFields(entityClass)) {
 			if (f.getName().equals(att))
 				return f;
@@ -336,8 +336,8 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		String location = entityHelper.createSampleEntity(info);
 		if(location != null) {
 			getMockMvc(info.getEntityClass().getName(), HttpMethod.GET).perform(get(entityHelper.url(info.getPluralName()))).andExpect(status().isOk())
-			.andDo(document(info.getPluralName() + "-list-example", links(getLinksForList(info)),
-					responseFields(getFieldsForList(info))));
+			.andDo(print()).andDo(document(info.getPluralName() + "-list-example", relaxedLinks(getLinksForList(info)),
+					relaxedResponseFields(getFieldsForList(info))));
 
 			reset(info, location);	
 		}
@@ -348,7 +348,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		List<FieldDescriptor> list = new ArrayList<FieldDescriptor>();
 		list.add(fieldWithPath("_embedded." + info.getPluralName()).description("An array of <<resources-"
 				+ info.getPluralName() + ", " + info.getSimpleName1stUpper() + " resources>>"));
-		list.add(fieldWithPath("_links").description("<<resources-list-links, Links>> to other resources"));
+		//list.add(fieldWithPath("_links").description("<<resources-list-links, Links>> to other resources"));
 		if (info.isPaged()) {
 			list.add(fieldWithPath("page").description("Paging information (page, totalElements, totalPages, number)"));
 
@@ -378,7 +378,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 				.andExpect(jsonPath("_links.self.href", Matchers.is(location)));
 	}
 
-	public Map<String, String> getParamsDescMap(Class entityClass, boolean includeManyToOne) {
+	public Map<String, String> getParamsDescMap(Class<?> entityClass, boolean includeManyToOne) {
 		Map<String, String> params = new HashMap<>();
 		List<Field> allFields = ReflectionUtils.getAllFields(entityClass);
 		for (Field f : allFields) {

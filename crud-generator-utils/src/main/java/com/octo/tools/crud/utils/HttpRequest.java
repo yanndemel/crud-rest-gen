@@ -67,8 +67,6 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.util.UriUtils;
@@ -83,7 +81,7 @@ import org.springframework.web.util.UriUtils;
 public class HttpRequest {
 
 	
-	private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
+	//private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
 	/**
 	 * 'UTF-8' charset name
 	 */
@@ -303,13 +301,7 @@ public class HttpRequest {
 	}
 
 	private static void appendParam(final StringBuilder result, boolean encode, Object element) {
-		String encoded;
-		try {
-			encoded = UriUtils.encodeQueryParam(element.toString(), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			logger.error("Exception while encoding parameter", e);
-			encoded = element.toString();
-		}
+		String encoded = UriUtils.encodeQueryParam(element.toString(), "UTF-8");
 		result.append(encode ? encoded : element);
 	}
 
