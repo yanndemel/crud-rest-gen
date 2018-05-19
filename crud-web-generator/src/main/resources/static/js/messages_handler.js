@@ -54,8 +54,13 @@ messageHandler.factory('MessageHandler',['$rootScope', function($rootScope) {
      * Add a server error message (no translate)
      */
     $this.addServerError = function(serverError) {
-    	if($rootScope.message.serverErrors.indexOf(serverError)<0)
+    	if(serverError.message != null && $rootScope.message.serverErrors.indexOf(serverError)<0) {
     		$rootScope.message.serverErrors.push(serverError);
+    	} else if(serverError.apierror != null && serverError.apierror.message != null && $rootScope.message.serverErrors.indexOf(serverError.apierror)<0) {
+    		$rootScope.message.serverErrors.push(serverError.apierror);
+    	} else {
+    		$this.addError("An error occured " + serverError);
+    	}    		
     };
 
   

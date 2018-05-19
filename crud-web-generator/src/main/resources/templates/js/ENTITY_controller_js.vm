@@ -29,7 +29,7 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 		if(${_}scope.item["${info.name}"] != null) {
 			hasCallbacks = true;
 			remaningCallbacks++;
-			${_}http.get(${_}scope.item._links.${info.name}.href).then(
+			${_}http.get(getLinkedUrl(${_}scope.item._links.${info.name}.href)).then(
 				function(success) {
 					var url = success.data._links.self.href;
 					${_}scope.item["${info.name}"] = url;
@@ -252,11 +252,7 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 #if(${entity.hasLinks})
 #foreach($info in ${entity.info})
 #if(${info.link}) 		
-		var linkUrl = ${_}scope.item._links.${info.name}.href;
-		var i = linkUrl.indexOf("{");
-		if(i>0) {
-			linkUrl = linkUrl.substring(0, i);
-		}
+		var linkUrl = getLinkedUrl(${_}scope.item._links.${info.name}.href);		
 		${_}http.get(linkUrl + "?projection=${info.type}Excerpt")
 			.success(function(data) {
 				var url = data._links.self.href;

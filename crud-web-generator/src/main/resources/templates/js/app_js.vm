@@ -52,6 +52,16 @@ var getParameterByName = function(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+var getLinkedUrl = function(url) {
+	var i = url.indexOf("{");
+	if(i>0) {
+		return url.substring(0, i);
+	}
+	return url;
+}
+
+
+
 // Declare app level module which depends on filters, and services
 var myApp = angular.module('myApp', [
    'ngRoute'
