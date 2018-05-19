@@ -252,7 +252,12 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 #if(${entity.hasLinks})
 #foreach($info in ${entity.info})
 #if(${info.link}) 		
-		${_}http.get(${_}scope.item._links.${info.name}.href + "?projection=${info.type}Excerpt")
+		var linkUrl = ${_}scope.item._links.${info.name}.href;
+		var i = linkUrl.indexOf("{");
+		if(i>0) {
+			linkUrl = linkUrl.substring(0, i);
+		}
+		${_}http.get(linkUrl + "?projection=${info.type}Excerpt")
 			.success(function(data) {
 				var url = data._links.self.href;
 				${_}scope.item["${info.name}"] = data.shortLabel;								
