@@ -63,8 +63,8 @@ public class RestResourceMapperConfig {
 
 	private void initAnnotatedRestResources() throws IntrospectionException, ConfigurationException {
 		Set<EntityType<?>> entities = em.getMetamodel().getEntities();
-		for (EntityType type : entities) {
-			Class javaType = type.getJavaType();
+		for (EntityType<?> type : entities) {
+			Class<?> javaType = type.getJavaType();
 			if (ReflectionUtils.isEntityExposed(javaType)) {
 				List<FieldInfo> l = new ArrayList<>();
 				BeanInfo beanInfo = Introspector.getBeanInfo(javaType);
@@ -104,21 +104,21 @@ public class RestResourceMapperConfig {
 								Object resourceObject;
 								if(AopUtils.isJdkDynamicProxy(content)) {
 									try {
-										resourceObject = ((Proxy)content).getInvocationHandler(content)
+										resourceObject = Proxy.getInvocationHandler(content)
 												.invoke(content, info.getFieldGetter(), null);
 									} catch (Throwable e) {
 										logger.error("Exception while un-proxing resource", e);
 										return resource;
 									}
 								} else
-									resourceObject = info.getFieldGetter().invoke(content, null);
+									resourceObject = info.getFieldGetter().invoke(content);
 								if(resourceObject != null) {
 									RestResourceMapper annotation = info.getAnnotation();
 									if(info.isCollection()) {
 										List<RestRemoteResource> resolvedResources = null;
 										if (annotation.resolveToProperty() != null)
 											resolvedResources = new ArrayList<>();
-										Collection coll = (Collection) resourceObject;
+										Collection<?> coll = (Collection<?>) resourceObject;
 										for(Object oId : coll) {
 											String resourceURL = restResourceMapperService.getResourceURL(annotation, oId);
 											if (annotation.resolveToProperty() != null) {
@@ -201,7 +201,7 @@ public class RestResourceMapperConfig {
 		Method setter = info.getPropertySetter();
 		if(AopUtils.isJdkDynamicProxy(content)) {
 			try {
-				((Proxy)content).getInvocationHandler(content)
+				Proxy.getInvocationHandler(content)
 						.invoke(content, setter, new Object[] {resolvedResource});
 			} catch (Throwable e) {
 				logger.error("Exception while un-proxing resource", e);

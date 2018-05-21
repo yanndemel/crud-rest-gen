@@ -5,6 +5,7 @@ import java.io.Serializable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@SuppressWarnings("serial")
 @Data
 @NoArgsConstructor
 public class Profile implements Serializable {

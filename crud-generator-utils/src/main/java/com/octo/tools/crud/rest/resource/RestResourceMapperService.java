@@ -79,7 +79,7 @@ public class RestResourceMapperService {
     }
     
 
-    public String getHATEOASURLForResource(final String restResourceURL, final Class entityClass) throws MalformedURLException {
+    public String getHATEOASURLForResource(final String restResourceURL, final Class<?> entityClass) throws MalformedURLException {
         URL resourceURL = new URL(restResourceURL);
         //use HATEOAS LinkBuilder to get the right host and port for constructing the appropriate resource link
         LinkBuilder linkBuilder = entityLinks.linkFor(entityClass);

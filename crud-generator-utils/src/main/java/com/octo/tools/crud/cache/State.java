@@ -2,6 +2,7 @@ package com.octo.tools.crud.cache;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class State implements Serializable {
 
 	private String authorizationUrl;

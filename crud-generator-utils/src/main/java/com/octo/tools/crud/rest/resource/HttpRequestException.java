@@ -1,5 +1,6 @@
 package com.octo.tools.crud.rest.resource;
 
+@SuppressWarnings("serial")
 public class HttpRequestException extends Exception {
 
 	private String message;
