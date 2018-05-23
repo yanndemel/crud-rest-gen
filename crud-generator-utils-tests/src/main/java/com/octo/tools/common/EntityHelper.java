@@ -31,9 +31,11 @@ import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Past;
@@ -41,8 +43,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.DatatypeConverter;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,7 +152,7 @@ public class EntityHelper {
 		return createSampleEntity(info.getPluralName(), params, info.getEntityClass().getName());
 	}
 
-	public Map<String, Object> getParamsMap(Class clazz) throws Exception {
+	public Map<String, Object> getParamsMap(Class<?> clazz) throws Exception {
 		return getParamsMap(clazz, false);
 	}
 	
@@ -161,20 +161,20 @@ public class EntityHelper {
 		this.currentTest.getMockMvc(entityClass, HttpMethod.DELETE).perform(MockMvcRequestBuilders.delete(location)).andExpect(status().is2xxSuccessful());
 	}
 
-	public void createLinkedEntities(Class entityClass) throws Exception {
+	public void createLinkedEntities(Class<?> entityClass) throws Exception {
 		logger.debug("Creating linked entities for " + entityClass);
 		createLinkedEntities(entityClass, true);
 	}
 
-	public void createLinkedEntities(Class entityClass, boolean rootClass) throws JsonProcessingException, Exception {
+	public void createLinkedEntities(Class<?> entityClass, boolean rootClass) throws JsonProcessingException, Exception {
 		createLinkedEntities(entityClass, rootClass, false);
 	}
 	
-	public void createLinkedEntities(Class entityClass, boolean rootClass, boolean forUpdate) throws JsonProcessingException, Exception {
+	public void createLinkedEntities(Class<?> entityClass, boolean rootClass, boolean forUpdate) throws JsonProcessingException, Exception {
 		createLinkedEntities(entityClass, rootClass, forUpdate, new HashSet<String>());
 	}
 	
-	public void createLinkedEntities(Class entityClass, boolean rootClass, boolean forUpdate, Set<String> processedClassNames) throws JsonProcessingException, Exception {
+	public void createLinkedEntities(Class<?> entityClass, boolean rootClass, boolean forUpdate, Set<String> processedClassNames) throws JsonProcessingException, Exception {
 		logger.debug("createLinkedEntities entityClass = {}, rootClass = {}", entityClass, rootClass);
 		if(!processedClassNames.add(entityClass.getName()))
 			return;
@@ -182,11 +182,11 @@ public class EntityHelper {
 		for (Field f : allFields) {
 			ManyToOne ann = f.getAnnotation(ManyToOne.class);
 			if (ann != null) {
-				Class target = getTargetEntity(f, ann);
+				Class<?> target = getTargetEntity(f, ann);
 				if (!target.equals(entityClass) && !alreadyLinked(target))
 					createLinkedEntities(target, false, forUpdate, processedClassNames);
 			} else if(f.isAnnotationPresent(OneToMany.class) && f.isAnnotationPresent(NotEmpty.class)) {
-				Class target = ReflectionUtils.getGenericCollectionType(f);
+				Class<?> target = ReflectionUtils.getGenericCollectionType(f);
 				logger.debug("target = {}", target);
 				if (!target.equals(entityClass) && !alreadyLinked(target))
 					createLinkedEntities(target, false, forUpdate, processedClassNames);
@@ -199,7 +199,7 @@ public class EntityHelper {
 			}			
 		}
 	}
-	public boolean alreadyLinked(Class target) {
+	public boolean alreadyLinked(Class<?> target) {
 		for (DeleteInfo i : linkedEntities) {
 			if (i.entityClass.equals(target))
 				return true;
@@ -215,12 +215,12 @@ public class EntityHelper {
 		return null;
 	}
 
-	private Class getTargetEntity(Field f, ManyToOne ann) {
-		Class target = !ann.targetEntity().equals(void.class) ? ann.targetEntity() : f.getType();
+	private Class<?> getTargetEntity(Field f, ManyToOne ann) {
+		Class<?> target = !ann.targetEntity().equals(void.class) ? ann.targetEntity() : f.getType();
 		return target;
 	}
 
-	private EntityInfo getEntityInfo(Class entityClass) {
+	private EntityInfo getEntityInfo(Class<?> entityClass) {
 		for (EntityInfo info : this.currentTest.getEntityInfoList()) {
 			if (entityClass.equals(info.getEntityClass()))
 				return info;
@@ -228,7 +228,7 @@ public class EntityHelper {
 		return null;
 	}
 
-	public Map<String, Object> getParamsMap(Class clazz, boolean forUpdate) throws Exception {
+	public Map<String, Object> getParamsMap(Class<?> clazz, boolean forUpdate) throws Exception {
 		Map<String, Object> params = new HashMap<>();
 		List<Field> allFields = ReflectionUtils.getAllFields(clazz);
 		for (Field f : allFields) {
@@ -244,7 +244,7 @@ public class EntityHelper {
 
 	
 
-	private Object getFieldValue(Class clazz, Field f, boolean forUpdate) throws Exception {
+	private Object getFieldValue(Class<?> clazz, Field f, boolean forUpdate) throws Exception {
 		for(EntityInfo info : this.currentTest.getEntityInfoList()) {			
 			if(info.getEntityClass().equals(clazz) && info.getDataSet() != null) {
 				Object value = info.getValue(f.getName(), forUpdate);				
@@ -285,6 +285,7 @@ public class EntityHelper {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	private Object convert(Object value, Field f) {
 		if(f.getType().isEnum()) {
 			String[] names = ReflectionUtils.getNames((Class<? extends Enum<?>>)f.getType());
@@ -313,6 +314,7 @@ public class EntityHelper {
 	}		
 
 
+	@SuppressWarnings("unchecked")
 	public String createSampleEntity(Object value, Class<?> clazz) throws JsonProcessingException, Exception {
 		EntityInfo entityInfo = getEntityInfo(clazz);
 		createLinkedEntities(entityInfo.getEntityClass(), true);
@@ -396,7 +398,8 @@ public class EntityHelper {
 		return value;
 	}
 
-	private Object initFieldInfo(Class clazz, Field f, Calendar cal, FieldInfo fi, boolean forUpdate) throws Exception {
+	@SuppressWarnings("unchecked")
+	private Object initFieldInfo(Class<?> clazz, Field f, Calendar cal, FieldInfo fi, boolean forUpdate) throws Exception {
 		Class<?> type = f.getType();
 		Annotation[] annotations = f.getAnnotations();
 		Object value = null;
