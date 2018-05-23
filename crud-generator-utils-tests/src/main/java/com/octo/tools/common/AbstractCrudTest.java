@@ -193,8 +193,8 @@ public abstract class AbstractCrudTest {
 		List<EntityInfo> list = new ArrayList<EntityInfo>();
 		Reflections reflections = new Reflections(packageName);
 		Set<Class<?>> allRepos = reflections.getTypesAnnotatedWith(RepositoryRestResource.class);		
-		for (EntityType type : entityList) {
-			Class javaType = type.getJavaType();
+		for (EntityType<?> type : entityList) {
+			Class<?> javaType = type.getJavaType();
 			if (isExposed(javaType) && type.hasSingleIdAttribute()) {
 				setDisabledHttpMethodsPerRepo(javaType, allRepos);
 				EntityInfo info = new EntityInfo();
@@ -236,7 +236,7 @@ public abstract class AbstractCrudTest {
 		return list;
 	}
 
-	private Field getIdField(Class javaType) {
+	private Field getIdField(Class<?> javaType) {
 		List<Field> allFields = ReflectionUtils.getAllFields(javaType);		
 		Field idField = null;
 		for(Field f : allFields) {
@@ -248,18 +248,19 @@ public abstract class AbstractCrudTest {
 		return idField;
 	}
 
-	public boolean isExposed(Class javaType) {
+	public boolean isExposed(Class<?> javaType) {
 		return ReflectionUtils.isEntityExposed(javaType);
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<EntityInfo> getChildEntities(EntityInfo info, List<EntityInfo> list) {
 		return list.stream().filter((i)->info.getEntityClass().isAssignableFrom(i.getEntityClass()) 
 				&& i.getEntityClass().isAnnotationPresent(DiscriminatorValue.class))
 				.collect(Collectors.toList());
 	}
 
-	private void setDisabledHttpMethodsPerRepo(Class entityClass, Set<Class<?>> allRepos) {
-		Class entityRepo = null;
+	private void setDisabledHttpMethodsPerRepo(Class<?> entityClass, Set<Class<?>> allRepos) {
+		Class<?> entityRepo = null;
 		for(Class<?> c : allRepos) {
 			Type[] genericInterfaces = c.getGenericInterfaces();
 			if(genericInterfaces != null && genericInterfaces.length > 0) {
@@ -307,7 +308,7 @@ public abstract class AbstractCrudTest {
 	}
 
 
-	private boolean hasOnlyManyToOne(Class javaType) {
+	private boolean hasOnlyManyToOne(Class<?> javaType) {
 		int total = 0;
 		int many = 0;
 		for(Field f : ReflectionUtils.getAllFields(javaType)) {
@@ -321,12 +322,12 @@ public abstract class AbstractCrudTest {
 		return total == many;
 	}
 
-	private boolean isPaged(Class javaType) throws ClassNotFoundException {		
+	private boolean isPaged(Class<?> javaType) throws ClassNotFoundException {		
 		return PagingAndSortingRepository.class.isAssignableFrom(getRepository(javaType));
 	}
 
-	private boolean hasSearch(Class javaType) throws ClassNotFoundException {
-		Class repoClass = getRepository(javaType);
+	private boolean hasSearch(Class<?> javaType) throws ClassNotFoundException {
+		Class<?> repoClass = getRepository(javaType);
 		Method[] methods = repoClass.getDeclaredMethods();
 		for(Method m : methods) {
 			if(m.isAnnotationPresent(RestResource.class)) {
@@ -341,7 +342,7 @@ public abstract class AbstractCrudTest {
 		return false;
 	}
 
-	private Class getRepository(Class javaType) throws ClassNotFoundException {
+	private Class<?> getRepository(Class<?> javaType) throws ClassNotFoundException {
 		return Class.forName(packageName + "." + javaType.getSimpleName()+"Repository");
 	}
 	
