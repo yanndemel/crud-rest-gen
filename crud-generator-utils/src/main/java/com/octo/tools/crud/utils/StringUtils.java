@@ -12,6 +12,12 @@ import org.atteo.evo.inflector.English;
  */
 public class StringUtils {
 
+	private static final String D = "d'";
+	private static final String DES = "des";
+	private static final String DU = "du";
+	private static final String DE = "de";
+	private static final String SPACE = " ";
+	private static final String HYPHEN = "-";
 	public static final String VALUE_SEP = ",";
 
 	private StringUtils() {};
@@ -47,7 +53,7 @@ public class StringUtils {
 	public static String removeAccents(String name) {
 		String normalize = Normalizer.normalize(name, Normalizer.Form.NFD);
 		return normalize.replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
-				.replaceAll("(\\\\|/|\\.)", " ").trim();
+				.replaceAll("(\\\\|/|\\.)", SPACE).trim();
 	}
 
 	public static String concatFirstUpper(String lastName, String firstName) {
@@ -56,7 +62,7 @@ public class StringUtils {
 			sb.append(lastName.toUpperCase());
 		if(firstName != null) {
 			if(sb.length() > 0)
-				sb.append(" ");
+				sb.append(SPACE);
 			sb.append(firstName);
 		}		
 		return sb.toString();
@@ -85,6 +91,59 @@ public class StringUtils {
 
 	public static String doubleToString(Double price) {		
 		return price % 1 == 0 ? Integer.toString(price.intValue()) : price.toString();
+	}
+
+	public static String formatLongName(String firstName, String lastName) {
+		StringBuilder sb = new StringBuilder();
+		if(firstName != null && firstName.length() > 0) {			
+			appendFirstLetterCapitalized(firstName, sb, false);
+			sb.append(SPACE);
+		}
+		if(lastName != null && lastName.length() > 0) {
+			appendFirstLetterCapitalized(lastName, sb, true);
+		}
+		return sb.toString();
+	}
+
+	private static void appendFirstLetterCapitalized(String name, StringBuilder sb, boolean checkParticule) {
+		String[] parts = name.split(SPACE);
+		for(int i = 0; i<parts.length; i++) {
+			if(parts[i].contains(HYPHEN)) {
+				String[] pp = parts[i].split(HYPHEN);
+				for(int j = 0; j<pp.length; j++) {
+					sb.append(capitalizeFirstLetter(pp[j].toLowerCase(), checkParticule));
+					if(j<pp.length - 1) {
+						sb.append(HYPHEN);
+					}
+				}
+			} else {
+				sb.append(capitalizeFirstLetter(parts[i].toLowerCase(), checkParticule));				
+			}
+			if(i<parts.length - 1) {
+				sb.append(SPACE);
+			}
+		}
+	}
+
+	public static String capitalizeFirstLetter(String s, boolean checkParticule) {
+		int len = s.length();
+		if(len > 1) {
+			if(checkParticule) {
+				switch(s) {
+				case DE:
+				case DU:
+				case DES:
+					return s;
+				default:
+					break;
+				}				
+				if(s.startsWith(D)) {
+					return len > 2 ? D + capitalizeFirstLetter(s.substring(2), false) : D;
+				}
+			}			
+			return s.substring(0, 1).toUpperCase() + s.substring(1);
+		}
+		return s.toUpperCase();
 	}
 	
 	
