@@ -14,6 +14,6 @@ import $$ENTITY_CLASS$$;
  *
  */
 @RepositoryRestResource
-public interface $$ENTITY$$Repository extends PagingAndSortingRepository<$$ENTITY$$, Long> {
+public interface $$ENTITY$$Repository extends PagingAndSortingRepository<$$ENTITY$$, $$ID_CLASS$$> {
  	
 }

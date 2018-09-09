@@ -12,6 +12,7 @@ import java.util.List;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.ManyToMany;
 import javax.persistence.MappedSuperclass;
@@ -176,6 +177,15 @@ public class ReflectionUtils {
 
 	public static  boolean isSingleTableInheritance(Class<?> javaType) {		
 		return javaType.isAnnotationPresent(Inheritance.class) && javaType.isAnnotationPresent(DiscriminatorColumn.class);
+	}
+
+	public static String getIdClass(Class<?> javaType) {
+		for (Field f : getAllFields(javaType)) {
+			if (f.isAnnotationPresent(Id.class)) {
+				return f.getType().getSimpleName();
+			}
+		}
+		return null;
 	}
 
 }

@@ -149,7 +149,7 @@ public class AuditGeneratorMojo extends AbstractMojo {
 				BufferedWriter writer = Files.newBufferedWriter(path);
 				InputStream in = getClass().getClassLoader().getResourceAsStream("AuditController.template");
 				BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
+				String idClass = ReflectionUtils.getIdClass(javaType);
 				while (reader.ready()) {
 					String s = reader.readLine();
 							s = s.replaceAll("\\$\\$PACKAGE\\$\\$", packageName)
@@ -159,7 +159,8 @@ public class AuditGeneratorMojo extends AbstractMojo {
 									.replaceAll("\\$\\$ENTITY\\$\\$", javaType.getSimpleName())
 									.replaceAll("\\$\\$REVISION_ENTITY\\$\\$", revisionEntityParameter)
 									.replaceAll("\\$\\$ENTITY_CLASS\\$\\$", javaType.getName())
-									.replaceAll("\\$\\$ENTITY_UPPER_PLURAL\\$\\$",  StringUtils.plural(javaType.getSimpleName()).toUpperCase());
+									.replaceAll("\\$\\$ENTITY_UPPER_PLURAL\\$\\$",  StringUtils.plural(javaType.getSimpleName()).toUpperCase())
+									.replaceAll("\\$\\$ID_CLASS\\$\\$", idClass);
 								writer.write(s + "\n");
 				}
 				reader.close();

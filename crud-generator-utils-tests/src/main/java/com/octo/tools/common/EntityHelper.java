@@ -119,7 +119,12 @@ public class EntityHelper {
 		for(EntityInfo i : l) {
 			if(i.getEntityClass().getName().equals(entityClassName)) {
 				if(!i.isIdAuto()) {
-					jsonData.put(i.getIdField(), currentTest.nextVal());
+					Long nextVal = currentTest.nextVal();
+					if(Long.class.getSimpleName().equals(ReflectionUtils.getIdClass(i.getEntityClass()))) {
+						jsonData.put(i.getIdField(), nextVal);
+					} else {
+						jsonData.put(i.getIdField(), nextVal.toString());
+					}
 				}
 				break;
 			}

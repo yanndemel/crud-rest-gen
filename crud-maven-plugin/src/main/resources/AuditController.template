@@ -28,7 +28,7 @@ public class $$ENTITY$$AuditController extends $$AUDIT_CONTROLLER$$<$$ENTITY$$$$
 	}
 		
 	@RequestMapping(method = RequestMethod.GET, value = URLs.$$ENTITY_UPPER_PLURAL$$_SEARCH) 
-	public @ResponseBody ResponseEntity<?> getRevisionsForEntity(@RequestParam("entityId") Long id,
+	public @ResponseBody ResponseEntity<?> getRevisionsForEntity(@RequestParam("entityId") $$ID_CLASS$$ id,
 			@RequestParam(name = "lastDelRev", required = false, defaultValue = "false") Boolean lastDelRev) {
 		if(lastDelRev)
 			return super.getLastRevisionForDeletedEntity(id);

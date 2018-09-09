@@ -110,7 +110,7 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 		EntityManager em = emf.createEntityManager();
 
 		try {
-			generateURLsContstants(em);
+			generateURLsConstants(em);
 			if(projections) {
 				List<String> classNames = generateProjectionExcepts(em);
 				generateProjectionInit(em,classNames);
@@ -177,6 +177,7 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 				List<Field> fields = ReflectionUtils.getAllFields(javaType);
 				PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
 				String lastField = null;
+				String idClass = null;
 				for (Field f : fields) {
 					if (!f.isAnnotationPresent(Id.class)) {
 						PropertyDescriptor pd = ReflectionUtils.getPropertyDescriptor(pds, f);
@@ -187,6 +188,8 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 							else
 								projection.append(getMethodAsString(pd, f, javaType));
 						}
+					} else {
+						idClass = f.getType().getSimpleName();
 					}
 				}
 				if (lastField != null)
@@ -205,7 +208,8 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 					s = s.replaceAll("\\$\\$PACKAGE\\$\\$", packageName)
 							.replaceAll("\\$\\$ENTITY\\$\\$", javaType.getSimpleName())
 							.replaceAll("\\$\\$ENTITY_CLASS\\$\\$", javaType.getName())
-							.replaceAll("\\$\\$PROJECTION\\$\\$", projection.toString());
+							.replaceAll("\\$\\$PROJECTION\\$\\$", projection.toString())
+							.replaceAll("\\$\\$ID_CLASS\\$\\$", idClass);
 					writer.write(s + "\n");
 				}
 				l.add(exerptName);
@@ -229,12 +233,13 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 				BufferedWriter writer = Files.newBufferedWriter(path);
 				InputStream in = getClass().getClassLoader().getResourceAsStream(excerpts ? "Repository.template" : "Repository.noProjection.template");
 				BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
+				String idClass = ReflectionUtils.getIdClass(javaType);
 				while (reader.ready()) {
 					String s = reader.readLine();
 					s = s.replaceAll("\\$\\$PACKAGE\\$\\$", packageName)
 							.replaceAll("\\$\\$ENTITY\\$\\$", javaType.getSimpleName())
-							.replaceAll("\\$\\$ENTITY_CLASS\\$\\$", javaType.getName());
+							.replaceAll("\\$\\$ENTITY_CLASS\\$\\$", javaType.getName())
+							.replaceAll("\\$\\$ID_CLASS\\$\\$", idClass);
 					writer.write(s + "\n");
 				}
 				reader.close();
@@ -262,7 +267,7 @@ public class CrudApiGeneratorMojo extends AbstractMojo {
 	 * 
 	 * Generate package_name.URLs source code
 	 */
-	private void generateURLsContstants(EntityManager em) throws Exception {
+	private void generateURLsConstants(EntityManager em) throws Exception {
 		Set<EntityType<?>> entityList = em.getMetamodel().getEntities();
 
 		File dir = getRootDirectory();

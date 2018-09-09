@@ -15,6 +15,6 @@ import $$PACKAGE$$.projection.$$ENTITY$$Excerpt;
  *
  */
 @RepositoryRestResource(excerptProjection = $$ENTITY$$Excerpt.class)
-public interface $$ENTITY$$Repository extends PagingAndSortingRepository<$$ENTITY$$, Long> {
+public interface $$ENTITY$$Repository extends PagingAndSortingRepository<$$ENTITY$$, $$ID_CLASS$$> {
  	
 }
