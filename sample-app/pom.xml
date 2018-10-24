@@ -3,7 +3,7 @@
 
 	<groupId>com.octo.tools.samples</groupId>
 	<artifactId>crud-samples-parent</artifactId>
-	<version>0.0.3</version>
+	0.0.4-SNAPSHOT
 	<packaging>pom</packaging>
 
 	<properties>
