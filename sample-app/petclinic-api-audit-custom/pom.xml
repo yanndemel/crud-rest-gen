@@ -3,7 +3,7 @@
 
 	<groupId>com.octo.tools.samples</groupId>
 	<artifactId>petclinic-api-audit-custom</artifactId>
-	0.0.4-SNAPSHOT
+	<version>0.0.4-SNAPSHOT</version>
 	<!-- WAR if you intend to deploy in an external servlet container like tomcat -->
 	<packaging>war</packaging>
 
@@ -45,27 +45,27 @@
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-audit-custom</artifactId>
-			0.0.4-SNAPSHOT
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>	
 		<!-- Your JPA domain classes (must contain persistence.xml)  -->
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-audit-model-custom</artifactId>
-			0.0.4-SNAPSHOT
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>						
 
 		<!-- Classes used by generated controllers -->
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils</artifactId>
-			0.0.4-SNAPSHOT
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- Audit controllers test classes dependencies -->
 		<dependency>
             <groupId>com.octo.tools</groupId>
             <artifactId>crud-generator-utils-tests</artifactId>
-            0.0.4-SNAPSHOT
+            <version>0.0.4-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
 		
@@ -114,7 +114,7 @@
 				<plugin>
 					<groupId>com.octo.tools</groupId>
 					<artifactId>crud-maven-plugin</artifactId>
-					0.0.4-SNAPSHOT
+					<version>0.0.4-SNAPSHOT</version>
 					<configuration>
 						<persistentUnitName>petclinic-model</persistentUnitName>
 						<packageName>${packageName}</packageName>
@@ -143,13 +143,13 @@
 						<dependency>
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-audit-model-custom</artifactId>
-							0.0.4-SNAPSHOT
+							<version>0.0.4-SNAPSHOT</version>
 						</dependency>
 						<!-- Custom AbstractAuditController and related classes -->
 						<dependency>
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-audit-custom</artifactId>
-							0.0.4-SNAPSHOT
+							<version>0.0.4-SNAPSHOT</version>
 						</dependency>						
 						<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
 							Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 

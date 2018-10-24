@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.octo.tools.samples</groupId>
 		<artifactId>crud-samples-parent</artifactId>
-		0.0.4-SNAPSHOT
+		<version>0.0.4-SNAPSHOT</version>
 	</parent>
 
   <name>petclinic-audit-default</name>
@@ -36,13 +36,13 @@
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-audit-model-default</artifactId>
-			0.0.4-SNAPSHOT
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>audit-core</artifactId>
-			0.0.4-SNAPSHOT
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>			
 
 	</dependencies>

@@ -3,7 +3,7 @@
 
 	<groupId>com.octo.tools.samples</groupId>
 	<artifactId>petclinic-api-doc</artifactId>
-	0.0.4-SNAPSHOT
+	<version>0.0.4-SNAPSHOT</version>
 	<!-- WAR if you intend to deploy in an external servlet container like tomcat -->
 	<packaging>war</packaging>
 
@@ -49,21 +49,21 @@
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-model</artifactId>
-			0.0.4-SNAPSHOT
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>						
 
 		<!-- Classes used by generated controllers -->
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils</artifactId>
-			0.0.4-SNAPSHOT
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- Start dependencies for API documentation generation -->
         <dependency>
             <groupId>com.octo.tools</groupId>
             <artifactId>crud-generator-utils-tests</artifactId>
-            0.0.4-SNAPSHOT
+            <version>0.0.4-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>               
         <dependency>
@@ -219,7 +219,7 @@
 				<plugin>
 					<groupId>com.octo.tools</groupId>
 					<artifactId>crud-maven-plugin</artifactId>
-					0.0.4-SNAPSHOT
+					<version>0.0.4-SNAPSHOT</version>
 					<configuration>
 						<persistentUnitName>petclinic-model</persistentUnitName>
 						<packageName>${packageName}</packageName>
@@ -239,7 +239,7 @@
 						<dependency>
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-model</artifactId>
-							0.0.4-SNAPSHOT
+							<version>0.0.4-SNAPSHOT</version>
 						</dependency>						
 						<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
 							Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 
