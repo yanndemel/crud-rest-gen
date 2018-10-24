@@ -51,7 +51,7 @@ import com.octo.tools.crud.utils.StringUtils;
  *
  */
 @Mojo(name = "audit", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
-public class AuditGeneratorMojo extends AbstractMojo {
+public class AuditGeneratorMojo extends AbstractGeneratorMojo {
 
 	
 	@Parameter(defaultValue = "${project}")

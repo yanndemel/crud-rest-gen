@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @SuppressWarnings("serial")
-@Data
 @NoArgsConstructor
+@Data
 public class Profile implements Serializable {
 
 	/* *

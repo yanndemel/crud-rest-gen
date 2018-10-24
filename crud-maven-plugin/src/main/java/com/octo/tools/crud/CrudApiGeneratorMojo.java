@@ -57,7 +57,7 @@ import com.octo.tools.crud.utils.StringUtils;
  *
  */
 @Mojo(name = "crudapi", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
-public class CrudApiGeneratorMojo extends AbstractMojo {
+public class CrudApiGeneratorMojo extends AbstractGeneratorMojo {
 
 	
 	@Parameter(defaultValue = "${project}")

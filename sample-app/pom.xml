@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.octo.tools.samples</groupId>
@@ -8,8 +10,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<compile.version>1.8</compile.version>
-		<spring-boot.version>2.0.2.RELEASE</spring-boot.version>
+		<compile.version>10</compile.version>
+		<spring-boot.version>2.0.6.RELEASE</spring-boot.version>
 	</properties>
 
 	<modules>
@@ -18,13 +20,13 @@
 		<module>petclinic-audit-model-custom</module>
 		<module>petclinic-audit-model-default</module>
 		<module>petclinic-audit-custom</module>
-		<module>petclinic-audit-default</module>		
+		<module>petclinic-audit-default</module>
 		<module>petclinic-api</module>
 		<module>petclinic-api-audit-custom</module>
 		<module>petclinic-api-audit-default</module>
 		<module>petclinic-api-doc</module>
 		<module>petclinic-web</module>
-		<module>petclinic-all</module> 
+		<module>petclinic-all</module>
 	</modules>
 
 	<build>
@@ -32,7 +34,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version>
+				<version>3.8.0</version>
 				<configuration>
 					<source>${compile.version}</source>
 					<target>${compile.version}</target>
@@ -53,6 +55,25 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>1.18.2</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.annotation</groupId>
+				<artifactId>javax.annotation-api</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>javax.xml.bind</groupId>
+				<artifactId>jaxb-api</artifactId>
+				<version>2.4.0-b180830.0359</version>
+			</dependency>
+			<dependency>
+				<groupId>org.glassfish.jaxb</groupId>
+				<artifactId>jaxb-runtime</artifactId>
+				<version>2.4.0-b180830.0438</version>
+			</dependency>
+			<dependency>
 				<!-- Import dependency management from Spring Boot -->
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
@@ -66,6 +87,12 @@
 		<url>https://github.com/yanndemel/crud-rest-gen</url>
 		<connection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</developerConnection>
-    <tag>crud-parent-0.0.3</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
+	<repositories>
+		<repository>
+			<id>projectlombok.org</id>
+			<url>https://projectlombok.org/edge-releases</url>
+		</repository>
+	</repositories>
 </project>
