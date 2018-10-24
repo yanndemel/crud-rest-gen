@@ -30,7 +30,7 @@ import com.octo.tools.crudweb.CrudGenerator;
  */
 @Mojo( name = "crudweb", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
 public class CrudWebGeneratorMojo
-    extends AbstractMojo
+    extends AbstractGeneratorMojo
 {
 	
 	/**

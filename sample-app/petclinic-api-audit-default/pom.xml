@@ -3,20 +3,21 @@
 
 	<groupId>com.octo.tools.samples</groupId>
 	<artifactId>petclinic-api-audit-default</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<!-- WAR if you intend to deploy in an external servlet container like tomcat -->
 	<packaging>war</packaging>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.2.RELEASE</version>
+		<version>2.0.6.RELEASE</version>
 	</parent>
 
 	<name>petclinic-api-audit-default</name>
 
 	<properties>		
 		<packageName>com.octo.tools.samples.petclinic.repository</packageName>
+		<compile.version>10</compile.version>
 	</properties>
 
 
@@ -44,31 +45,31 @@
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-audit-model-default</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>						
 
 		<!-- Classes used by generated controllers -->
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- Custom AbstractAuditController and related classes -->
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-audit-default</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>	
 		
 		<!-- Audit controllers test classes dependencies -->
 		<dependency>
             <groupId>com.octo.tools</groupId>
             <artifactId>crud-generator-utils-tests</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <version>0.0.4-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
-		
+        
 	</dependencies>
 
 	<build>
@@ -80,6 +81,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
 				<configuration>
 					<source>${compile.version}</source>
 					<target>${compile.version}</target>
@@ -107,14 +109,15 @@
 					</systemPropertyVariables>             
                 </configuration>
             </plugin>
-		</plugins>			
+		</plugins>					
 		<pluginManagement>
 			<plugins>
+				
 				<!-- Configuration of the crud-maven-plugin -->
 				<plugin>
 					<groupId>com.octo.tools</groupId>
 					<artifactId>crud-maven-plugin</artifactId>
-					<version>0.0.3-SNAPSHOT</version>
+					<version>0.0.4-SNAPSHOT</version>
 					<configuration>
 						<persistentUnitName>petclinic-model</persistentUnitName>
 						<packageName>${packageName}</packageName>
@@ -143,13 +146,13 @@
 						<dependency>
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-audit-model-default</artifactId>
-							<version>0.0.3-SNAPSHOT</version>
+							<version>0.0.4-SNAPSHOT</version>
 						</dependency>
 						<!-- Custom AbstractAuditController and related classes -->
 						<dependency>
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-audit-default</artifactId>
-							<version>0.0.3-SNAPSHOT</version>
+							<version>0.0.4-SNAPSHOT</version>
 						</dependency>						
 						<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
 							Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 
@@ -162,8 +165,8 @@
 					</dependencies>
 				</plugin>
 			</plugins>
-		</pluginManagement>
-	</build>
+		</pluginManagement>				
+	</build>	
 	<scm>
 		<url>https://github.com/yanndemel/crud-rest-gen</url>
 		<connection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</connection>

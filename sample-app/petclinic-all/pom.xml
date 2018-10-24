@@ -3,21 +3,21 @@
 
 	<groupId>com.octo.tools.samples</groupId>
 	<artifactId>petclinic-all</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<!-- WAR if you intend to deploy in an external servlet container like tomcat -->
 	<packaging>war</packaging>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.2.RELEASE</version>
+		<version>2.0.6.RELEASE</version>
 	</parent>
 
 	<name>petclinic-all</name>
 
 	<properties>	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<compile.version>1.8</compile.version>
+		<compile.version>10</compile.version>
 		<!-- The Snippets directory used by Spring Rest Docs (asciidoctor maven plugin) -->
         <snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
 		<!-- The package name of the generated RepositoryRestResource classes -->
@@ -48,27 +48,27 @@
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-audit-custom</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>	
 		<!-- Your JPA domain classes (must contain persistence.xml)  -->
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-audit-model-custom</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>						
 
 		<!-- Classes used by generated controllers -->
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- Audit controllers test classes dependencies -->
 		<dependency>
             <groupId>com.octo.tools</groupId>
             <artifactId>crud-generator-utils-tests</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <version>0.0.4-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
 		
@@ -106,6 +106,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
 				<configuration>
 					<source>${compile.version}</source>
 					<target>${compile.version}</target>
@@ -134,7 +135,7 @@
                                 <artifactItem>
                                     <groupId>com.octo.tools</groupId>
                                     <artifactId>crud-generator-utils-tests</artifactId>
-                                    <version>0.0.3-SNAPSHOT</version>
+                                    <version>0.0.4-SNAPSHOT</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/crud-tests</outputDirectory>
@@ -222,7 +223,7 @@
 				<plugin>
 					<groupId>com.octo.tools</groupId>
 					<artifactId>crud-maven-plugin</artifactId>
-					<version>0.0.3-SNAPSHOT</version>
+					<version>0.0.4-SNAPSHOT</version>
 					<configuration>
 						<persistentUnitName>petclinic-model</persistentUnitName>
 						<packageName>${packageName}</packageName>
@@ -260,13 +261,13 @@
 						<dependency>
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-audit-model-custom</artifactId>
-							<version>0.0.3-SNAPSHOT</version>
+							<version>0.0.4-SNAPSHOT</version>
 						</dependency>
 						<!-- Custom AbstractAuditController and related classes -->
 						<dependency>
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-audit-custom</artifactId>
-							<version>0.0.3-SNAPSHOT</version>
+							<version>0.0.4-SNAPSHOT</version>
 						</dependency>						
 						<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
 							Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 
