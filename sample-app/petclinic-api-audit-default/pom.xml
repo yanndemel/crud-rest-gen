@@ -171,6 +171,6 @@
 		<url>https://github.com/yanndemel/crud-rest-gen</url>
 		<connection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</developerConnection>
-	  <tag>crud-parent-0.0.3</tag>
+	  <tag>crud-parent-0.0.4-SNAPSHOT</tag>
   </scm>	
 </project>
