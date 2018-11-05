@@ -157,7 +157,8 @@ function(Item, CommonServices, ${_}scope, ${_}rootScope, ${_}routeParams, ${_}ht
 	}
 
 	${_}scope.editLinkedEntity = function(entityName, url) {
-		${_}http.get(url).then(
+		var linkUrl = getLinkedUrl(url);	
+		${_}http.get(linkUrl).then(
 				function(success) {
 					var url = success.data._links.self.href;
 					var i1 = url.lastIndexOf("/");	
