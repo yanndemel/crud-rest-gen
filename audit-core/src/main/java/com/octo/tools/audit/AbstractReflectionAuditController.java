@@ -21,7 +21,7 @@ public abstract class AbstractReflectionAuditController<T, R> extends AbstractAu
 	private Method revEntityTimestampGetter;
 
 	public AbstractReflectionAuditController(Class<T> entityClass,
-			Class<? extends AbstractReflectionAuditController> controller) {
+			Class<? extends AbstractReflectionAuditController<T,R>> controller) {
 		super(entityClass, controller);
 	}
 
@@ -70,9 +70,9 @@ public abstract class AbstractReflectionAuditController<T, R> extends AbstractAu
 	private Date getTimestamp(R entity, Method m) {
 		try {
 			if (m.getReturnType().equals(Date.class))
-				return (Date) m.invoke(entity, null);
+				return (Date) m.invoke(entity, (Object[])null);
 			else
-				return new Date((Long) m.invoke(entity, null));
+				return new Date((Long) m.invoke(entity, (Object[])null));
 
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new AuditConfigurationException(e);
@@ -82,7 +82,7 @@ public abstract class AbstractReflectionAuditController<T, R> extends AbstractAu
 	private Date getTimestamp(R entity, Field f) {
 		boolean b = false;
 		try {
-			if (!f.isAccessible()) {
+			if (!f.canAccess(entity)) {
 				f.setAccessible(true);
 				b = true;
 			}
@@ -101,9 +101,9 @@ public abstract class AbstractReflectionAuditController<T, R> extends AbstractAu
 	private Long getId(Object entity, Method m) {
 		try {
 			if(Long.class.equals(m.getReturnType()) || long.class.equals(m.getReturnType()))
-				return (Long) m.invoke(entity, null);
+				return (Long) m.invoke(entity, (Object[])null);
 			else if(Integer.class.equals(m.getReturnType()) || int.class.equals(m.getReturnType()))
-				return ((Integer) m.invoke(entity, null)).longValue();
+				return ((Integer) m.invoke(entity, (Object[])null)).longValue();
 			return null;
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new AuditConfigurationException(e);
@@ -113,7 +113,7 @@ public abstract class AbstractReflectionAuditController<T, R> extends AbstractAu
 	private Long getId(Object entity, Field f) throws AuditConfigurationException {
 		boolean b = false;
 		try {
-			if (!f.isAccessible()) {
+			if (!f.canAccess(entity)) {
 				f.setAccessible(true);
 				b = true;
 			}
