@@ -1,5 +1,6 @@
 package com.octo.tools.audit;
 
+@SuppressWarnings("serial")
 public class AuditConfigurationException extends RuntimeException {
 
 	public AuditConfigurationException() {

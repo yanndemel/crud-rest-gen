@@ -260,13 +260,14 @@ public class CrudGenerator {
         }
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> initPersistenceInfo(EntityManager em) throws ClassNotFoundException {
 		Set<EntityType<?>> allEntities = em.getMetamodel().getEntities();
 		entitiesByPackage = new TreeMap<>();
         Map<String, Object> entityInfo;        
         List<Map<String, Object>> entities = new ArrayList<Map<String,Object>>();
-        for(EntityType et : allEntities) {
-        	Class clazz = et.getJavaType();
+        for(EntityType<?> et : allEntities) {
+        	Class<?> clazz = et.getJavaType();
         	if(ReflectionUtils.isEntityExposed(clazz)) {
         		entityInfo = new HashMap<String, Object>();
             	entities.add(entityInfo);            	
@@ -384,7 +385,7 @@ public class CrudGenerator {
 	}
 
 	private void addToEntitiesByPackage(String name, Map<String, Object> entityInfo) {
-		if(ReflectionUtils.isSingleTableInheritance((Class) entityInfo.get("entityClass")))
+		if(ReflectionUtils.isSingleTableInheritance((Class<?>) entityInfo.get("entityClass")))
 				return;
 		Map<String, String> map = entitiesByPackage.get(name);
 		if(map == null) {

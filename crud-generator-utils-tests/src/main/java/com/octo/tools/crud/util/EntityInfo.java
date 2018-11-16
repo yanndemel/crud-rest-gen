@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class EntityInfo {
 
-	public Class entityClass;
+	public Class<?> entityClass;
 	private String simpleName1stUpper;
 	private String simpleName;
 	private String pluralName;
@@ -55,11 +55,11 @@ public class EntityInfo {
 		this.pluralName1stUpper = pluralName1stUpper;
 	}
 
-	public Class getEntityClass() {
+	public Class<?> getEntityClass() {
 		return entityClass;
 	}
 
-	public void setEntityClass(Class entityName) {
+	public void setEntityClass(Class<?> entityName) {
 		this.entityClass = entityName;
 	}
 

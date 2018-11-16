@@ -115,6 +115,34 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
+				<!-- To avoid warnings in Eclipse -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>com.octo.tools</groupId>
+										<artifactId>crud-maven-plugin</artifactId>
+										<versionRange>[0.0.4-SNAPSHOT,)</versionRange>
+										<goals>
+											<goal>crudapi</goal>
+											<goal>audit</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute>
+											<runOnIncremental>true</runOnIncremental>
+										</execute>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
 				<!-- Configuration of the crud-maven-plugin -->
 				<plugin>
 					<groupId>com.octo.tools</groupId>

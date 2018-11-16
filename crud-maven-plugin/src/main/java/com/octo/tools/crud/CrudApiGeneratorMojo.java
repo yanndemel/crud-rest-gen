@@ -26,23 +26,6 @@ import javax.persistence.Persistence;
 import javax.persistence.Version;
 import javax.persistence.metamodel.EntityType;
 
-/*
- * Copyright 2001-2005 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -161,8 +144,8 @@ public class CrudApiGeneratorMojo extends AbstractGeneratorMojo {
 	private List<String> generateProjectionExcepts(EntityManager em) throws Exception {
 		Set<EntityType<?>> entityList = em.getMetamodel().getEntities();
 		List<String> l = new ArrayList<>();
-		for (EntityType type : entityList) {
-			Class javaType = type.getJavaType();
+		for (EntityType<?> type : entityList) {
+			Class<?> javaType = type.getJavaType();
 			if (ReflectionUtils.isEntityExposed(javaType)) {
 				String exerptName = javaType.getSimpleName() + "Excerpt";
 				String filename = exerptName + ".java";
@@ -224,8 +207,8 @@ public class CrudApiGeneratorMojo extends AbstractGeneratorMojo {
 		File dir = getRootDirectory();
 
 		Set<EntityType<?>> entityList = em.getMetamodel().getEntities();
-		for (EntityType type : entityList) {
-			Class javaType = type.getJavaType();
+		for (EntityType<?> type : entityList) {
+			Class<?> javaType = type.getJavaType();
 			if (ReflectionUtils.isEntityExposed(javaType) && !isExcluded(javaType.getName())) {
 				String filename = javaType.getSimpleName() + "Repository.java";
 				Path path = Paths.get(dir.getPath(), filename);
@@ -278,8 +261,8 @@ public class CrudApiGeneratorMojo extends AbstractGeneratorMojo {
 			BufferedWriter writer = Files.newBufferedWriter(path);
 			writer.write("package "+packageName+";\n\n");
 			writer.write("public interface URLs {\n\n");
-			for (EntityType type : entityList) {
-				Class javaType = type.getJavaType();
+			for (EntityType<?> type : entityList) {
+				Class<?> javaType = type.getJavaType();
 				if (ReflectionUtils.isEntityExposed(javaType)) {
 					String plural = StringUtils.plural(javaType.getSimpleName());
 					writer.write("\tpublic String " + plural.toUpperCase() + " = \"/" + plural + "\";\n");
@@ -296,7 +279,7 @@ public class CrudApiGeneratorMojo extends AbstractGeneratorMojo {
 
 	}
 
-	private String getMethodAsString(PropertyDescriptor pd, Field f, Class javaType) {
+	private String getMethodAsString(PropertyDescriptor pd, Field f, Class<?> javaType) {
 		if (pd.getReadMethod().getReturnType().isAnnotationPresent(Entity.class)) {
 			String comment = pd.getReadMethod().getReturnType().getSimpleName() + " linked to the "
 					+ javaType.getSimpleName();

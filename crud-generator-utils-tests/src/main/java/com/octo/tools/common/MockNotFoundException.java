@@ -1,5 +1,6 @@
 package com.octo.tools.common;
 
+@SuppressWarnings("serial")
 public class MockNotFoundException extends Exception {
 
 

@@ -48,7 +48,7 @@ public class AuditControllersTest extends AbstractCrudTest {
 	@Test
 	public void testAudit() throws Exception {
 		for(EntityInfo info : entityInfoList) {
-			Class entityClass = info.getEntityClass();
+			Class<?> entityClass = info.getEntityClass();
 			if(isAudited(entityClass)) {
 				try {
 					performAuditTest(info, entityClass);
@@ -61,15 +61,16 @@ public class AuditControllersTest extends AbstractCrudTest {
 		}
 	}
 
-	public boolean isAudited(Class entityClass) {
+	public boolean isAudited(Class<?> entityClass) {
 		return entityClass != null && entityClass.isAnnotationPresent(Audited.class) && ReflectionUtils.isEntityExposed(entityClass);
 	}
 	
-	public boolean isExposed(Class javaType) {
+	public boolean isExposed(Class<?> javaType) {
 		return isAudited(javaType);
 	}
 
-	private void performAuditTest(EntityInfo info, Class entityClass) throws Exception, JsonProcessingException,
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void performAuditTest(EntityInfo info, Class<?> entityClass) throws Exception, JsonProcessingException,
 			MockNotFoundException, UnsupportedEncodingException, IllegalAccessException, NoSuchFieldException,
 			ClassNotFoundException, IOException, JsonParseException, JsonMappingException {
 		entityHelper.createLinkedEntities(entityClass);

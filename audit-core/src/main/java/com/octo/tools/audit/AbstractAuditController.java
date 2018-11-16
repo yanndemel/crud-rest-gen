@@ -30,15 +30,15 @@ public abstract class AbstractAuditController<T, R> {
 	protected EntityManager em;
 		
 	protected final Class<T> entityClass;
-	protected final Class<? extends AbstractAuditController> controllerClass;
+	protected final Class<? extends AbstractAuditController<T, R>> controllerClass;
 
 
 	public static final String _HISTORY = "history";
 	public static final String HISTORY = "/" + _HISTORY;
 	
-	protected static final Set<AbstractAuditController> registerdControllers = new HashSet<>();
+	protected static final Set<AbstractAuditController<?,?>> registerdControllers = new HashSet<>();
 	
-    public AbstractAuditController(Class<T> entityClass, Class<? extends AbstractAuditController> controller) {
+    public AbstractAuditController(Class<T> entityClass, Class<? extends AbstractAuditController<T, R>> controller) {
 		super();
 		this.entityClass = entityClass;
 		this.controllerClass = controller;		
@@ -46,7 +46,8 @@ public abstract class AbstractAuditController<T, R> {
 	}
 
 
-    protected ResponseEntity<?> getRevisionsForEntity(Long entityId) {
+    @SuppressWarnings("unchecked")
+	protected ResponseEntity<?> getRevisionsForEntity(Long entityId) {
 		AuditQueryCreator auditQueryCreator = getAuditQueryCreator();
 		List<Object[]> resultList = auditQueryCreator.forRevisionsOfEntity(entityClass, false, true).add(AuditEntity.id().eq(entityId)).getResultList();
 		Resources<AuditResourceSupport<T>> resources = getAuditInfoList(resultList);
@@ -84,6 +85,7 @@ public abstract class AbstractAuditController<T, R> {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	private AuditResourceSupport<T> getAuditInfo(Object[] revData) {
 		T entity = (T)revData[0];
 		R revEntity = (R)revData[1];
@@ -93,6 +95,7 @@ public abstract class AbstractAuditController<T, R> {
 		return auditResourceSupport;
 	}
 
+	@SuppressWarnings("unchecked")
 	private static <T> T unproxy(T entity) {
 	    if (entity instanceof HibernateProxy) {
 	        entity = (T) ((HibernateProxy) entity).getHibernateLazyInitializer()
@@ -114,7 +117,8 @@ public abstract class AbstractAuditController<T, R> {
 	protected abstract Long getEntityId(T entity);
 
 	
-    public ResponseEntity<?> getRevisions() {
+    @SuppressWarnings("unchecked")
+	public ResponseEntity<?> getRevisions() {
 		AuditQueryCreator auditQueryCreator = getAuditQueryCreator();
 		List<Object[]> resultList = auditQueryCreator.forRevisionsOfEntity(entityClass, false, true)
 				    	.getResultList();
@@ -133,6 +137,7 @@ public abstract class AbstractAuditController<T, R> {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	public ResponseEntity<?> getRevisionEntity(Long revId) {
 		List<Object[]> resultList = getAuditQueryCreator().forRevisionsOfEntity(entityClass, false, true).add(AuditEntity.revisionNumber().eq(revId)).getResultList();
 		return ResponseEntity.ok(getAuditInfoList(resultList));
@@ -143,7 +148,7 @@ public abstract class AbstractAuditController<T, R> {
 	}
 	
 
-	public static Set<AbstractAuditController> getRegisterdcontrollers() {
+	public static Set<AbstractAuditController<?, ?>> getRegisterdcontrollers() {
 		return registerdControllers;
 	}
 

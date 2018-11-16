@@ -20,9 +20,9 @@ public class AuditControllerBase {
 	
 	@RequestMapping(method = RequestMethod.GET) 
 	public @ResponseBody ResponseEntity<?> ok() {
-		Set<AbstractAuditController> registerdcontrollers = AbstractAuditController.getRegisterdcontrollers();
+		Set<AbstractAuditController<?, ?>> registerdcontrollers = AbstractAuditController.getRegisterdcontrollers();
 		List<Link> links = new ArrayList<>(registerdcontrollers.size());
-		for(AbstractAuditController controller : registerdcontrollers) {
+		for(AbstractAuditController<?, ?> controller : registerdcontrollers) {
 			links.add(ControllerLinkBuilder.linkTo(ControllerLinkBuilder.methodOn(controller.getClass()).getRevisions()).withRel(controller.getEntityClass().getSimpleName().toLowerCase()));
 		}
 		return ResponseEntity.ok(new Resources<>(Collections.emptyList(), links));

@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.octo.tools.samples</groupId>
@@ -15,11 +17,12 @@
 
 	<name>petclinic-all</name>
 
-	<properties>	
+	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compile.version>10</compile.version>
-		<!-- The Snippets directory used by Spring Rest Docs (asciidoctor maven plugin) -->
-        <snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
+		<!-- The Snippets directory used by Spring Rest Docs (asciidoctor maven 
+			plugin) -->
+		<snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
 		<!-- The package name of the generated RepositoryRestResource classes -->
 		<packageName>com.octo.tools.samples.petclinic.repository</packageName>
 	</properties>
@@ -49,13 +52,13 @@
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-audit-custom</artifactId>
 			<version>0.0.4-SNAPSHOT</version>
-		</dependency>	
-		<!-- Your JPA domain classes (must contain persistence.xml)  -->
+		</dependency>
+		<!-- Your JPA domain classes (must contain persistence.xml) -->
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-audit-model-custom</artifactId>
 			<version>0.0.4-SNAPSHOT</version>
-		</dependency>						
+		</dependency>
 
 		<!-- Classes used by generated controllers -->
 		<dependency>
@@ -63,38 +66,38 @@
 			<artifactId>crud-generator-utils</artifactId>
 			<version>0.0.4-SNAPSHOT</version>
 		</dependency>
-		
+
 		<!-- Audit controllers test classes dependencies -->
 		<dependency>
-            <groupId>com.octo.tools</groupId>
-            <artifactId>crud-generator-utils-tests</artifactId>
-            <version>0.0.4-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-		
-		<!-- Start dependencies for API documentation generation -->                 
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.restdocs</groupId>
-            <artifactId>spring-restdocs-mockmvc</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- End of dependencies for API documentation generation -->
-		
+			<groupId>com.octo.tools</groupId>
+			<artifactId>crud-generator-utils-tests</artifactId>
+			<version>0.0.4-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Start dependencies for API documentation generation -->
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.restdocs</groupId>
+			<artifactId>spring-restdocs-mockmvc</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- End of dependencies for API documentation generation -->
+
 	</dependencies>
 
 	<build>
@@ -106,7 +109,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
+				<version>3.8.0</version><!--$NO-MVN-MAN-VER$ -->
 				<configuration>
 					<source>${compile.version}</source>
 					<target>${compile.version}</target>
@@ -119,106 +122,139 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
-			<!-- Unpacking crud-generator-utils-tests jar so that asciidoctor-maven-plugin can locate the .adoc template in the sourceDirectory -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unpack</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>com.octo.tools</groupId>
-                                    <artifactId>crud-generator-utils-tests</artifactId>
-                                    <version>0.0.4-SNAPSHOT</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${project.build.directory}/crud-tests</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-			<!-- Tests execution : you just have to extend existing test classes located in crud-generator-utils-tests -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <includes>
-                       <!-- Test for generated AuditControllers -->
-                        <include>**/*Test.java</include>
-                        <!-- Tests generating the API documentation -->
-                        <include>**/*Documentation.java</include>
-                        <include>**/*EntityGenerator.java</include>              
-                    </includes>
-                    <systemPropertyVariables>
-                        <!--  Package name of the repository classes -->
-                        <packageName>${packageName}</packageName>
-                        <!-- Used by BaseApiDocumentation : set to true if you have generated audit controllers with crud-maven-plugin -->
-                        <audit>true</audit>
-                        <!-- Used by BaseApiDocumentation : set to true if you add "com.octo.tools" to the @ComponentScan annotation on your @SpringBootApplication class -->
-                        <doc>true</doc>                        
-                    </systemPropertyVariables>              
-                </configuration>
-            </plugin>
+			<!-- Unpacking crud-generator-utils-tests jar so that asciidoctor-maven-plugin 
+				can locate the .adoc template in the sourceDirectory -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>unpack</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>com.octo.tools</groupId>
+									<artifactId>crud-generator-utils-tests</artifactId>
+									<version>0.0.4-SNAPSHOT</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/crud-tests</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Tests execution : you just have to extend existing test classes located 
+				in crud-generator-utils-tests -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<includes>
+						<!-- Test for generated AuditControllers -->
+						<include>**/*Test.java</include>
+						<!-- Tests generating the API documentation -->
+						<include>**/*Documentation.java</include>
+						<include>**/*EntityGenerator.java</include>
+					</includes>
+					<systemPropertyVariables>
+						<!-- Package name of the repository classes -->
+						<packageName>${packageName}</packageName>
+						<!-- Used by BaseApiDocumentation : set to true if you have generated 
+							audit controllers with crud-maven-plugin -->
+						<audit>true</audit>
+						<!-- Used by BaseApiDocumentation : set to true if you add "com.octo.tools" 
+							to the @ComponentScan annotation on your @SpringBootApplication class -->
+						<doc>true</doc>
+					</systemPropertyVariables>
+				</configuration>
+			</plugin>
 			<!-- Generation of the API documentation -->
-            <plugin>
-                <groupId>org.asciidoctor</groupId>
-                <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>1.5.6</version>
-                <executions>
-                    <execution>
-                        <id>generate-docs</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <!-- Template located in the unpacked test dependency crud-generator-utils-tests -->
-                            <sourceDirectory>${project.build.directory}/crud-tests/asciidoc</sourceDirectory>
-                            <backend>html</backend>
-                            <doctype>book</doctype>
-                            <attributes>
-                                <snippets>${snippetsDirectory}</snippets>
-                            </attributes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- Copy of the generated documentation to static/docs/api -->
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-resources-doc</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>
-                                ${project.build.outputDirectory}/static/docs/api
-                            </outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>
-                                        ${project.build.directory}/generated-docs
-                                    </directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-		</plugins>			
+			<plugin>
+				<groupId>org.asciidoctor</groupId>
+				<artifactId>asciidoctor-maven-plugin</artifactId>
+				<version>1.5.6</version>
+				<executions>
+					<execution>
+						<id>generate-docs</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>process-asciidoc</goal>
+						</goals>
+						<configuration>
+							<!-- Template located in the unpacked test dependency crud-generator-utils-tests -->
+							<sourceDirectory>${project.build.directory}/crud-tests/asciidoc</sourceDirectory>
+							<backend>html</backend>
+							<doctype>book</doctype>
+							<attributes>
+								<snippets>${snippetsDirectory}</snippets>
+							</attributes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Copy of the generated documentation to static/docs/api -->
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-resources-doc</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>
+								${project.build.outputDirectory}/static/docs/api
+							</outputDirectory>
+							<resources>
+								<resource>
+									<directory>
+										${project.build.directory}/generated-docs
+									</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 		<pluginManagement>
 			<plugins>
+				<!-- To avoid warnings in Eclipse -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>com.octo.tools</groupId>
+										<artifactId>crud-maven-plugin</artifactId>
+										<versionRange>[0.0.4-SNAPSHOT,)</versionRange>
+										<goals>
+											<goal>crudapi</goal>
+											<goal>audit</goal>
+											<goal>crudweb</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute>
+											<runOnIncremental>true</runOnIncremental>
+										</execute>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
 				<!-- Configuration of the crud-maven-plugin -->
 				<plugin>
 					<groupId>com.octo.tools</groupId>
@@ -227,10 +263,10 @@
 					<configuration>
 						<persistentUnitName>petclinic-model</persistentUnitName>
 						<packageName>${packageName}</packageName>
-						<restApiUrl>http://localhost:8080/</restApiUrl>		
+						<restApiUrl>http://localhost:8080/</restApiUrl>
 						<auditControllerClassName>com.octo.tools.samples.AbstractAuditController</auditControllerClassName>
 					</configuration>
-					<executions>						
+					<executions>
 						<!-- CRUD API generation -->
 						<execution>
 							<id>api</id>
@@ -240,13 +276,13 @@
 							</goals>
 						</execution>
 						<!-- Audit controllers generation -->
-                        <execution>
-                            <id>audit</id>
-                            <phase>generate-sources</phase>
-                            <goals>
-                                <goal>audit</goal>
-                            </goals>
-                        </execution>	
+						<execution>
+							<id>audit</id>
+							<phase>generate-sources</phase>
+							<goals>
+								<goal>audit</goal>
+							</goals>
+						</execution>
 						<!-- CRUD Admin Web app generation -->
 						<execution>
 							<id>web</id>
@@ -257,7 +293,7 @@
 						</execution>
 					</executions>
 					<dependencies>
-						<!-- Your JPA domain classes (must contain persistence.xml)  -->
+						<!-- Your JPA domain classes (must contain persistence.xml) -->
 						<dependency>
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-audit-model-custom</artifactId>
@@ -268,7 +304,7 @@
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-audit-custom</artifactId>
 							<version>0.0.4-SNAPSHOT</version>
-						</dependency>						
+						</dependency>
 						<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
 							Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 
 							instead -->
@@ -286,6 +322,6 @@
 		<url>https://github.com/yanndemel/crud-rest-gen</url>
 		<connection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</developerConnection>
-	  <tag>crud-parent-0.0.4-SNAPSHOT</tag>
-  </scm>	
+		<tag>crud-parent-0.0.4-SNAPSHOT</tag>
+	</scm>
 </project>

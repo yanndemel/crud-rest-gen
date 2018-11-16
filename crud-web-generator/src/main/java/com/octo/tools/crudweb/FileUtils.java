@@ -54,7 +54,7 @@ public class FileUtils {
 	        }
 	      }
 	    }
-
+	    fromJar.close();
 	  }
 	
 	static void copyFile(File source, File target) throws IOException {        

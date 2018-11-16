@@ -252,7 +252,6 @@ public abstract class AbstractCrudTest {
 		return ReflectionUtils.isEntityExposed(javaType);
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<EntityInfo> getChildEntities(EntityInfo info, List<EntityInfo> list) {
 		return list.stream().filter((i)->info.getEntityClass().isAssignableFrom(i.getEntityClass()) 
 				&& i.getEntityClass().isAnnotationPresent(DiscriminatorValue.class))

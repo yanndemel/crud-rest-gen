@@ -11,7 +11,7 @@ public abstract class AbstractDefaultAuditController<T> extends AbstractAuditCon
 
 	
 	
-    public AbstractDefaultAuditController(Class<T> entityClass, Class<? extends AbstractDefaultAuditController> controller) {
+    public AbstractDefaultAuditController(Class<T> entityClass, Class<? extends AbstractDefaultAuditController<T>> controller) {
 		super(entityClass, controller);
 	}
 
@@ -25,6 +25,7 @@ public abstract class AbstractDefaultAuditController<T> extends AbstractAuditCon
 		return new Date(revEntity.getTimestamp());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public ResponseEntity<?> getRevisionEntity(Long revId) {
 		List<Object[]> resultList = getAuditQueryCreator().forRevisionsOfEntity(entityClass, false, true).add(AuditEntity.revisionNumber().eq(revId.intValue())).getResultList();

@@ -1,5 +1,6 @@
 package com.octo.tools.crud.util;
 
+@SuppressWarnings("serial")
 public class AlreadyCreatedException extends Exception {
 
 	private String url;
