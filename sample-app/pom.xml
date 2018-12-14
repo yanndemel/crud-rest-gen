@@ -88,11 +88,5 @@
 		<connection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</developerConnection>
 		<tag>HEAD</tag>
-	</scm>
-	<repositories>
-		<repository>
-			<id>projectlombok.org</id>
-			<url>https://projectlombok.org/edge-releases</url>
-		</repository>
-	</repositories>
+	</scm>	
 </project>

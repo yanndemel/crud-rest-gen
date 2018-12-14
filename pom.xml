@@ -7,6 +7,15 @@
 	<artifactId>crud-parent</artifactId>
 	<version>1.0.0</version>
 	<packaging>pom</packaging>
+	<url>https://github.com/yanndemel/crud-rest-gen</url>
+	
+	<licenses>
+	    <license>
+	      <name>Apache License, Version 2.0</name>
+	      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+	      <distribution>repo</distribution>
+	    </license>
+ 	</licenses>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -179,13 +188,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	<repositories>
-		<repository>
-			<id>central</id>
-			<name>Central repo</name>
-			<url>https://repo.maven.apache.org/maven2</url>
-		</repository>
-	</repositories>
+	
 	<scm>
 		<url>https://github.com/yanndemel/crud-rest-gen</url>
 		<connection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</connection>
