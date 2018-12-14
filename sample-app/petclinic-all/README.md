@@ -114,7 +114,7 @@ crud-maven-plugin configuration
 <plugin>
 	<groupId>com.octo.tools</groupId>
 	<artifactId>crud-maven-plugin</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<configuration>
 		<persistentUnitName>petclinic-model</persistentUnitName>
 		<packageName>${packageName}</packageName>
@@ -152,13 +152,13 @@ crud-maven-plugin configuration
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-audit-model-custom</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>
 		<!-- Custom AbstractAuditController and related classes -->
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-audit-custom</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>						
 		<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
 			Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 

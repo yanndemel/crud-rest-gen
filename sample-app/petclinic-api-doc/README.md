@@ -27,7 +27,7 @@ In addition to the dependencies needed for the API (detailed [here](../petclinic
 <dependency>
     <groupId>com.octo.tools</groupId>
     <artifactId>crud-generator-utils-tests</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
+    <version>1.0.0</version>
     <scope>test</scope>
 </dependency>               
 <dependency>
@@ -91,7 +91,7 @@ The same configuration as in the [petclinic-api](../petclinic-api#crud-maven-plu
                     <artifactItem>
                         <groupId>com.octo.tools</groupId>
                         <artifactId>crud-generator-utils-tests</artifactId>
-                        <version>0.0.4-SNAPSHOT</version>
+                        <version>1.0.0</version>
                         <type>jar</type>
                         <overWrite>true</overWrite>
                         <outputDirectory>${project.build.directory}/crud-tests</outputDirectory>

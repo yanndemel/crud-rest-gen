@@ -34,7 +34,7 @@ Extract from pom.xml :
 <dependency>
 	<groupId>com.octo.tools</groupId>
 	<artifactId>crud-generator-utils</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>1.0.0</version>
 </dependency>
 ```
 ### Java code
@@ -69,7 +69,7 @@ The **crudweb** goal is used in this sample  (bound to the *generate-resources* 
     <dependency>
         <groupId>com.octo.tools.samples</groupId>
         <artifactId>petclinic-model</artifactId>
-        <version>0.0.4-SNAPSHOT</version>
+        <version>1.0.0</version>
     </dependency>                       
     <!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
         Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 

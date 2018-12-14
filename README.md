@@ -124,7 +124,7 @@ You can find below a sample *pom.xml* for **all-in-one** generation (more detail
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>audit-core</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>
 		
 		<!-- Audit management using Envers -->
@@ -137,14 +137,14 @@ You can find below a sample *pom.xml* for **all-in-one** generation (more detail
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>
 
 		<!-- Start dependencies for API documentation generation -->
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils-tests</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
+			<version>1.0.0</version>
 			<scope>test</scope>
 		</dependency>				
 		<dependency>
@@ -213,7 +213,7 @@ You can find below a sample *pom.xml* for **all-in-one** generation (more detail
 								<artifactItem>
 									<groupId>com.octo.tools</groupId>
 									<artifactId>crud-generator-utils-tests</artifactId>
-									<version>0.0.4-SNAPSHOT</version>
+									<version>1.0.0</version>
 									<type>jar</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${project.build.directory}/crud-tests</outputDirectory>
@@ -301,7 +301,7 @@ You can find below a sample *pom.xml* for **all-in-one** generation (more detail
 				<plugin>
 					<groupId>com.octo.tools</groupId>
 					<artifactId>crud-maven-plugin</artifactId>
-					<version>0.0.4-SNAPSHOT</version>
+					<version>1.0.0</version>
 					<configuration>
 						<persistentUnitName>your-project-model</persistentUnitName>
 						<restApiUrl>${restApiUrl}</restApiUrl>
