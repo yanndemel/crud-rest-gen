@@ -78,7 +78,7 @@ You can find below a sample *pom.xml* for **all-in-one** generation (more detail
 	<name>your-project-web</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<compile.version>1.8</compile.version>
+		<compile.version>10</compile.version>
 		<!-- The Snippets directory used by Spring Rest Docs (asciidoctor maven plugin) -->
 		<snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
 		<!-- The package name of the generated RepositoryRestResource classes -->
