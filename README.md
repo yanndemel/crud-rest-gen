@@ -48,7 +48,8 @@ Use your own data model
 ### Prerequisites
 
  1. Your entities must be POJOs annotated with standard **javax.persistence annotations** : currently only **Field access** defined annotations are supported
- 2. The type of **all @Id** in your entities **must be java.lang.Long**
+ 2. The type of **all @Id** in your entities **must be a number or a string**
+ 3. Few JPA annotations are not supported, such as @Embedded or @Embeddable
 
 
 ### Project setup

@@ -3,7 +3,7 @@
 
 	<groupId>com.octo.tools.samples</groupId>
 	<artifactId>petclinic-api-audit-default</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<!-- WAR if you intend to deploy in an external servlet container like tomcat -->
 	<packaging>war</packaging>
 
@@ -45,28 +45,28 @@
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-audit-model-default</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>						
 
 		<!-- Classes used by generated controllers -->
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>
 		
 		<!-- Custom AbstractAuditController and related classes -->
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-audit-default</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>	
 		
 		<!-- Audit controllers test classes dependencies -->
 		<dependency>
             <groupId>com.octo.tools</groupId>
             <artifactId>crud-generator-utils-tests</artifactId>
-            <version>0.0.4-SNAPSHOT</version>
+            <version>1.0.0</version>
             <scope>test</scope>
         </dependency>
         
@@ -124,7 +124,7 @@
 									<pluginExecutionFilter>
 										<groupId>com.octo.tools</groupId>
 										<artifactId>crud-maven-plugin</artifactId>
-										<versionRange>[0.0.4-SNAPSHOT,)</versionRange>
+										<versionRange>[1.0.0,)</versionRange>
 										<goals>
 											<goal>crudapi</goal>
 											<goal>audit</goal>
@@ -144,7 +144,7 @@
 				<plugin>
 					<groupId>com.octo.tools</groupId>
 					<artifactId>crud-maven-plugin</artifactId>
-					<version>0.0.4-SNAPSHOT</version>
+					<version>1.0.0</version>
 					<configuration>
 						<persistentUnitName>petclinic-model</persistentUnitName>
 						<packageName>${packageName}</packageName>
@@ -173,13 +173,13 @@
 						<dependency>
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-audit-model-default</artifactId>
-							<version>0.0.4-SNAPSHOT</version>
+							<version>1.0.0</version>
 						</dependency>
 						<!-- Custom AbstractAuditController and related classes -->
 						<dependency>
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-audit-default</artifactId>
-							<version>0.0.4-SNAPSHOT</version>
+							<version>1.0.0</version>
 						</dependency>						
 						<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
 							Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 
@@ -198,6 +198,6 @@
 		<url>https://github.com/yanndemel/crud-rest-gen</url>
 		<connection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</developerConnection>
-	  <tag>crud-parent-0.0.4-SNAPSHOT</tag>
+	  <tag>crud-parent-1.0.0</tag>
   </scm>	
 </project>
