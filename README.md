@@ -12,7 +12,7 @@ Provide the domain entities (standard JPA annotated classes), and let crud-maven
 * the **Rest API** for retrieving **audit information** and associated unit tests if you use Hibernate Envers to audit your entities
 
 > **Technology stack**
-
+> 
 > - Spring Boot
 > - Spring Data Rest
 > - Spring Data JPA
@@ -22,9 +22,7 @@ Provide the domain entities (standard JPA annotated classes), and let crud-maven
 
 Install the plugin
 ------------------
-Authorized users can use the **OCTO Nexus server** for managing crud-maven-plugin dependencies.
-
-Or you can build and install/deploy all necessary components in you local repo / Nexus server by invoking ``mvn clean install`` / ``mvn clean deploy``  at the root of crud-rest-gen project. This will install all necessary artifacts :
+You can build and install/deploy all necessary components in you local repo / Nexus server by invoking ``mvn clean install`` / ``mvn clean deploy``  at the root of crud-rest-gen project. This will install all necessary artifacts :
 * *audit-core* : Base classes used by generated audit controllers
 * *crud-generator-utils* : Utility classes for Reflection & String operations and Controllers for accessing generated documentation page and history API
 * *crud-generator-utils-tests* : Base classes to be extended in the API project for API documentation generation and generated audit controllers testing
@@ -73,12 +71,12 @@ You can find below a sample *pom.xml* for **all-in-one** generation (more detail
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.6.RELEASE</version>
+		<version>2.1.1.RELEASE</version>
 	</parent>
 	<name>your-project-web</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<compile.version>10</compile.version>
+		<compile.version>11</compile.version>
 		<!-- The Snippets directory used by Spring Rest Docs (asciidoctor maven plugin) -->
 		<snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
 		<!-- The package name of the generated RepositoryRestResource classes -->
@@ -124,7 +122,7 @@ You can find below a sample *pom.xml* for **all-in-one** generation (more detail
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>audit-core</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- Audit management using Envers -->
@@ -137,14 +135,14 @@ You can find below a sample *pom.xml* for **all-in-one** generation (more detail
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Start dependencies for API documentation generation -->
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils-tests</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>				
 		<dependency>
@@ -185,9 +183,11 @@ You can find below a sample *pom.xml* for **all-in-one** generation (more detail
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
 				<configuration>
 					<source>${compile.version}</source>
 					<target>${compile.version}</target>
+					<release>${compile.version}</release>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -213,7 +213,7 @@ You can find below a sample *pom.xml* for **all-in-one** generation (more detail
 								<artifactItem>
 									<groupId>com.octo.tools</groupId>
 									<artifactId>crud-generator-utils-tests</artifactId>
-									<version>1.0.0</version>
+									<version>1.0.1-SNAPSHOT</version>
 									<type>jar</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${project.build.directory}/crud-tests</outputDirectory>
@@ -301,7 +301,7 @@ You can find below a sample *pom.xml* for **all-in-one** generation (more detail
 				<plugin>
 					<groupId>com.octo.tools</groupId>
 					<artifactId>crud-maven-plugin</artifactId>
-					<version>1.0.0</version>
+					<version>1.0.1-SNAPSHOT</version>
 					<configuration>
 						<persistentUnitName>your-project-model</persistentUnitName>
 						<restApiUrl>${restApiUrl}</restApiUrl>
