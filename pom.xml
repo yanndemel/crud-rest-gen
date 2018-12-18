@@ -5,7 +5,7 @@
 
 	<groupId>com.octo.tools</groupId>
 	<artifactId>crud-parent</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<url>https://github.com/yanndemel/crud-rest-gen</url>
 	
@@ -19,8 +19,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<compile.version>10</compile.version>
-		<spring-boot.version>2.0.6.RELEASE</spring-boot.version>
+		<compile.version>11</compile.version>
+		<spring-boot.version>2.1.1.RELEASE</spring-boot.version>
 		<evoinflector.version>1.2.2</evoinflector.version>
 		<scribe.version>4.2.0</scribe.version>
 		<project.scm.id>github</project.scm.id>
@@ -44,6 +44,7 @@
 				<configuration>
 					<source>${compile.version}</source>
 					<target>${compile.version}</target>
+					<release>${compile.version}</release>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -94,12 +95,7 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<dependencies>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.2</version><!--$NO-MVN-MAN-VER$-->
-		</dependency>
+	<dependencies>		
 		<dependency>
 			<groupId>javax.annotation</groupId>
 			<artifactId>javax.annotation-api</artifactId>
@@ -135,7 +131,6 @@
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm</artifactId>
-			<version>6.2.1</version><!--$NO-MVN-MAN-VER$-->
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
@@ -147,11 +142,6 @@
 				<version>${spring-boot.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.projectlombok</groupId>
-				<artifactId>lombok</artifactId>
-				<version>1.18.2</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.xml.bind</groupId>
@@ -184,7 +174,7 @@
 			<dependency>
 				<groupId>org.ow2.asm</groupId>
 				<artifactId>asm</artifactId>
-				<version>6.2.1</version>
+				<version>7.0</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

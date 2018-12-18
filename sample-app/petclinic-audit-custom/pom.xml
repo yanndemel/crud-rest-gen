@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.octo.tools.samples</groupId>
 		<artifactId>crud-samples-parent</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1-SNAPSHOT</version>
 	</parent>
 
   <name>petclinic-audit-custom</name>
@@ -15,7 +15,7 @@
 
   <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<compile.version>10</compile.version>
+		<compile.version>11</compile.version>
 	</properties>
 
 	<build>
@@ -36,13 +36,13 @@
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-audit-model-custom</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>audit-core</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>			
 
 	</dependencies>

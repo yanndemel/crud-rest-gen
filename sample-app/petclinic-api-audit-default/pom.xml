@@ -3,21 +3,21 @@
 
 	<groupId>com.octo.tools.samples</groupId>
 	<artifactId>petclinic-api-audit-default</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<!-- WAR if you intend to deploy in an external servlet container like tomcat -->
 	<packaging>war</packaging>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.6.RELEASE</version>
+		<version>2.1.1.RELEASE</version>
 	</parent>
 
 	<name>petclinic-api-audit-default</name>
 
 	<properties>		
 		<packageName>com.octo.tools.samples.petclinic.repository</packageName>
-		<compile.version>10</compile.version>
+		<compile.version>11</compile.version>
 	</properties>
 
 
@@ -45,28 +45,28 @@
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-audit-model-default</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>						
 
 		<!-- Classes used by generated controllers -->
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- Custom AbstractAuditController and related classes -->
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-audit-default</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>	
 		
 		<!-- Audit controllers test classes dependencies -->
 		<dependency>
             <groupId>com.octo.tools</groupId>
             <artifactId>crud-generator-utils-tests</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         
@@ -144,7 +144,7 @@
 				<plugin>
 					<groupId>com.octo.tools</groupId>
 					<artifactId>crud-maven-plugin</artifactId>
-					<version>1.0.0</version>
+					<version>1.0.1-SNAPSHOT</version>
 					<configuration>
 						<persistentUnitName>petclinic-model</persistentUnitName>
 						<packageName>${packageName}</packageName>
@@ -173,13 +173,13 @@
 						<dependency>
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-audit-model-default</artifactId>
-							<version>1.0.0</version>
+							<version>1.0.1-SNAPSHOT</version>
 						</dependency>
 						<!-- Custom AbstractAuditController and related classes -->
 						<dependency>
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-audit-default</artifactId>
-							<version>1.0.0</version>
+							<version>1.0.1-SNAPSHOT</version>
 						</dependency>						
 						<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
 							Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 
