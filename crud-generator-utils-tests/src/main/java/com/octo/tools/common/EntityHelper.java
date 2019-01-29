@@ -8,6 +8,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -510,10 +511,10 @@ public class EntityHelper {
 			}			
 			else if(f.isAnnotationPresent(Digits.class))
 				value = "0";
-			else if (Date.class.isAssignableFrom(type) || DateTime.class.isAssignableFrom(type))
-				value = printDate(cal, f);
 			else if (LocalDate.class.isAssignableFrom(type))
 				value = LocalDate.now().toString();
+			else if (Date.class.isAssignableFrom(type) || DateTime.class.isAssignableFrom(type) || Temporal.class.isAssignableFrom(type))
+				value = printDate(cal, f);
 			else
 				value = tstStr;
 		}
