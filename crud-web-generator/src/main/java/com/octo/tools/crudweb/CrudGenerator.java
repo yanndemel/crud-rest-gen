@@ -324,7 +324,10 @@ public class CrudGenerator {
             				if(!col.nullable())
             					fi.setNotNull(true);
             				if(fi.getSizeMax() == 255)
-            					fi.setSizeMax(col.length());            				
+            					fi.setSizeMax(col.length());      
+            				else if("text".equals(col.columnDefinition())) {
+            					fi.setSizeMax(4000);
+            				}
             			}
             			if(Number.class.isAssignableFrom(f.getType()) || 
             					(f.getType().isPrimitive() && (f.getType().equals(int.class) || f.getType().equals(double.class) || f.getType().equals(long.class) || f.getType().equals(short.class)))) {

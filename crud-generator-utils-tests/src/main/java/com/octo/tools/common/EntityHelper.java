@@ -133,9 +133,15 @@ public class EntityHelper {
 		logger.debug("Creating entity "+entityClassName+" at url " + url + " with data {" + jsonData + "}");		
 		String body = this.currentTest.getObjectMapper().writeValueAsString(jsonData);
 		logger.debug("Body = {}", body);
-		ResultActions resultAction = currentTest.getMockMvc(entityClassName, HttpMethod.POST).perform(
+		ResultActions resultAction;
+		MockMethod mockMethod = currentTest.getMockMethod(entityClassName, HttpMethod.POST);
+		if(mockMethod != null) {
+			resultAction = (ResultActions) mockMethod.getMethod().invoke(mockMethod.getInstance());
+		} else { 
+			resultAction = currentTest.getMockMvc(entityClassName, HttpMethod.POST).perform(
 				post(url(url)).contentType(MediaType.APPLICATION_JSON).content(body))
-				.andExpect(status().isCreated());		
+				.andExpect(status().isCreated());
+		}
 		return resultAction;
 	}
 
@@ -164,7 +170,12 @@ public class EntityHelper {
 	
 	public void deleteEntity(String location, String entityClass) throws Exception {
 		logger.debug("Deleting entity " + location);
-		this.currentTest.getMockMvc(entityClass, HttpMethod.DELETE).perform(MockMvcRequestBuilders.delete(location)).andExpect(status().is2xxSuccessful());
+		MockMethod mockMethod = currentTest.getMockMethod(entityClass, HttpMethod.DELETE);
+		if(mockMethod != null) {
+			mockMethod.getMethod().invoke(mockMethod.getInstance());
+		} else { 
+			this.currentTest.getMockMvc(entityClass, HttpMethod.DELETE).perform(MockMvcRequestBuilders.delete(location)).andExpect(status().is2xxSuccessful());
+		}
 	}
 
 	public void createLinkedEntities(Class<?> entityClass) throws Exception {

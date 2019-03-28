@@ -59,6 +59,7 @@ public abstract class AbstractCrudTest {
 	protected WebApplicationContext context;
 	private MockMvc mockMvc;
 	private Map<String, Map<HttpMethod, MockMvc>> customControllersMockMvc;
+	private Map<String, Map<HttpMethod, MockMethod>> customControllersMethods;
 	protected List<EntityInfo> entityInfoList;
 	protected EntityHelper entityHelper;
 	
@@ -125,6 +126,19 @@ public abstract class AbstractCrudTest {
 		this.mockMvc = mockMvc;
 	}
 	
+	protected void addCustomControllerMethod(String entityClass, HttpMethod httpMethod, MockMethod mockObject) {
+		if(this.customControllersMethods == null) {
+			this.customControllersMethods = new HashMap<String, Map<HttpMethod, MockMethod>>();
+		}
+		Map<HttpMethod, MockMethod> map = this.customControllersMethods.get(entityClass);
+		if(map == null) {			
+			map = new HashMap<>();
+			this.customControllersMethods.put(entityClass, map);
+		}
+		if(!map.containsKey(httpMethod))
+			map.put(httpMethod, mockObject);
+	}
+	
 	protected void addCustomController(String entityClass, HttpMethod method, MockMvc mockMvc) {
 		if(this.customControllersMockMvc == null)
 			this.customControllersMockMvc = new HashMap<>();
@@ -170,6 +184,16 @@ public abstract class AbstractCrudTest {
 			return mockMvc2;
 		}
 		return getDefaultMockMvc();
+	}
+	
+	protected MockMethod getMockMethod(String entityClass, HttpMethod httpMethod) {
+		if(this.customControllersMethods != null) {
+			Map<HttpMethod, MockMethod> map = this.customControllersMethods.get(entityClass);
+			if(map != null) {
+				return map.get(httpMethod);
+			}
+		}
+		return null;
 	}
 	
 	private MockMvc getDefaultMockMvc() {
