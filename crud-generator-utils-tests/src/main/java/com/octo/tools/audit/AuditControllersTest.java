@@ -70,7 +70,7 @@ public class AuditControllersTest extends AbstractCrudTest {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void performAuditTest(EntityInfo info, Class<?> entityClass) throws Exception, JsonProcessingException,
+	protected void performAuditTest(EntityInfo info, Class<?> entityClass) throws Exception, JsonProcessingException,
 			MockNotFoundException, UnsupportedEncodingException, IllegalAccessException, NoSuchFieldException,
 			ClassNotFoundException, IOException, JsonParseException, JsonMappingException {
 		entityHelper.createLinkedEntities(entityClass);
