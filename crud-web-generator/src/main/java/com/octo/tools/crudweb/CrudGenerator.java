@@ -325,7 +325,7 @@ public class CrudGenerator {
             					fi.setNotNull(true);
             				if(fi.getSizeMax() == 255)
             					fi.setSizeMax(col.length());      
-            				else if("text".equals(col.columnDefinition())) {
+            				if("text".equals(col.columnDefinition())) {
             					fi.setSizeMax(4000);
             				}
             			}
