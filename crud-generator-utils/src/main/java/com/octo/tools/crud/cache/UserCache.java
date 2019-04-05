@@ -91,9 +91,9 @@ public class UserCache {
 		session.setAttribute(SESSION_TOKEN_KEY, newToken.getAccessToken());
 	}	
 	
-	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, HttpSession session) {
+	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName, HttpSession session) {
 		Cache cache = cacheManager.getCache(UserCache.PROFILES);		
-		cache.put(authToken.getAccessToken(), new Profile(name, userMail, userId));
+		cache.put(authToken.getAccessToken(), new Profile(name, userMail, userId, firstName));
 		if(session != null) {
 			storeTokenInCache(authToken, session.getId());
 			session.setAttribute(UserCache.SESSION_TOKEN_KEY, authToken.getAccessToken());
@@ -108,6 +108,10 @@ public class UserCache {
 	
 	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId) {
 		putProfileInCache(authToken, name, userMail, userId, null);
+	}
+	
+	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName) {
+		putProfileInCache(authToken, name, userMail, userId, firstName, null);
 	}
 	
 	public Token getCachedAccessToken(String authToken) throws AuthenticationException {
