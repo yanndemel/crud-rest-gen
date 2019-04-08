@@ -49,10 +49,10 @@ public class ApiUrlTest extends AbstractCrudTest {
 		this.entityInfoList = getEntityInfoList(em);
 		for(EntityInfo info : entityInfoList) {
 			String pluralName = info.getPluralName();
-			lines.add(pluralName);
-			lines.add(pluralName + "/{id}");
+			lines.add(addFirstSlash(pluralName));
+			lines.add(addFirstSlash(pluralName + "/{id}"));
 			if(info.isSearch()) {
-				lines.add(pluralName + "/search");
+				lines.add(addFirstSlash(pluralName + "/search"));
 			}
 		}
 		generateUrlsFile(inFile, charset, lines);		
