@@ -11,6 +11,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -62,9 +63,14 @@ public class ApiUrlTest extends AbstractCrudTest {
 			throws ClassNotFoundException, IOException {
 		Set<BeanDefinition> classes = getBeanClasses();
 		addLines(lines, classes);	
+		List<String> list = sortLines(lines);
+		Files.write(Paths.get(inFile), list, charset,  StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+	}
+
+	public static List<String> sortLines(Set<String> lines) {
 		ArrayList<String> list = new ArrayList<>(lines);
 		Collections.sort(list);
-		Files.write(Paths.get(inFile), list, charset,  StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+		return list;
 	}
 
 	public static void addLines(Set<String> lines, final Set<BeanDefinition> classes) throws ClassNotFoundException {
