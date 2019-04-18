@@ -50,7 +50,7 @@ public class ApiUrlTest extends AbstractCrudTest {
 		this.entityInfoList = getEntityInfoList(em);
 		for(EntityInfo info : entityInfoList) {
 			String pluralName = info.getPluralName();
-			lines.add(addFirstSlash(pluralName));
+			addPath(lines, pluralName);
 			lines.add(addFirstSlash(pluralName + "/{id}"));
 			if(info.isSearch()) {
 				lines.add(addFirstSlash(pluralName + "/search"));
@@ -88,12 +88,14 @@ public class ApiUrlTest extends AbstractCrudTest {
 	    					if(rm.value() != null && rm.value().length > 0) {
 	    						for(String path : rm.value())
 	    							addUrl(lines, pref.value(), path);
+	    					} else if(rm.method() != null && rm.method().length > 0) {
+	    						for(String val : pref.value()) {
+	    							addPath(lines, val);
+	    						}
 	    					}
 	    				}
 	    			}
 	    		}
-	    		
-		    	
 		    }		    
 		    
 		}
@@ -112,12 +114,16 @@ public class ApiUrlTest extends AbstractCrudTest {
 
 	public static void addUrl(Set<String> lines, String[] pref, String path) {
 		if(pref == null || pref.length == 0) {
-			lines.add(addFirstSlash(path));
+			addPath(lines, path);
 		} else {
 			for(String p : pref) {
 				lines.add(concat(p, path));
 			}	
 		}		
+	}
+
+	private static void addPath(Set<String> lines, String path) {
+		lines.add(addFirstSlash(path));
 	}
 
 	public static String concat(String p, String path) {
