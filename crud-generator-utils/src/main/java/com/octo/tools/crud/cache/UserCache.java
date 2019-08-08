@@ -79,7 +79,7 @@ public class UserCache {
     }
     
 	private void storeTokenInCache(final OAuth2AccessToken tokens, Cache cache, String sessionId) {
-		logger.debug("Storing in cache {}", tokens.getAccessToken());
+		//logger.debug("Storing in cache {}", tokens.getAccessToken());
 		cache.put(tokens.getAccessToken(), new Token(tokens, sessionId, System.currentTimeMillis()));
 	}
 	
