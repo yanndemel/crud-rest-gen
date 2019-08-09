@@ -8,14 +8,14 @@
 	<version>1.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<url>https://github.com/yanndemel/crud-rest-gen</url>
-	
+
 	<licenses>
-	    <license>
-	      <name>Apache License, Version 2.0</name>
-	      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-	      <distribution>repo</distribution>
-	    </license>
- 	</licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -95,7 +95,7 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<dependencies>		
+	<dependencies>
 		<dependency>
 			<groupId>javax.annotation</groupId>
 			<artifactId>javax.annotation-api</artifactId>
@@ -103,29 +103,29 @@
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
-			<version>2.4.0-b180830.0359</version><!--$NO-MVN-MAN-VER$-->
+			<version>2.4.0-b180830.0359</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 
 		<dependency>
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
-			<version>2.4.0-b180830.0438</version><!--$NO-MVN-MAN-VER$-->
+			<version>2.4.0-b180830.0438</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.23.1-GA</version><!--$NO-MVN-MAN-VER$-->
+			<version>3.23.1-GA</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
-			<version>3.2.7</version><!--$NO-MVN-MAN-VER$-->
+			<version>3.2.7</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>2.20.0</version><!--$NO-MVN-MAN-VER$-->
+			<version>2.20.0</version><!--$NO-MVN-MAN-VER$ -->
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -178,12 +178,12 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
-	<scm>
-		<url>https://github.com/yanndemel/crud-rest-gen</url>
-		<connection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</developerConnection>
-		<tag>HEAD</tag>
-	</scm>
+
+	<distributionManagement>
+		<repository>
+			<id>dev-azure-com-cheuvreux-cheuvreux</id>
+			<url>https://pkgs.dev.azure.com/Cheuvreux/_packaging/Cheuvreux/maven/v1</url>
+		</repository>
+	</distributionManagement>
 
 </project>
