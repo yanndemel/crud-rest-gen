@@ -84,10 +84,10 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	<scm>
-		<url>https://github.com/yanndemel/crud-rest-gen</url>
-		<connection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</developerConnection>
-		<tag>HEAD</tag>
-	</scm>	
+	<distributionManagement>
+		<repository>
+			<id>dev-azure-com-cheuvreux-cheuvreux</id>
+			<url>https://pkgs.dev.azure.com/Cheuvreux/_packaging/Cheuvreux/maven/v1</url>
+		</repository>
+	</distributionManagement>
 </project>

@@ -133,10 +133,10 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<scm>
-		<url>https://github.com/yanndemel/crud-rest-gen</url>
-		<connection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/yanndemel/crud-rest-gen.git</developerConnection>
-	  <tag>crud-parent-1.0.0</tag>
-  </scm>	
+	<distributionManagement>
+		<repository>
+			<id>dev-azure-com-cheuvreux-cheuvreux</id>
+			<url>https://pkgs.dev.azure.com/Cheuvreux/_packaging/Cheuvreux/maven/v1</url>
+		</repository>
+	</distributionManagement>
 </project>
