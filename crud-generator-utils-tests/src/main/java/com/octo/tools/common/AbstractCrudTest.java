@@ -8,6 +8,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -113,7 +114,12 @@ public abstract class AbstractCrudTest {
 	}
 
 	protected void setUpEntityList() throws ClassNotFoundException, IOException {
+		ExcludedEntities excludedEntities = this.getClass().getAnnotation(ExcludedEntities.class);
 		this.entityInfoList = getEntityInfoList(em);
+		if(excludedEntities != null && excludedEntities.value() != null && excludedEntities.value().length > 0) {
+			List<Class<?>> excludedClasses = Arrays.asList(excludedEntities.value());
+			this.entityInfoList = this.entityInfoList.stream().filter(info->!excludedClasses.contains(info.getEntityClass())).collect(Collectors.toList());
+		}
 		initDataSets();
 		this.entityHelper = new EntityHelper(this);
 	}
