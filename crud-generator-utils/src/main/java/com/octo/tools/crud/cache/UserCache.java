@@ -42,7 +42,7 @@ public class UserCache {
 		return token == null ? null : getCachedUserProfile(token);
 	}
 	
-	private String getConnectedUserToken() {
+	public String getConnectedUserToken() {
 		String authToken = authKey.get();
 		//logger.debug("getConnectedUserToken = "+authToken);
 		return authToken;
