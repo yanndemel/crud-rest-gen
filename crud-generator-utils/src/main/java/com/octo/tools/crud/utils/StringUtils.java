@@ -16,8 +16,8 @@ public class StringUtils {
 	private static final String DES = "des";
 	private static final String DU = "du";
 	private static final String DE = "de";
-	private static final String SPACE = " ";
-	private static final String HYPHEN = "-";
+	public static final String SPACE = " ";
+	public static final String HYPHEN = "-";
 	public static final String VALUE_SEP = ",";
 
 	private StringUtils() {};
