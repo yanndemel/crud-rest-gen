@@ -1675,7 +1675,7 @@ public class HttpRequest {
 	 * @throws HttpRequestException
 	 */
 	public boolean isBodyEmpty() throws HttpRequestException {
-		return contentLength() == 0;
+		return contentLength() <= 0;
 	}
 
 	/**
