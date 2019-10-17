@@ -126,6 +126,9 @@ public class StringUtils {
 	}
 
 	public static String capitalizeFirstLetter(String s, boolean checkParticule) {
+		if(s == null) {
+			return null;
+		}
 		int len = s.length();
 		if(len > 1) {
 			if(checkParticule) {
