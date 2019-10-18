@@ -153,4 +153,8 @@ public class StringUtils {
 		return s == null || s.isEmpty();
 	}
 	
+	public static boolean isNotEmpty(String s) {
+		return s != null && !s.isEmpty();
+	}
+	
 }
