@@ -148,7 +148,9 @@ public class StringUtils {
 		}
 		return s.toUpperCase();
 	}
-	
-	
+	 
+	public static boolean isNullOrEmpty(String s) {
+		return s == null || s.isEmpty();
+	}
 	
 }
