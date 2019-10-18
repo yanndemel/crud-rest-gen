@@ -1,6 +1,8 @@
 package com.octo.tools.crud.utils;
 
 import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.atteo.evo.inflector.English;
 
@@ -155,6 +157,15 @@ public class StringUtils {
 	
 	public static boolean isNotEmpty(String s) {
 		return s != null && !s.isEmpty();
+	}
+	
+	public static List<String> toList(String s) {
+		String[] arr = s.split(VALUE_SEP);
+		List<String> l = new ArrayList<>(arr.length);
+		for(String a : arr) {
+			l.add(a.trim());
+		}
+		return l;
 	}
 	
 }
