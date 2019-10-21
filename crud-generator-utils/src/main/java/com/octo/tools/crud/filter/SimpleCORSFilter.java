@@ -109,8 +109,8 @@ public class SimpleCORSFilter implements Filter {
 				response.sendError(HttpStatus.UNAUTHORIZED.value(), "Access to '"+request.getRequestURL().toString()+"' from origin '"+origin+"' has been blocked by CORS policy.");
 				return;
 			}
-		} else {
-			response.setHeader(ACCESS_CONTROL_ALLOW_ORIGIN, ALL_ORIGINS);	
+		} else {			
+			response.setHeader(ACCESS_CONTROL_ALLOW_ORIGIN, origin);	
 		}
         response.setHeader(VARY, ORIGIN);
         response.setHeader(ACCESS_CONTROL_ALLOW_CREDENTIALS, allowCredentials.toString());
