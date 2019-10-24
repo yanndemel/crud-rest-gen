@@ -1,5 +1,6 @@
 package com.octo.tools.crud.utils;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -12,6 +13,10 @@ public class StringTest {
 				+ "De la TERRE D'espérance DU con lajoie");
 		assertTrue(formatLongName, "Jean-Baptiste Noël de La Rochedubois des Entrailles de La Terre d'Espérance du Con Lajoie"
 				.equals(formatLongName));
+		assertEquals("Jean-Baptiste", StringUtils.toTitleCase("JEAN-BAPTIste"));
+		assertEquals("Jean Noël", StringUtils.toTitleCase("JEAN NOËL"));
 	}
+	
+	
 	
 }

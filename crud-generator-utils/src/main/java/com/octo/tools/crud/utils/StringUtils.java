@@ -126,6 +126,10 @@ public class StringUtils {
 			}
 		}
 	}
+	
+	public static String capitalizeFirstLetter(String s) {
+		return capitalizeFirstLetter(s, false);
+	}
 
 	public static String capitalizeFirstLetter(String s, boolean checkParticule) {
 		if(s == null) {
@@ -168,4 +172,12 @@ public class StringUtils {
 		return l;
 	}
 	
+	public static String toTitleCase(String s) {
+		if(s == null) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder();
+		appendFirstLetterCapitalized(s, sb, false);
+		return sb.toString();		
+	}
 }
