@@ -91,9 +91,9 @@ public class UserCache {
 		session.setAttribute(SESSION_TOKEN_KEY, newToken.getAccessToken());
 	}	
 	
-	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName, HttpSession session) {
+	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName, HttpSession session, Long entityId, Long tenantId) {
 		Cache cache = cacheManager.getCache(UserCache.PROFILES);		
-		cache.put(authToken.getAccessToken(), new Profile(name, userMail, userId, firstName));
+		cache.put(authToken.getAccessToken(), new Profile(name, userMail, userId, firstName, entityId, tenantId));
 		if(session != null) {
 			storeTokenInCache(authToken, session.getId());
 			session.setAttribute(UserCache.SESSION_TOKEN_KEY, authToken.getAccessToken());
@@ -103,15 +103,15 @@ public class UserCache {
 	}
 	
 	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail) {
-		putProfileInCache(authToken, name, userMail, null, null);
+		putProfileInCache(authToken, name, userMail, null, null, null, null);
 	}
 	
-	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId) {
-		putProfileInCache(authToken, name, userMail, userId, null);
+	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, Long entityId, Long tenantId) {
+		putProfileInCache(authToken, name, userMail, userId, null, entityId, tenantId);
 	}
 	
-	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName) {
-		putProfileInCache(authToken, name, userMail, userId, firstName, null);
+	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName, Long entityId, Long tenantId) {
+		putProfileInCache(authToken, name, userMail, userId, firstName, null, entityId, tenantId);
 	}
 	
 	public Token getCachedAccessToken(String authToken) throws AuthenticationException {

@@ -23,6 +23,8 @@ public class Profile implements Serializable {
 	private String firstname;
 	private String email;	
 	private Long userId;
+	private Long entityId;
+	private Long tenantId;
 	
 	/**
 	 * Sent to client with profile info (not stored in cache)
@@ -31,13 +33,14 @@ public class Profile implements Serializable {
 	private String refreshToken;
 	private long expiresIn;
 	
-	
-	public Profile(String displayName, String email, Long userId, String firstName) {
+	public Profile(String displayName, String email, Long userId, String firstName, Long entityId, Long tenantId) {
 		super();
 		this.displayName = displayName;
 		this.firstname = firstName;
 		this.email = email;
 		this.userId = userId;
+		this.entityId = entityId;
+		this.tenantId = tenantId;
 	}
 
 	/*Use to send RefreshToken infos*/
