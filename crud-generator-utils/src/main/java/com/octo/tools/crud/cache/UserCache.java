@@ -91,6 +91,27 @@ public class UserCache {
 		session.setAttribute(SESSION_TOKEN_KEY, newToken.getAccessToken());
 	}	
 	
+	//To remove (kept for compatibility reasons)
+	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName, HttpSession session) {
+		Cache cache = cacheManager.getCache(UserCache.PROFILES);		
+		cache.put(authToken.getAccessToken(), new Profile(name, userMail, userId, firstName, null, null));
+		if(session != null) {
+			storeTokenInCache(authToken, session.getId());
+			session.setAttribute(UserCache.SESSION_TOKEN_KEY, authToken.getAccessToken());
+		} else {
+			storeTokenInCache(authToken, null);
+		}
+	}
+	
+	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId) {
+		putProfileInCache(authToken, name, userMail, userId, null, null, null);
+	}
+	
+	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName) {
+		putProfileInCache(authToken, name, userMail, userId, firstName, null, null, null);
+	}
+	//End of to be removed methods
+	
 	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName, HttpSession session, Long entityId, Long tenantId) {
 		Cache cache = cacheManager.getCache(UserCache.PROFILES);		
 		cache.put(authToken.getAccessToken(), new Profile(name, userMail, userId, firstName, entityId, tenantId));
