@@ -141,8 +141,12 @@ public class UserCache {
 	}
 
 	public HttpRequest setHeaders(HttpRequest req) {
+		return setHeaders(req, MediaType.APPLICATION_JSON);
+	}
+	
+	public HttpRequest setHeaders(HttpRequest req, MediaType mediaType) {
 		return req.authorization(getAuthorizationHeader())
-    			.accept(MediaType.APPLICATION_JSON_VALUE)
+    			.accept(mediaType.toString())
     			.trustAllCerts()
     			.trustAllHosts();
 	}
