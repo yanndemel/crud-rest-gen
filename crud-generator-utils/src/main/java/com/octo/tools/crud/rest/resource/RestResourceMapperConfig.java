@@ -22,6 +22,7 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.naming.ConfigurationException;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.metamodel.EntityType;
 
 import org.slf4j.Logger;
@@ -48,10 +49,10 @@ public class RestResourceMapperConfig {
 	private static final Logger logger = LoggerFactory.getLogger(RestResourceMapperConfig.class);
 	
 	@Autowired
-	private RestResourceMapperService restResourceMapperService;
-
+	private EntityManagerFactory emf;
+	
 	@Autowired
-	private EntityManager em;
+	private RestResourceMapperService restResourceMapperService;
 
 	private Map<String, List<FieldInfo>> fieldGetterSetterByClassName;
 
@@ -62,28 +63,33 @@ public class RestResourceMapperConfig {
 	}
 
 	private void initAnnotatedRestResources() throws IntrospectionException, ConfigurationException {
-		Set<EntityType<?>> entities = em.getMetamodel().getEntities();
-		for (EntityType<?> type : entities) {
-			Class<?> javaType = type.getJavaType();
-			if (ReflectionUtils.isEntityExposed(javaType)) {
-				List<FieldInfo> l = new ArrayList<>();
-				BeanInfo beanInfo = Introspector.getBeanInfo(javaType);
-				List<Field> fields = ReflectionUtils.getAllFields(javaType);
-				PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
-				for (Field f : fields) {
-					RestResourceMapper a = f.getAnnotation(RestResourceMapper.class);
-					if (a != null) {
-						PropertyDescriptor pd = ReflectionUtils.getPropertyDescriptor(pds, f);
-						if (pd != null && pd.getReadMethod() != null
-								&& Modifier.isPublic(pd.getReadMethod().getModifiers())) {
-							l.add(new FieldInfo(f.getName(), a, pd.getReadMethod(),
-									RestResourceUtils.getWriteMethod(fields, pds, a.resolveToProperty())));
+		EntityManager em = emf.createEntityManager();
+		try {
+			Set<EntityType<?>> entities = em.getMetamodel().getEntities();
+			for (EntityType<?> type : entities) {
+				Class<?> javaType = type.getJavaType();
+				if (ReflectionUtils.isEntityExposed(javaType)) {
+					List<FieldInfo> l = new ArrayList<>();
+					BeanInfo beanInfo = Introspector.getBeanInfo(javaType);
+					List<Field> fields = ReflectionUtils.getAllFields(javaType);
+					PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
+					for (Field f : fields) {
+						RestResourceMapper a = f.getAnnotation(RestResourceMapper.class);
+						if (a != null) {
+							PropertyDescriptor pd = ReflectionUtils.getPropertyDescriptor(pds, f);
+							if (pd != null && pd.getReadMethod() != null
+									&& Modifier.isPublic(pd.getReadMethod().getModifiers())) {
+								l.add(new FieldInfo(f.getName(), a, pd.getReadMethod(),
+										RestResourceUtils.getWriteMethod(fields, pds, a.resolveToProperty())));
+							}
 						}
 					}
+					if (!l.isEmpty())
+						fieldGetterSetterByClassName.put(javaType.getName(), l);
 				}
-				if (!l.isEmpty())
-					fieldGetterSetterByClassName.put(javaType.getName(), l);
 			}
+		} finally {
+			em.close();
 		}
 	}
 

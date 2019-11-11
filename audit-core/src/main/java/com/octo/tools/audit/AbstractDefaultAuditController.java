@@ -3,6 +3,8 @@ package com.octo.tools.audit;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.query.AuditEntity;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +29,9 @@ public abstract class AbstractDefaultAuditController<T> extends AbstractAuditCon
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ResponseEntity<?> getRevisionEntity(Long revId) {
-		List<Object[]> resultList = getAuditQueryCreator().forRevisionsOfEntity(entityClass, false, true).add(AuditEntity.revisionNumber().eq(revId.intValue())).getResultList();
-		return ResponseEntity.ok(getAuditInfoList(resultList));
+	public ResponseEntity<?> getRevisionEntity(Long revId, EntityManager em) {
+		List<Object[]> resultList = getAuditQueryCreator(em).forRevisionsOfEntity(entityClass, false, true).add(AuditEntity.revisionNumber().eq(revId.intValue())).getResultList();
+		return ResponseEntity.ok(getAuditInfoList(resultList, em));
 	}
 	
 	
