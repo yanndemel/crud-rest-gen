@@ -75,12 +75,10 @@ public class BaseApiDocumentation extends AbstractCrudTest {
 
 	@Test
 	public void indexExample() throws Exception {
-		
 		getMockMvc("", HttpMethod.GET).perform(get(""))
 			.andExpect(status().isOk())
 			.andDo(print()).andDo(document("index-example",
 					links(linkResources())));
-		
 	}
 
 	private LinkDescriptor[] linkResources() throws ClassNotFoundException {
