@@ -20,9 +20,9 @@ import org.hibernate.envers.query.AuditQueryCreator;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 
 public abstract class AbstractAuditController<T, R> {
@@ -51,7 +51,7 @@ public abstract class AbstractAuditController<T, R> {
 	protected ResponseEntity<?> getRevisionsForEntity(Long entityId, EntityManager em) {
 		AuditQueryCreator auditQueryCreator = getAuditQueryCreator(em);
 		List<Object[]> resultList = auditQueryCreator.forRevisionsOfEntity(entityClass, false, true).add(AuditEntity.id().eq(entityId)).getResultList();
-		Resources<AuditResourceSupport<T>> resources = getAuditInfoList(resultList, em);
+		CollectionModel<AuditResourceSupport<T>> resources = getAuditInfoList(resultList, em);
 		return ResponseEntity.ok(resources);
 	}
 	
@@ -65,24 +65,24 @@ public abstract class AbstractAuditController<T, R> {
 			if(revData == null)
 				return ResponseEntity.notFound().build();
 			AuditResourceSupport<T> auditInfo = getAuditInfo(revData, em);
-			return ResponseEntity.ok(new Resource<>(auditInfo));
+			return ResponseEntity.ok(new EntityModel<>(auditInfo));
 		} catch (NoResultException e) {
 			return ResponseEntity.notFound().build();
 		}
 	}
 
 
-	protected Resources<AuditResourceSupport<T>> getAuditInfoList(List<Object[]> resultList, EntityManager em) {		
+	protected CollectionModel<AuditResourceSupport<T>> getAuditInfoList(List<Object[]> resultList, EntityManager em) {		
 		int size = resultList != null ? resultList.size() : 0;
 		if(size == 0)
-			return new Resources<>(Collections.emptyList());
+			return new CollectionModel<>(Collections.emptyList());
 		List<AuditResourceSupport<T>> auditInfoList = new ArrayList<>(size);
 		List<Link> links = new ArrayList<>(size); 
 		for(Object[] revData : resultList) {
 			AuditResourceSupport<T> auditResourceSupport = getAuditInfo(revData, em);
 			auditInfoList.add(auditResourceSupport);
 		}
-		return new Resources<>(auditInfoList, links);
+		return new CollectionModel<>(auditInfoList, links);
 	}
 
 
@@ -145,7 +145,7 @@ public abstract class AbstractAuditController<T, R> {
 	}
  
 	private Link newSelfLink(Long revId, EntityManager em) {
-		return ControllerLinkBuilder.linkTo(ControllerLinkBuilder.methodOn(controllerClass).getRevisionEntity(revId, em)).withSelfRel();
+		return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(controllerClass).getRevisionEntity(revId, em)).withSelfRel();
 	}
 	
 

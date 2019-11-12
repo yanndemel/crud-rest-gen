@@ -11,8 +11,8 @@ import javax.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.Resources;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,9 +32,9 @@ public class AuditControllerBase {
 			Set<AbstractAuditController<?, ?>> registerdcontrollers = AbstractAuditController.getRegisterdcontrollers();
 			List<Link> links = new ArrayList<>(registerdcontrollers.size());
 			for(AbstractAuditController<?, ?> controller : registerdcontrollers) {
-				links.add(ControllerLinkBuilder.linkTo(ControllerLinkBuilder.methodOn(controller.getClass()).getRevisions(em)).withRel(controller.getEntityClass().getSimpleName().toLowerCase()));
+				links.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(controller.getClass()).getRevisions(em)).withRel(controller.getEntityClass().getSimpleName().toLowerCase()));
 			}
-			return ResponseEntity.ok(new Resources<>(Collections.emptyList(), links));
+			return ResponseEntity.ok(new CollectionModel<>(Collections.emptyList(), links));
 		} finally {
 			em.close();
 		}

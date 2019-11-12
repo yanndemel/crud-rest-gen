@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -33,8 +34,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.webmvc.PersistentEntityResource;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.ResourceProcessor;
+import org.springframework.hateoas.Links;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.RepresentationModelProcessor;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -94,11 +96,11 @@ public class RestResourceMapperConfig {
 	}
 
 	@Bean
-	public ResourceProcessor<Resource<?>> resourceProcessor() {
+	public RepresentationModelProcessor<EntityModel<?>> resourceProcessor() {
 
-		return new ResourceProcessor<Resource<?>>() {
+		return new RepresentationModelProcessor<EntityModel<?>>() {
 			@Override
-			public Resource<?> process(Resource<?> resource) {
+			public EntityModel<?> process(EntityModel<?> resource) {
 
 				if(resource instanceof PersistentEntityResource) {
 					PersistentEntityResource ress = (PersistentEntityResource)resource;
@@ -165,16 +167,16 @@ public class RestResourceMapperConfig {
 							}
 						}
 					}
-					List<Link> links = resource.getLinks();
+					Links links = resource.getLinks();
 					if(links != null) {
-						Link self = resource.getLink("self");
-						if(self != null) {
+						Optional<Link> link = resource.getLink("self");
+						if(link.isPresent()) {
 							Iterator<Link> it = links.iterator();
 							boolean ok = true;
 							while(it.hasNext() && ok) {
 								Link l = it.next();
-								if(l.getRel().equalsIgnoreCase(ress.getPersistentEntity().getType().getSimpleName())
-										&& l.getHref().equals(self.getHref())) {
+								if(l.getRel().value().equalsIgnoreCase(ress.getPersistentEntity().getType().getSimpleName())
+										&& l.getHref().equals(link.get().getHref())) {
 									it.remove();
 									ok = false;
 								}
@@ -193,7 +195,7 @@ public class RestResourceMapperConfig {
 		for internal links, we want to ensure that the
 		 URL conforms to HATEOAS for the given resource
 	 * */
-	private void addLink(Resource<?> resource, FieldInfo info, RestResourceMapper annotation, String resourceURL)
+	private void addLink(EntityModel<?> resource, FieldInfo info, RestResourceMapper annotation, String resourceURL)
 			throws MalformedURLException {
 		resource.add(new Link(info.getFieldName(),
 				annotation.external() ? resourceURL
@@ -201,7 +203,7 @@ public class RestResourceMapperConfig {
 								resource.getContent().getClass())));
 	}
 
-	private void setResolvedResource(Resource<?> resource, FieldInfo info, Object content, Object resolvedResource)
+	private void setResolvedResource(EntityModel<?> resource, FieldInfo info, Object content, Object resolvedResource)
 			throws IOException, JsonParseException, JsonMappingException, IllegalAccessException,
 			InvocationTargetException, ProxyException {
 		Method setter = info.getPropertySetter();
