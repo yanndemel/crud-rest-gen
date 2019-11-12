@@ -11,39 +11,31 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.dom4j.Element;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.action.spi.BeforeTransactionCompletionProcess;
 import org.hibernate.engine.spi.SessionImplementor;
-import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.configuration.internal.AuditEntitiesConfiguration;
 import org.hibernate.envers.configuration.internal.GlobalConfiguration;
-import org.hibernate.envers.configuration.internal.metadata.MetadataTools;
-import org.hibernate.envers.internal.entities.PropertyData;
 import org.hibernate.envers.internal.entities.mapper.PersistentCollectionChangeData;
 import org.hibernate.envers.internal.entities.mapper.relation.MiddleComponentData;
 import org.hibernate.envers.internal.entities.mapper.relation.MiddleIdData;
 import org.hibernate.envers.internal.synchronization.SessionCacheCleaner;
-import org.hibernate.envers.internal.tools.ReflectionTools;
 import org.hibernate.envers.internal.tools.query.Parameters;
 import org.hibernate.envers.internal.tools.query.QueryBuilder;
-import org.hibernate.envers.strategy.internal.ValidityAuditStrategy;
-import org.hibernate.envers.strategy.spi.MappingContext;
+import org.hibernate.envers.strategy.ValidityAuditStrategy;
 import org.hibernate.event.spi.EventSource;
 import org.hibernate.jdbc.ReturningWork;
 import org.hibernate.persister.entity.Queryable;
 import org.hibernate.persister.entity.UnionSubclassEntityPersister;
 import org.hibernate.property.access.spi.Getter;
-import org.hibernate.service.ServiceRegistry;
 import org.hibernate.sql.Update;
 import org.hibernate.type.CollectionType;
 import org.hibernate.type.ComponentType;
 import org.hibernate.type.MapType;
 import org.hibernate.type.MaterializedClobType;
 import org.hibernate.type.MaterializedNClobType;
-import org.hibernate.type.TimestampType;
 import org.hibernate.type.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,72 +47,28 @@ public class NoExceptionAuditStrategy extends ValidityAuditStrategy {
 	/**
 	 * getter for the revision entity field annotated with @RevisionTimestamp
 	 */
-	private Getter revisionTimestampGetter;
+	private Getter revisionTimestampGetter = null;
 
 	private final SessionCacheCleaner sessionCacheCleaner;
 
 	public NoExceptionAuditStrategy() {
 		sessionCacheCleaner = new SessionCacheCleaner();
 	}
-
-	@Override
-	public void postInitialize(
-			Class<?> revisionInfoClass,
-			PropertyData revisionInfoTimestampData,
-			ServiceRegistry serviceRegistry) {
-		// further initialization required
-		final Getter revisionTimestampGetter = ReflectionTools.getGetter(
-				revisionInfoClass,
-				revisionInfoTimestampData,
-				serviceRegistry
-		);
-		setRevisionTimestampGetter( revisionTimestampGetter );
+	
+	@SuppressWarnings({"unchecked"})
+	private RevisionType getRevisionType(AuditEntitiesConfiguration auditEntitiesConfiguration, Object data) {
+		return (RevisionType) ( (Map<String, Object>) data ).get( auditEntitiesConfiguration.getRevisionTypePropName() );
 	}
 
-	@Override
-	public void addAdditionalColumns(MappingContext mappingContext) {
-		// Add the end-revision field, if the appropriate strategy is used.
-
-		Element endRevMapping = (Element) mappingContext.getRevisionEntityMapping().clone();
-
-		endRevMapping.setName( "many-to-one" );
-		endRevMapping.addAttribute( "name", mappingContext.getAuditEntityConfiguration().getRevisionEndFieldName() );
-		MetadataTools.addOrModifyColumn( endRevMapping, mappingContext.getAuditEntityConfiguration().getRevisionEndFieldName() );
-
-		mappingContext.getAuditEntityMapping().add( endRevMapping );
-
-		if ( mappingContext.getAuditEntityConfiguration().isRevisionEndTimestampEnabled() ) {
-			// add a column for the timestamp of the end revision
-			final String revisionInfoTimestampSqlType = TimestampType.INSTANCE.getName();
-			final Element timestampProperty = MetadataTools.addProperty(
-					mappingContext.getAuditEntityMapping(),
-					mappingContext.getAuditEntityConfiguration().getRevisionEndTimestampFieldName(),
-					revisionInfoTimestampSqlType,
-					true,
-					true,
-					false
-			);
-			MetadataTools.addColumn(
-					timestampProperty,
-					mappingContext.getAuditEntityConfiguration().getRevisionEndTimestampFieldName(),
-					null,
-					null,
-					null,
-					null,
-					null,
-					null
-			);
-		}
-	}
-
+	@SuppressWarnings("deprecation")
 	@Override
 	public void perform(
-			final Session session,
-			final String entityName,
-			final AuditEntitiesConfiguration audEntitiesCfg,
-			final Serializable id,
-			final Object data,
-			final Object revision) {
+			Session session,
+			String entityName,
+			AuditEntitiesConfiguration audEntitiesCfg,
+			Serializable id,
+			Object data,
+			Object revision) {
 		final String auditedEntityName = audEntitiesCfg.getAuditEntityName( entityName );
 		final String revisionInfoEntityName = audEntitiesCfg.getRevisionInfoEntityName();
 
@@ -261,9 +209,13 @@ public class NoExceptionAuditStrategy extends ValidityAuditStrategy {
 						logger.error("Exception in Audit...", e);
 					}
 				}
-			} );
+			});
 		}
 		sessionCacheCleaner.scheduleAuditDataRemoval( session, data );
+	}
+
+	private Queryable getQueryable(String entityName, SessionImplementor sessionImplementor) {
+		return (Queryable) sessionImplementor.getFactory().getMetamodel().entityPersister( entityName );
 	}
 
 	@Override
@@ -273,12 +225,9 @@ public class NoExceptionAuditStrategy extends ValidityAuditStrategy {
 			String entityName,
 			String propertyName,
 			AuditEntitiesConfiguration auditEntitiesConfiguration,
-			PersistentCollectionChangeData persistentCollectionChangeData, Object revision) {
-		final QueryBuilder qb = new QueryBuilder(
-				persistentCollectionChangeData.getEntityName(),
-				MIDDLE_ENTITY_ALIAS,
-				( (SharedSessionContractImplementor) session ).getFactory()
-		);
+			PersistentCollectionChangeData persistentCollectionChangeData,
+			Object revision) {
+		final QueryBuilder qb = new QueryBuilder( persistentCollectionChangeData.getEntityName(), MIDDLE_ENTITY_ALIAS );
 
 		final String originalIdPropName = auditEntitiesConfiguration.getOriginalIdPropName();
 		final Map<String, Object> originalId = (Map<String, Object>) persistentCollectionChangeData.getData().get(
@@ -322,59 +271,57 @@ public class NoExceptionAuditStrategy extends ValidityAuditStrategy {
 		sessionCacheCleaner.scheduleAuditDataRemoval( session, persistentCollectionChangeData.getData() );
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * For this implmenetation, the revision-end column is used
-	 * <p>
-	 * {@code e.revision <= :revision and (e.endRevision > :revision or e.endRevision is null}
-	 */
-	@Override
+	private boolean isNonIdentifierWhereConditionsRequired(String entityName, String propertyName, SessionImplementor session) {
+		final Type propertyType = session.getSessionFactory().getMetamodel().entityPersister( entityName ).getPropertyType( propertyName );
+		if ( propertyType.isCollectionType() ) {
+			final CollectionType collectionType = (CollectionType) propertyType;
+			final Type collectionElementType = collectionType.getElementType( session.getSessionFactory() );
+			if ( collectionElementType instanceof ComponentType ) {
+				// required for Embeddables
+				return true;
+			}
+			else if ( collectionElementType instanceof MaterializedClobType || collectionElementType instanceof MaterializedNClobType ) {
+				// for Map<> using @Lob annotations
+				return collectionType instanceof MapType;
+			}
+		}
+		return false;
+	}
+
+	private void addNonIdentifierWhereConditions(QueryBuilder qb, Map<String, Object> data, String originalIdPropertyName) {
+		final Parameters parameters = qb.getRootParameters();
+		for ( Map.Entry<String, Object> entry : data.entrySet() ) {
+			if ( !originalIdPropertyName.equals( entry.getKey() ) ) {
+				if ( entry.getValue() != null ) {
+					parameters.addWhereWithParam( entry.getKey(), true, "=", entry.getValue() );
+				}
+				else {
+					parameters.addNullRestriction( entry.getKey(), true );
+				}
+			}
+		}
+	}
+
+	private void addEndRevisionNullRestriction(AuditEntitiesConfiguration auditEntitiesConfiguration, Parameters rootParameters) {
+		rootParameters.addWhere( auditEntitiesConfiguration.getRevisionEndFieldName(), true, "is", "null", false );
+	}
+
 	public void addEntityAtRevisionRestriction(
-			GlobalConfiguration globalCfg,
-			QueryBuilder rootQueryBuilder,
-			Parameters parameters,
-			String revisionProperty,
-			String revisionEndProperty,
-			boolean addAlias,
-			MiddleIdData idData,
-			String revisionPropertyPath,
-			String originalIdPropertyName,
-			String alias1,
-			String alias2,
-			boolean inclusive) {
+			GlobalConfiguration globalCfg, QueryBuilder rootQueryBuilder,
+			Parameters parameters, String revisionProperty, String revisionEndProperty, boolean addAlias,
+			MiddleIdData idData, String revisionPropertyPath, String originalIdPropertyName,
+			String alias1, String alias2, boolean inclusive) {
 		addRevisionRestriction( parameters, revisionProperty, revisionEndProperty, addAlias, inclusive );
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * For this implmenetation, the revision-end column is used
-	 * <p>
-	 * {@code e.revision <= :revision and (e.endRevision > :revision or e.endRevision is null}
-	 */
-	@Override
 	public void addAssociationAtRevisionRestriction(
-			QueryBuilder rootQueryBuilder,
-			Parameters parameters,
-			String revisionProperty,
-			String revisionEndProperty,
-			boolean addAlias,
-			MiddleIdData referencingIdData,
-			String versionsMiddleEntityName,
-			String eeOriginalIdPropertyPath,
-			String revisionPropertyPath,
-			String originalIdPropertyName,
-			String alias1,
-			boolean inclusive,
-			MiddleComponentData... componentDatas) {
+			QueryBuilder rootQueryBuilder, Parameters parameters, String revisionProperty,
+			String revisionEndProperty, boolean addAlias, MiddleIdData referencingIdData,
+			String versionsMiddleEntityName, String eeOriginalIdPropertyPath, String revisionPropertyPath,
+			String originalIdPropertyName, String alias1, boolean inclusive, MiddleComponentData... componentDatas) {
 		addRevisionRestriction( parameters, revisionProperty, revisionEndProperty, addAlias, inclusive );
 	}
 
-	/**
-	 * @deprecated since 5.4 with no replacement.
-	 */
-	@Deprecated
 	public void setRevisionTimestampGetter(Getter revisionTimestampGetter) {
 		this.revisionTimestampGetter = revisionTimestampGetter;
 	}
@@ -389,11 +336,6 @@ public class NoExceptionAuditStrategy extends ValidityAuditStrategy {
 				revisionEndProperty + ".id", addAlias, inclusive ? ">" : ">=", REVISION_PARAMETER
 		);
 		subParm.addWhere( revisionEndProperty, addAlias, "is", "null", false );
-	}
-
-	@SuppressWarnings({"unchecked"})
-	private RevisionType getRevisionType(AuditEntitiesConfiguration auditEntitiesConfiguration, Object data) {
-		return (RevisionType) ( (Map<String, Object>) data ).get( auditEntitiesConfiguration.getRevisionTypePropName() );
 	}
 
 	@SuppressWarnings({"unchecked"})
@@ -436,45 +378,6 @@ public class NoExceptionAuditStrategy extends ValidityAuditStrategy {
 			return (Date) revEndTimestampObj;
 		}
 		return new Date( (Long) revEndTimestampObj );
-	}
-
-	private Queryable getQueryable(String entityName, SessionImplementor sessionImplementor) {
-		return (Queryable) sessionImplementor.getFactory().getMetamodel().entityPersister( entityName );
-	}
-
-	private void addEndRevisionNullRestriction(AuditEntitiesConfiguration auditEntitiesConfiguration, Parameters rootParameters) {
-		rootParameters.addWhere( auditEntitiesConfiguration.getRevisionEndFieldName(), true, "is", "null", false );
-	}
-
-	private void addNonIdentifierWhereConditions(QueryBuilder qb, Map<String, Object> data, String originalIdPropertyName) {
-		final Parameters parameters = qb.getRootParameters();
-		for ( Map.Entry<String, Object> entry : data.entrySet() ) {
-			if ( !originalIdPropertyName.equals( entry.getKey() ) ) {
-				if ( entry.getValue() != null ) {
-					parameters.addWhereWithParam( entry.getKey(), true, "=", entry.getValue() );
-				}
-				else {
-					parameters.addNullRestriction( entry.getKey(), true );
-				}
-			}
-		}
-	}
-
-	private boolean isNonIdentifierWhereConditionsRequired(String entityName, String propertyName, SessionImplementor session) {
-		final Type propertyType = session.getSessionFactory().getMetamodel().entityPersister( entityName ).getPropertyType( propertyName );
-		if ( propertyType.isCollectionType() ) {
-			final CollectionType collectionType = (CollectionType) propertyType;
-			final Type collectionElementType = collectionType.getElementType( session.getSessionFactory() );
-			if ( collectionElementType instanceof ComponentType ) {
-				// required for Embeddables
-				return true;
-			}
-			else if ( collectionElementType instanceof MaterializedClobType || collectionElementType instanceof MaterializedNClobType ) {
-				// for Map<> using @Lob annotations
-				return collectionType instanceof MapType;
-			}
-		}
-		return false;
 	}
 	
 }

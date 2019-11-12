@@ -3,11 +3,11 @@ package com.octo.tools.audit;
 import java.util.Date;
 
 import org.hibernate.envers.RevisionType;
-import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.ResourceSupport;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class AuditResourceSupport<T> extends RepresentationModel {
+public class AuditResourceSupport<T> extends ResourceSupport {
 
 	protected T entity;
 	
