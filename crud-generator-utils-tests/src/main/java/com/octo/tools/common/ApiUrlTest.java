@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import javax.persistence.EntityManager;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +49,12 @@ public class ApiUrlTest extends AbstractCrudTest {
 		Charset charset = strCharset != null ? Charset.forName(strCharset) : Charset.forName("ISO-8859-1");
 		assertNotNull(inFile);
 		Set<String> lines = new HashSet<>();
-		this.entityInfoList = getEntityInfoList(em);
+		EntityManager em = emf.createEntityManager();
+		try {
+			this.entityInfoList = getEntityInfoList(em);
+		} finally {
+			em.close();
+		}
 		for(EntityInfo info : entityInfoList) {
 			String pluralName = info.getPluralName();
 			addPath(lines, pluralName);

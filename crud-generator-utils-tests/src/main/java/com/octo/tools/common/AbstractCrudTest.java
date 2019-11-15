@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -36,6 +37,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.http.HttpMethod;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -55,7 +58,7 @@ public abstract class AbstractCrudTest {
 	@Autowired
 	protected ObjectMapper objectMapper;
 	@Autowired
-	protected EntityManager em;
+	protected EntityManagerFactory emf;
 	@Autowired
 	protected WebApplicationContext context;
 	private MockMvc mockMvc;
@@ -86,14 +89,6 @@ public abstract class AbstractCrudTest {
 		setUpEntityList();
 	}
 	
-	@After
-	public void after() {
-		if(em != null) {
-			em.clear();
-			em.close();		
-		}
-	}
-	
 	private void configureMapper() {
 		objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
 		objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
@@ -115,13 +110,18 @@ public abstract class AbstractCrudTest {
 
 	protected void setUpEntityList() throws ClassNotFoundException, IOException {
 		ExcludedEntities excludedEntities = this.getClass().getAnnotation(ExcludedEntities.class);
-		this.entityInfoList = getEntityInfoList(em);
-		if(excludedEntities != null && excludedEntities.value() != null && excludedEntities.value().length > 0) {
-			List<Class<?>> excludedClasses = Arrays.asList(excludedEntities.value());
-			this.entityInfoList = this.entityInfoList.stream().filter(info->!excludedClasses.contains(info.getEntityClass())).collect(Collectors.toList());
+		EntityManager em = emf.createEntityManager();
+		try {
+			this.entityInfoList = getEntityInfoList(em);
+			if(excludedEntities != null && excludedEntities.value() != null && excludedEntities.value().length > 0) {
+				List<Class<?>> excludedClasses = Arrays.asList(excludedEntities.value());
+				this.entityInfoList = this.entityInfoList.stream().filter(info->!excludedClasses.contains(info.getEntityClass())).collect(Collectors.toList());
+			}
+			initDataSets();
+			this.entityHelper = new EntityHelper(this);
+		} finally {
+			em.close();
 		}
-		initDataSets();
-		this.entityHelper = new EntityHelper(this);
 	}
 
 	protected void seUpMockMvc() {

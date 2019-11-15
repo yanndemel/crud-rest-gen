@@ -95,6 +95,9 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 				logger.debug("Disabling listExample for entity "+info.getEntityClass().getName(), e);
 				entityHelper.clearLinkedEntities();
 				reset();
+			} catch(Exception e) {
+				logger.debug("Exception in documentEntities for "+info.getEntityClass().getName(), e);
+				throw e;
 			}
 
 			try {
@@ -103,6 +106,9 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 				logger.debug("Disabling createExample for entity "+info.getEntityClass().getName(), e);
 				entityHelper.clearLinkedEntities();
 				reset();
+			} catch(Exception e) {
+				logger.debug("Exception in documentEntities for "+info.getEntityClass().getName(), e);
+				throw e;
 			}
 
 			try {
@@ -111,6 +117,9 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 				logger.debug("Disabling getExample for entity "+info.getEntityClass().getName(), e);
 				entityHelper.clearLinkedEntities();
 				reset();
+			} catch(Exception e) {
+				logger.debug("Exception in documentEntities for "+info.getEntityClass().getName(), e);
+				throw e;
 			}
 
 			try {
@@ -119,6 +128,9 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 				logger.debug("Disabling updateExample for entity "+info.getEntityClass().getName(), e);
 				entityHelper.clearLinkedEntities();
 				reset();
+			} catch(Exception e) {
+				logger.debug("Exception in documentEntities for "+info.getEntityClass().getName(), e);
+				throw e;
 			}
 
 		}

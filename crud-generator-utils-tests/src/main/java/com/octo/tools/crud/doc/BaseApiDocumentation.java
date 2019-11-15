@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.servlet.RequestDispatcher;
 
 import org.hamcrest.Matchers;
@@ -85,7 +86,13 @@ public class BaseApiDocumentation extends AbstractCrudTest {
 
 	private LinkDescriptor[] linkResources() throws ClassNotFoundException {
 		List<LinkDescriptor> list = new ArrayList<LinkDescriptor>();
-		List<EntityInfo> entityInfoList = getEntityInfoList(em);
+		List<EntityInfo> entityInfoList = null;
+		EntityManager em = emf.createEntityManager();
+		try {
+			entityInfoList = getEntityInfoList(em);
+		} finally {
+			em.close();
+		}
 		for(EntityInfo entity : entityInfoList) {
 			list.add(linkWithRel(entity.getPluralName()).description("The <<resources-"+entity.getPluralName()+","+entity.getSimpleName1stUpper()+" resource>>"));
 		}
