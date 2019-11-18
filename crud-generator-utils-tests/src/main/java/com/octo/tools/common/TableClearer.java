@@ -61,8 +61,8 @@ public class TableClearer {
     private void clear(List<String> tableNames) throws SQLException {
         Statement statement = buildSqlStatement(tableNames);
 
-        logger.debug("Executing DELETE SQL");
-        statement.executeBatch();
+        /*logger.debug("Executing DELETE SQL");
+        statement.executeBatch();*/
         
         logger.debug("Executing DROP SQL");
         
@@ -70,7 +70,7 @@ public class TableClearer {
             try {
                 statement.execute("DROP TABLE " + tableName + " CASCADE");
             } catch (SQLException e) {
-                logger.warn("Exception while dropping table "+tableName, e);
+                logger.warn("Exception while dropping table "+tableName);
             }
         });
     }
