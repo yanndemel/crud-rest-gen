@@ -61,8 +61,18 @@ public class TableClearer {
     private void clear(List<String> tableNames) throws SQLException {
         Statement statement = buildSqlStatement(tableNames);
 
-        logger.debug("Executing SQL");
+        logger.debug("Executing DELETE SQL");
         statement.executeBatch();
+        
+        logger.debug("Executing DROP SQL");
+        
+        tableNames.forEach(tableName -> {
+            try {
+                statement.execute("DROP TABLE " + tableName + " CASCADE");
+            } catch (SQLException e) {
+                logger.warn("Exception while dropping table "+tableName, e);
+            }
+        });
     }
 
     private Statement buildSqlStatement(List<String> tableNames) throws SQLException {
@@ -78,13 +88,6 @@ public class TableClearer {
         tableNames.forEach(tableName -> {
             try {
                 statement.addBatch(sql("DELETE FROM " + tableName));
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        tableNames.forEach(tableName -> {
-            try {
-                statement.addBatch(sql("DROP TABLE " + tableName + " CASCADE"));
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
