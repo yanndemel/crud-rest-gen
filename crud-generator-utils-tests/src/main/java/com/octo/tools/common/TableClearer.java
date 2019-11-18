@@ -30,11 +30,9 @@ public class TableClearer {
         try {
             connection = dataSource.getConnection();
             tryToClearTables();
-            connection.commit();
             logger.info("DB clean OK");
         } catch (SQLException e) {
         	logger.error("Exception in TableClean", e);
-            throw new RuntimeException(e);
         }
     }
 
