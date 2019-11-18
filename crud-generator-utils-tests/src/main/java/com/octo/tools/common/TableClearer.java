@@ -59,8 +59,8 @@ public class TableClearer {
     }
 
     private void clear(List<String> tableNames) throws SQLException {
-        Statement statement = buildSqlStatement(tableNames);
-
+        Statement statement = connection.createStatement();
+        statement.execute("SET FOREIGN_KEY_CHECKS = 0");
         /*logger.debug("Executing DELETE SQL");
         statement.executeBatch();*/
         
@@ -75,12 +75,12 @@ public class TableClearer {
         });
     }
 
-    private Statement buildSqlStatement(List<String> tableNames) throws SQLException {
+    /*private Statement buildSqlStatement(List<String> tableNames) throws SQLException {
         Statement statement = connection.createStatement();
-
+        
         statement.addBatch(sql("SET FOREIGN_KEY_CHECKS = 0"));
-        addDeleteSatements(tableNames, statement);        
-
+        //addDeleteSatements(tableNames, statement);        
+        
         return statement;
     }
 
@@ -97,5 +97,5 @@ public class TableClearer {
     private String sql(String sql) {
         logger.debug("Adding SQL: {}", sql);
         return sql;
-    }
+    }*/
 }
