@@ -1,7 +1,5 @@
 package $$PACKAGE$$.audit;
 
-import javax.persistence.EntityManager;
-
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,35 +30,22 @@ public class $$ENTITY$$AuditController extends $$AUDIT_CONTROLLER$$<$$ENTITY$$$$
 	@RequestMapping(method = RequestMethod.GET, value = URLs.$$ENTITY_UPPER_PLURAL$$_SEARCH) 
 	public @ResponseBody ResponseEntity<?> getRevisionsForEntity(@RequestParam("entityId") $$ID_CLASS$$ id,
 			@RequestParam(name = "lastDelRev", required = false, defaultValue = "false") Boolean lastDelRev) {
-		EntityManager em = emf.createEntityManager();
-		try {
-			if(lastDelRev)
-				return super.getLastRevisionForDeletedEntity(id, em);
-			return super.getRevisionsForEntity(id, em);
-		} finally {
-			em.close();
-		}
+		if(lastDelRev)
+			return super.getLastRevisionForDeletedEntity(id);
+		return super.getRevisionsForEntity(id);
 	}		
 		
 		
+	@Override
 	@RequestMapping(method = RequestMethod.GET, value = URLs.$$ENTITY_UPPER_PLURAL$$_ID) 
 	public @ResponseBody ResponseEntity<?> getRevisionEntity(@PathVariable("id") Long revId) {
-		EntityManager em = emf.createEntityManager();
-		try {
-			return super.getRevisionEntity(revId, em);
-		} finally {
-			em.close();
-		}
+		return super.getRevisionEntity(revId);
 	}	
 	
+	@Override
 	@RequestMapping(method = RequestMethod.GET, value = URLs.$$ENTITY_UPPER_PLURAL$$) 
     public @ResponseBody ResponseEntity<?> getRevisions() {
-    	EntityManager em = emf.createEntityManager();
-		try {
-			return super.getRevisions(em);
-		} finally {
-			em.close();
-		}
+		return super.getRevisions();
 	}
 	
 }

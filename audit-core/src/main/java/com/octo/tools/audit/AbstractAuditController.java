@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 
 import org.hibernate.Session;
@@ -28,8 +27,8 @@ import org.springframework.http.ResponseEntity;
 public abstract class AbstractAuditController<T, R> {
 
 	@Autowired
-	protected EntityManagerFactory emf; 
-	
+	protected EntityManager em;
+		
 	protected final Class<T> entityClass;
 	protected final Class<? extends AbstractAuditController<T, R>> controllerClass;
 
@@ -48,15 +47,15 @@ public abstract class AbstractAuditController<T, R> {
 
 
     @SuppressWarnings("unchecked")
-	protected ResponseEntity<?> getRevisionsForEntity(Long entityId, EntityManager em) {
-		AuditQueryCreator auditQueryCreator = getAuditQueryCreator(em);
+	protected ResponseEntity<?> getRevisionsForEntity(Long entityId) {
+		AuditQueryCreator auditQueryCreator = getAuditQueryCreator();
 		List<Object[]> resultList = auditQueryCreator.forRevisionsOfEntity(entityClass, false, true).add(AuditEntity.id().eq(entityId)).getResultList();
-		Resources<AuditResourceSupport<T>> resources = getAuditInfoList(resultList, em);
+		Resources<AuditResourceSupport<T>> resources = getAuditInfoList(resultList);
 		return ResponseEntity.ok(resources);
 	}
 	
-	protected ResponseEntity<?> getLastRevisionForDeletedEntity(Long entityId, EntityManager em) {		
-		AuditQueryCreator auditQueryCreator = getAuditQueryCreator(em);
+	protected ResponseEntity<?> getLastRevisionForDeletedEntity(Long entityId) {		
+		AuditQueryCreator auditQueryCreator = getAuditQueryCreator();
 		try {
 			Object[] revData = (Object[]) auditQueryCreator.forRevisionsOfEntity(entityClass, false, true)
 					.add(AuditEntity.id().eq(entityId))
@@ -64,7 +63,7 @@ public abstract class AbstractAuditController<T, R> {
 					.getSingleResult();
 			if(revData == null)
 				return ResponseEntity.notFound().build();
-			AuditResourceSupport<T> auditInfo = getAuditInfo(revData, em);
+			AuditResourceSupport<T> auditInfo = getAuditInfo(revData);
 			return ResponseEntity.ok(new Resource<>(auditInfo));
 		} catch (NoResultException e) {
 			return ResponseEntity.notFound().build();
@@ -72,14 +71,14 @@ public abstract class AbstractAuditController<T, R> {
 	}
 
 
-	protected Resources<AuditResourceSupport<T>> getAuditInfoList(List<Object[]> resultList, EntityManager em) {		
+	protected Resources<AuditResourceSupport<T>> getAuditInfoList(List<Object[]> resultList) {		
 		int size = resultList != null ? resultList.size() : 0;
 		if(size == 0)
 			return new Resources<>(Collections.emptyList());
 		List<AuditResourceSupport<T>> auditInfoList = new ArrayList<>(size);
 		List<Link> links = new ArrayList<>(size); 
 		for(Object[] revData : resultList) {
-			AuditResourceSupport<T> auditResourceSupport = getAuditInfo(revData, em);
+			AuditResourceSupport<T> auditResourceSupport = getAuditInfo(revData);
 			auditInfoList.add(auditResourceSupport);
 		}
 		return new Resources<>(auditInfoList, links);
@@ -87,12 +86,12 @@ public abstract class AbstractAuditController<T, R> {
 
 
 	@SuppressWarnings("unchecked")
-	private AuditResourceSupport<T> getAuditInfo(Object[] revData, EntityManager em) {
+	private AuditResourceSupport<T> getAuditInfo(Object[] revData) {
 		T entity = (T)revData[0];
 		R revEntity = (R)revData[1];
 		revEntity = unproxy(revEntity); 
 		AuditResourceSupport<T> auditResourceSupport = newAuditResourceSupport((RevisionType)revData[2], entity, revEntity);
-		auditResourceSupport.add(newSelfLink(getRevisionEntityId(revEntity), em));
+		auditResourceSupport.add(newSelfLink(getRevisionEntityId(revEntity)));
 		return auditResourceSupport;
 	}
 
@@ -119,33 +118,33 @@ public abstract class AbstractAuditController<T, R> {
 
 	
     @SuppressWarnings("unchecked")
-	public ResponseEntity<?> getRevisions(EntityManager em) {
-		AuditQueryCreator auditQueryCreator = getAuditQueryCreator(em);
+	public ResponseEntity<?> getRevisions() {
+		AuditQueryCreator auditQueryCreator = getAuditQueryCreator();
 		List<Object[]> resultList = auditQueryCreator.forRevisionsOfEntity(entityClass, false, true)
 				    	.getResultList();
-		return ResponseEntity.ok(getAuditInfoList(resultList, em));
+		return ResponseEntity.ok(getAuditInfoList(resultList));
 		
 	}
 
-	protected AuditQueryCreator getAuditQueryCreator(EntityManager em) {
-		return  getAuditReader(em).createQuery();
+	protected AuditQueryCreator getAuditQueryCreator() {
+		return  getAuditReader().createQuery();
 	}
 
 
-	private AuditReader getAuditReader(EntityManager em) {
+	private AuditReader getAuditReader() {
 		Session session = (Session)em.unwrap(Session.class);
 		return AuditReaderFactory.get(session);
 	}
 
 
 	@SuppressWarnings("unchecked")
-	public ResponseEntity<?> getRevisionEntity(Long revId, EntityManager em) {
-		List<Object[]> resultList = getAuditQueryCreator(em).forRevisionsOfEntity(entityClass, false, true).add(AuditEntity.revisionNumber().eq(revId)).getResultList();
-		return ResponseEntity.ok(getAuditInfoList(resultList, em));
+	public ResponseEntity<?> getRevisionEntity(Long revId) {
+		List<Object[]> resultList = getAuditQueryCreator().forRevisionsOfEntity(entityClass, false, true).add(AuditEntity.revisionNumber().eq(revId)).getResultList();
+		return ResponseEntity.ok(getAuditInfoList(resultList));
 	}
  
-	private Link newSelfLink(Long revId, EntityManager em) {
-		return ControllerLinkBuilder.linkTo(ControllerLinkBuilder.methodOn(controllerClass).getRevisionEntity(revId, em)).withSelfRel();
+	private Link newSelfLink(Long revId) {
+		return ControllerLinkBuilder.linkTo(ControllerLinkBuilder.methodOn(controllerClass).getRevisionEntity(revId)).withSelfRel();
 	}
 	
 
