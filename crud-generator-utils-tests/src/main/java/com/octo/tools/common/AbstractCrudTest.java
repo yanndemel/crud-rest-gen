@@ -25,6 +25,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.persistence.metamodel.EntityType;
+import javax.sql.DataSource;
 
 import org.atteo.evo.inflector.English;
 import org.junit.After;
@@ -51,6 +52,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.octo.tools.crud.util.EntityInfo;
 import com.octo.tools.crud.utils.ReflectionUtils;
 
+@DirtiesContext(classMode=ClassMode.AFTER_EACH_TEST_METHOD)
 public abstract class AbstractCrudTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractCrudTest.class);
@@ -61,6 +63,9 @@ public abstract class AbstractCrudTest {
 	protected EntityManagerFactory emf;
 	@Autowired
 	protected WebApplicationContext context;
+	@Autowired
+	protected DataSource dataSource;
+
 	private MockMvc mockMvc;
 	private Map<String, Map<HttpMethod, MockMvc>> customControllersMockMvc;
 	private Map<String, Map<HttpMethod, MockMethod>> customControllersMethods;
@@ -86,8 +91,15 @@ public abstract class AbstractCrudTest {
 	public void setUp() throws ClassNotFoundException, IOException {
 		configureMapper();
 		seUpMockMvc();
-		setUpEntityList();
+		setUpEntityList();	
 	}
+	
+	@After
+	public void afterTest() throws ClassNotFoundException, IOException {		
+		TableClearer tableClearer = new TableClearer(dataSource);
+		tableClearer.clearTables();
+	}
+	
 	
 	private void configureMapper() {
 		objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
