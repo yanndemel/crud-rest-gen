@@ -172,12 +172,16 @@ public class StringUtils {
 		return l;
 	}
 	
-	public static String toTitleCase(String s) {
+	public static String toTitleCase(String s, boolean checkParticule) {
 		if(s == null) {
 			return null;
 		}
 		StringBuilder sb = new StringBuilder();
-		appendFirstLetterCapitalized(s, sb, false);
+		appendFirstLetterCapitalized(s, sb, checkParticule);
 		return sb.toString();		
+	}
+	
+	public static String toTitleCase(String s) {
+		return toTitleCase(s, false);	
 	}
 }
