@@ -55,7 +55,7 @@ public abstract class AbstractAuditController<T, R> {
 		return ResponseEntity.ok(resources);
 	}
 	
-	protected ResponseEntity<?> getLastRevisionForDeletedEntity(Long entityId, EntityManager em) {		
+	public ResponseEntity<?> getLastRevisionForDeletedEntity(Long entityId, EntityManager em) {		
 		AuditQueryCreator auditQueryCreator = getAuditQueryCreator(em);
 		try {
 			Object[] revData = (Object[]) auditQueryCreator.forRevisionsOfEntity(entityClass, false, true)
