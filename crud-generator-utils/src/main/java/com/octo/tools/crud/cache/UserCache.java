@@ -123,6 +123,11 @@ public class UserCache {
 		}
 	}
 	
+	public void putProfileInCache(String accessToken, Profile profile) {
+		Cache cache = cacheManager.getCache(UserCache.PROFILES);		
+		cache.put(accessToken, profile);
+	}
+	
 	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail) {
 		putProfileInCache(authToken, name, userMail, null, null, null, null);
 	}

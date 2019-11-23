@@ -14,6 +14,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +41,14 @@ public class ADocEntityGenerator extends AbstractCrudTest {
 	
 	@Test
 	public void generateADocs() throws IOException, URISyntaxException, ClassNotFoundException {
-		List<EntityInfo> entityInfoList = getEntityInfoList(em);
+		List<EntityInfo> entityInfoList = null;
+		EntityManager em = emf.createEntityManager();
+		try {
+			entityInfoList = getEntityInfoList(em);
+		} finally {
+			em.close();
+		}
+		
 		List<String> files = new ArrayList<String>();
 		for(EntityInfo info : entityInfoList) {
 			String filename = info.getSimpleName() + ".adoc";

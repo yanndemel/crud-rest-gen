@@ -242,6 +242,7 @@ public class EntityHelper {
 			if (entityClass.equals(info.getEntityClass()))
 				return info;
 		}
+		logger.debug("No Entity found for class {}", entityClass);
 		return null;
 	}
 
