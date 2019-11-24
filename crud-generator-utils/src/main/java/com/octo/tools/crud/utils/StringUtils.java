@@ -184,4 +184,11 @@ public class StringUtils {
 	public static String toTitleCase(String s) {
 		return toTitleCase(s, false);	
 	}
+	
+	public static String removeSpaces(String s) {
+		if(s == null) {
+			return null;
+		}
+		return s.replace(StringUtils.SPACE, "");		
+	}
 }
