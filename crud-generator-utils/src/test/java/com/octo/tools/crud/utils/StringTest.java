@@ -18,5 +18,14 @@ public class StringTest {
 	}
 	
 	
+	@Test
+	public void testNormalize() {
+		String s = "Hello  Mr Vincêt \n coco titi\r héhö";
+		System.out.println(s);
+		s = StringUtils.removeCarriageReturnsAndAccents(s);
+		System.out.println(s);
+		
+	}
+	
 	
 }

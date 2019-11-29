@@ -14,6 +14,7 @@ import org.atteo.evo.inflector.English;
  */
 public class StringUtils {
 
+	private static final String MULTIPLE_SPACES = "  +";
 	private static final String D = "d'";
 	private static final String DES = "des";
 	private static final String DU = "du";
@@ -51,11 +52,28 @@ public class StringUtils {
 		}
 		return English.plural(name);
 	}
+	
+	public static String trim(String s) {
+		if(s != null) {
+			String s2 = s.replaceAll(MULTIPLE_SPACES, SPACE).trim();
+			if(!s2.isEmpty()) {
+				return s2;
+			}
+		}
+		return null;
+	}
 
 	public static String removeAccents(String name) {
 		String normalize = Normalizer.normalize(name, Normalizer.Form.NFD);
 		return normalize.replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
 				.replaceAll("(\\\\|/|\\.)", SPACE).trim();
+	}
+	
+	public static String removeCarriageReturnsAndAccents(String name) {
+		String normalize = Normalizer.normalize(name, Normalizer.Form.NFD);
+		return normalize.replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+				.replaceAll("(\\\\|/|\\.|\n|\r)", SPACE)
+				.replaceAll(MULTIPLE_SPACES, SPACE).trim();
 	}
 
 	public static String concatFirstUpper(String lastName, String firstName) {
