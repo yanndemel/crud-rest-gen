@@ -63,7 +63,7 @@ public class StringUtils {
 		return null;
 	}
 	
-	public static String trimToLoweCase(String s) {
+	public static String trimToLowerCase(String s) {
 		if(s != null) {
 			String s2 = s.replaceAll(MULTIPLE_SPACES, SPACE).trim();
 			if(!s2.isEmpty()) {
