@@ -62,6 +62,16 @@ public class StringUtils {
 		}
 		return null;
 	}
+	
+	public static String trimToLoweCase(String s) {
+		if(s != null) {
+			String s2 = s.replaceAll(MULTIPLE_SPACES, SPACE).trim();
+			if(!s2.isEmpty()) {
+				return s2.toLowerCase();
+			}
+		}
+		return null;
+	}
 
 	public static String removeAccents(String name) {
 		String normalize = Normalizer.normalize(name, Normalizer.Form.NFD);
