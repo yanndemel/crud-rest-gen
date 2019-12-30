@@ -33,7 +33,10 @@ public class Profile implements Serializable {
 	private String refreshToken;
 	private long expiresIn;
 	
-	public Profile(String displayName, String email, Long userId, String firstName, Long entityId, Long tenantId) {
+	//Set to true for internal users
+	private boolean internal;
+	
+	public Profile(String displayName, String email, Long userId, String firstName, Long entityId, Long tenantId, boolean internal) {
 		super();
 		this.displayName = displayName;
 		this.firstname = firstName;
@@ -41,6 +44,7 @@ public class Profile implements Serializable {
 		this.userId = userId;
 		this.entityId = entityId;
 		this.tenantId = tenantId;
+		this.internal = internal;
 	}
 
 	/*Use to send RefreshToken infos*/
@@ -51,6 +55,7 @@ public class Profile implements Serializable {
 		this.token = token;
 		this.refreshToken = refreshToken;
 		this.expiresIn = expiresIn;
+		this.internal = true;
 	}
 	
 	
