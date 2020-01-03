@@ -94,7 +94,7 @@ public class UserCache {
 	//To remove (kept for compatibility reasons)
 	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName, HttpSession session) {
 		Cache cache = cacheManager.getCache(UserCache.PROFILES);		
-		cache.put(authToken.getAccessToken(), new Profile(name, userMail, userId, firstName, null, null, true));
+		cache.put(authToken.getAccessToken(), new Profile(name, userMail, userId, firstName, null, null));
 		if(session != null) {
 			storeTokenInCache(authToken, session.getId());
 			session.setAttribute(UserCache.SESSION_TOKEN_KEY, authToken.getAccessToken());
@@ -104,18 +104,17 @@ public class UserCache {
 	}
 	
 	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId) {
-		putProfileInCache(authToken, name, userMail, userId, null, null, null, true);
+		putProfileInCache(authToken, name, userMail, userId, null, null, null);
 	}
 	
 	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName) {
-		putProfileInCache(authToken, name, userMail, userId, firstName, null, null, null, true);
+		putProfileInCache(authToken, name, userMail, userId, firstName, null, null, null);
 	}
 	//End of to be removed methods
 	
-	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName, HttpSession session, Long entityId, 
-			Long tenantId, boolean internal) {
+	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName, HttpSession session, Long entityId, Long tenantId) {
 		Cache cache = cacheManager.getCache(UserCache.PROFILES);		
-		cache.put(authToken.getAccessToken(), new Profile(name, userMail, userId, firstName, entityId, tenantId, internal));
+		cache.put(authToken.getAccessToken(), new Profile(name, userMail, userId, firstName, entityId, tenantId));
 		if(session != null) {
 			storeTokenInCache(authToken, session.getId());
 			session.setAttribute(UserCache.SESSION_TOKEN_KEY, authToken.getAccessToken());
@@ -130,19 +129,15 @@ public class UserCache {
 	}
 	
 	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail) {
-		putProfileInCache(authToken, name, userMail, null, null, null, null, true);
+		putProfileInCache(authToken, name, userMail, null, null, null, null);
 	}
 	
 	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, Long entityId, Long tenantId) {
-		putProfileInCache(authToken, name, userMail, userId, null, entityId, tenantId, true);
+		putProfileInCache(authToken, name, userMail, userId, null, entityId, tenantId);
 	}
 	
-	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, Long entityId, Long tenantId, boolean internal) {
-		putProfileInCache(authToken, name, userMail, userId, null, entityId, tenantId, internal);
-	}
-	
-	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName, Long entityId, Long tenantId, boolean internal) {
-		putProfileInCache(authToken, name, userMail, userId, firstName, null, entityId, tenantId, internal);
+	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName, Long entityId, Long tenantId) {
+		putProfileInCache(authToken, name, userMail, userId, firstName, null, entityId, tenantId);
 	}
 	
 	public Token getCachedAccessToken(String authToken) throws AuthenticationException {
