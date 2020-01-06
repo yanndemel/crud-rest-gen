@@ -57,7 +57,7 @@ public class SimpleCORSFilter implements Filter {
 	/**
 	 * Comma-separated list of allowed headers 
 	 * */
-	@Value("${http.allowedHeaders:Cache-Control, Origin, X-Requested-With, Content-Type, Accept, If-Match, Authorization}")
+	@Value("${http.allowedHeaders:Cache-Control, Origin, X-Requested-With, Content-Type, Accept, If-Match, Authorization, Pragma, Expires}")
 	private String allowedHeaders;
 	
 	/**
