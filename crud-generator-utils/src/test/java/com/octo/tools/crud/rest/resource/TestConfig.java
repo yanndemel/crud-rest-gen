@@ -9,6 +9,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import com.hazelcast.config.Config;
 import com.octo.tools.crud.rest.resource.repository.MockRestResourceMapperService;
 
 @SpringBootApplication
@@ -26,5 +27,10 @@ public class TestConfig {
 	@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 	RestResourceMapperService restMapper() {
 		return new MockRestResourceMapperService();
+	}
+	
+	@Bean
+    public Config hazelCastConfig() {
+		return new Config();
 	}
 }
