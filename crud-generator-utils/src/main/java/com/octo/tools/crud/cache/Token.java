@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 public class Token implements Serializable {
 
 	private OAuth2AccessToken token;
-	private String sessionId;
 	private long creationTime;
 	
 	public boolean isExpired() {
