@@ -84,7 +84,7 @@ public class UserCache {
 			Long tenantId, boolean internal) {
 		IMap<Object, Profile> profiles = hazelcast.getMap(PROFILES);
 		profiles.put(authToken.getAccessToken(), new Profile(authToken.getAccessToken(), name, userMail, userId, firstName, entityId, tenantId, internal));
-		storeTokenInCache(authToken, null);		
+		storeTokenInCache(authToken);
 	}
 	
 	public void putProfileInCache(String accessToken, Profile profile) {
