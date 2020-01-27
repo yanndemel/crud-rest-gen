@@ -36,8 +36,9 @@ public class Profile implements Serializable {
 	//Set to true for internal users
 	private boolean internal;
 	
-	public Profile(String displayName, String email, Long userId, String firstName, Long entityId, Long tenantId, boolean internal) {
+	public Profile(String token, String displayName, String email, Long userId, String firstName, Long entityId, Long tenantId, boolean internal) {
 		super();
+		this.token = token;
 		this.displayName = displayName;
 		this.firstname = firstName;
 		this.email = email;

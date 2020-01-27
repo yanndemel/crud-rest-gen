@@ -1,7 +1,6 @@
 package com.octo.tools.crud.cache;
 
 import javax.naming.AuthenticationException;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,33 +64,27 @@ public class UserCache {
 		throw new AuthenticationException("Profile not found in cache...");
 	}
 	
-	public void storeTokenInCache(final OAuth2AccessToken tokens, String sessionId) {
-    	storeTokenInCache(tokens, hazelcast.getMap(UserCache.AZURE_TOKENS), sessionId);
+	public void storeTokenInCache(final OAuth2AccessToken tokens) {
+    	storeTokenInCache(tokens, hazelcast.getMap(UserCache.AZURE_TOKENS));
     }
     
-	private void storeTokenInCache(final OAuth2AccessToken tokens, IMap<String, Token> cache, String sessionId) {
+	private void storeTokenInCache(final OAuth2AccessToken tokens, IMap<String, Token> cache) {
 		//logger.debug("Storing in cache {}", tokens.getAccessToken());
-		cache.put(tokens.getAccessToken(), new Token(tokens, sessionId, System.currentTimeMillis()));
+		cache.put(tokens.getAccessToken(), new Token(tokens, System.currentTimeMillis()));
 	}
 	
-	public void refreshTokenInCache(Token oldToken, OAuth2AccessToken newToken, HttpSession session) throws AuthenticationException {
+	public void refreshTokenInCache(Token oldToken, OAuth2AccessToken newToken) throws AuthenticationException {
 		IMap<String, Token> tokens = hazelcast.getMap(UserCache.AZURE_TOKENS);
 		tokens.evict(oldToken.getToken().getAccessToken());
-		storeTokenInCache(newToken, tokens, session.getId());
+		storeTokenInCache(newToken, tokens);
 		refreshUserProfileInCache(oldToken.getToken().getAccessToken(), newToken.getAccessToken());
-		session.setAttribute(SESSION_TOKEN_KEY, newToken.getAccessToken());
 	}	
 	
-	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName, HttpSession session, Long entityId, 
+	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName, Long entityId, 
 			Long tenantId, boolean internal) {
 		IMap<Object, Profile> profiles = hazelcast.getMap(PROFILES);
-		profiles.put(authToken.getAccessToken(), new Profile(name, userMail, userId, firstName, entityId, tenantId, internal));
-		if(session != null) {
-			storeTokenInCache(authToken, session.getId());
-			session.setAttribute(UserCache.SESSION_TOKEN_KEY, authToken.getAccessToken());
-		} else {
-			storeTokenInCache(authToken, null);
-		}
+		profiles.put(authToken.getAccessToken(), new Profile(authToken.getAccessToken(), name, userMail, userId, firstName, entityId, tenantId, internal));
+		storeTokenInCache(authToken, null);		
 	}
 	
 	public void putProfileInCache(String accessToken, Profile profile) {
@@ -109,10 +102,6 @@ public class UserCache {
 	
 	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, Long entityId, Long tenantId, boolean internal) {
 		putProfileInCache(authToken, name, userMail, userId, null, entityId, tenantId, internal);
-	}
-	
-	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName, Long entityId, Long tenantId, boolean internal) {
-		putProfileInCache(authToken, name, userMail, userId, firstName, null, entityId, tenantId, internal);
 	}
 	
 	public Token getCachedAccessToken(String authToken) throws AuthenticationException {
@@ -151,13 +140,11 @@ public class UserCache {
     			.trustAllHosts();
 	}
 
-	public void evictAuthTokenFromCache(String accessToken, HttpSession session) {
+	public void evictAuthTokenFromCache(String accessToken) {
 		IMap<String, Token> tokens = hazelcast.getMap(UserCache.AZURE_TOKENS);
 		tokens.evict(accessToken);
 		IMap<Object, Profile> profiles = hazelcast.getMap(PROFILES);
 		profiles.evict(accessToken);
-		if(session != null)
-			session.invalidate();		
 		logger.debug("Access token evicted from caches and session has been invalidated");
 	}
 
