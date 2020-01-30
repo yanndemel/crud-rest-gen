@@ -58,6 +58,7 @@ public class UserCache {
 		Profile p = profiles.get(oldToken);
 		if(p != null) {				
 			profiles.evict(oldToken);
+			p.setToken(newToken);
 			profiles.put(newToken, p);
 			return;
 		}
