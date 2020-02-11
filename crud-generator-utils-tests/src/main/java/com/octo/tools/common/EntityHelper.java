@@ -403,13 +403,13 @@ public class EntityHelper {
 				value = "";
 		}
 		if (fi.sizeMin != null) {
-			while (strValue.length() < fi.sizeMin) {
-				value = strValue + "1";
+			if (strValue.length() < fi.sizeMin) {
+				value = strValue + "1".repeat(fi.sizeMin - strValue.length());
 			}
 		}
 		if (fi.sizeMax != null) {
-			while (strValue.length() > fi.sizeMax) {
-				value = strValue.substring(0, strValue.length() - 1);
+			if (strValue.length() > fi.sizeMax) {
+				value = strValue.substring(0, fi.sizeMax);
 			}
 		}
 		
