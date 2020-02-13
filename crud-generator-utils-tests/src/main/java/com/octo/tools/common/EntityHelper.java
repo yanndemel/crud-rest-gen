@@ -44,6 +44,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.DatatypeConverter;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
@@ -402,13 +403,13 @@ public class EntityHelper {
 				value = "";
 		}
 		if (fi.sizeMin != null) {
-			while (strValue.length() < fi.sizeMin) {
-				value = strValue + "1";
+			if (strValue.length() < fi.sizeMin) {
+				value = strValue + "1".repeat(fi.sizeMin - strValue.length());
 			}
 		}
 		if (fi.sizeMax != null) {
-			while (strValue.length() > fi.sizeMax) {
-				value = strValue.substring(0, strValue.length() - 1);
+			if (strValue.length() > fi.sizeMax) {
+				value = strValue.substring(0, fi.sizeMax);
 			}
 		}
 		
@@ -524,7 +525,7 @@ public class EntityHelper {
 				value = "0";
 			else if (LocalDate.class.isAssignableFrom(type))
 				value = LocalDate.now().toString();
-			else if (Date.class.isAssignableFrom(type) || Temporal.class.isAssignableFrom(type))
+			else if (Date.class.isAssignableFrom(type) || DateTime.class.isAssignableFrom(type) || Temporal.class.isAssignableFrom(type))
 				value = printDate(cal, f);
 			else
 				value = tstStr;
