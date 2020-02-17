@@ -41,6 +41,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.AccessController;
 import java.security.GeneralSecurityException;
 import java.security.PrivilegedAction;
@@ -67,9 +68,8 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.web.util.UriUtils;
+import com.octo.tools.crud.web.HttpMethod;
+import com.octo.tools.crud.web.MediaType;
 
 /**
  * A fluid interface for making HTTP requests using an underlying
@@ -301,8 +301,105 @@ public class HttpRequest {
 	}
 
 	private static void appendParam(final StringBuilder result, boolean encode, Object element) {
-		String encoded = UriUtils.encodeQueryParam(element.toString(), "UTF-8");
+		String encoded = encodeQueryParam(element.toString(), StandardCharsets.UTF_8);
 		result.append(encode ? encoded : element);
+	}
+
+	private static String encodeQueryParam(String params, Charset charset) {
+		if (StringUtils.isNullOrEmpty(params)) {
+			return params;
+		}
+
+		byte[] bytes = params.getBytes(charset);
+		try(ByteArrayOutputStream bos = new ByteArrayOutputStream(bytes.length)) {
+			boolean changed = false;
+			for (byte b : bytes) {
+				if (b < 0) {
+					b += 256;
+				}
+				if (isAllowed(b)) {
+					bos.write(b);
+				}
+				else {
+					bos.write('%');
+					char hex1 = Character.toUpperCase(Character.forDigit((b >> 4) & 0xF, 16));
+					char hex2 = Character.toUpperCase(Character.forDigit(b & 0xF, 16));
+					bos.write(hex1);
+					bos.write(hex2);
+					changed = true;
+				}
+			}
+			return (changed ? new String(bos.toByteArray(), charset) : params);
+		} catch (IOException e) {
+			throw new RuntimeException("ByteArrayOutputStream closing problem", e);
+		}
+		
+	}
+	
+	private static boolean isAllowed(int c) {
+		if ('=' == c || '&' == c) {
+			return false;
+		}
+		else {
+			return isPchar(c) || '/' == c || '?' == c;
+		}
+	}
+	
+	/**
+	 * Indicates whether the given character is in the {@code DIGIT} set.
+	 * @see <a href="https://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+	 */
+	protected static boolean isDigit(int c) {
+		return (c >= '0' && c <= '9');
+	}
+
+	/**
+	 * Indicates whether the given character is in the {@code gen-delims} set.
+	 * @see <a href="https://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+	 */
+	protected static boolean isGenericDelimiter(int c) {
+		return (':' == c || '/' == c || '?' == c || '#' == c || '[' == c || ']' == c || '@' == c);
+	}
+
+	/**
+	 * Indicates whether the given character is in the {@code sub-delims} set.
+	 * @see <a href="https://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+	 */
+	protected static boolean isSubDelimiter(int c) {
+		return ('!' == c || '$' == c || '&' == c || '\'' == c || '(' == c || ')' == c || '*' == c || '+' == c ||
+				',' == c || ';' == c || '=' == c);
+	}
+
+	/**
+	 * Indicates whether the given character is in the {@code reserved} set.
+	 * @see <a href="https://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+	 */
+	protected static boolean isReserved(int c) {
+		return (isGenericDelimiter(c) || isSubDelimiter(c));
+	}
+
+	/**
+	 * Indicates whether the given character is in the {@code unreserved} set.
+	 * @see <a href="https://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+	 */
+	protected static boolean isUnreserved(int c) {
+		return (isAlpha(c) || isDigit(c) || '-' == c || '.' == c || '_' == c || '~' == c);
+	}
+
+	/**
+	 * Indicates whether the given character is in the {@code ALPHA} set.
+	 * @see <a href="https://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+	 */
+	protected static boolean isAlpha(int c) {
+		return (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z');
+	}
+	
+	/**
+	 * Indicates whether the given character is in the {@code pchar} set.
+	 * @see <a href="https://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+	 */
+	protected static boolean isPchar(int c) {
+		return (isUnreserved(c) || isSubDelimiter(c) || ':' == c || '@' == c);
 	}
 
 	/**
