@@ -28,7 +28,9 @@
 
 	<modules>
 		<module>audit-core</module>
+		<module>crud-generator-common</module>
 		<module>crud-generator-utils</module>
+		<module>crud-generator-cache-utils</module>
 		<module>crud-generator-utils-tests</module>
 		<module>crud-web-generator</module>
 		<module>crud-maven-plugin</module>

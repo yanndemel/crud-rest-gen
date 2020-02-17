@@ -1,0 +1,47 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>crud-generator-common</artifactId>
+	<packaging>jar</packaging>
+
+
+	<name>crud-generator-common</name>
+	<url>http://maven.apache.org</url>
+
+	<parent>
+		<groupId>com.octo.tools</groupId>
+		<artifactId>crud-parent</artifactId>
+		<version>1.0.1-SNAPSHOT</version>
+	</parent>
+	
+
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>    
+		</dependency>
+		
+		<dependency>
+			<groupId>org.atteo</groupId>
+			<artifactId>evo-inflector</artifactId>
+			<version>${evoinflector.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>
