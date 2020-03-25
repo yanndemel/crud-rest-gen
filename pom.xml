@@ -27,6 +27,7 @@
 	</properties>
 
 	<modules>
+		<module>audit-utils</module>
 		<module>audit-core</module>
 		<module>crud-generator-common</module>
 		<module>crud-generator-utils</module>
