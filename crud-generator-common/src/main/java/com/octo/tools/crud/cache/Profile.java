@@ -23,6 +23,8 @@ public class Profile implements Serializable {
 	private String firstname;
 	private String email;	
 	private Long userId;
+	// for external users
+	private Long webId;
 	private Long entityId;
 	private Long tenantId;
 	
@@ -35,6 +37,11 @@ public class Profile implements Serializable {
 	
 	//Set to true for internal users
 	private boolean internal;
+	
+	public Profile(String token, String displayName, String email, Long userId, Long webId, String firstName, Long entityId, Long tenantId, boolean internal) {
+		this(token, displayName, email, userId, firstName, entityId, tenantId, internal);
+		this.webId = webId;
+	}
 	
 	public Profile(String token, String displayName, String email, Long userId, String firstName, Long entityId, Long tenantId, boolean internal) {
 		super();

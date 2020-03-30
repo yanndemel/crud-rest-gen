@@ -82,7 +82,7 @@ public class UserCache {
 		refreshUserProfileInCache(oldToken.getToken().getAccessToken(), newToken.getAccessToken());
 	}	
 	
-	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, String firstName, Long entityId, 
+	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, Long webId, String firstName, Long entityId, 
 			Long tenantId, boolean internal) {
 		IMap<Object, Profile> profiles = hazelcast.getMap(PROFILES);
 		profiles.put(authToken.getAccessToken(), new Profile(authToken.getAccessToken(), name, userMail, userId, firstName, entityId, tenantId, internal));
@@ -95,15 +95,15 @@ public class UserCache {
 	}
 	
 	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail) {
-		putProfileInCache(authToken, name, userMail, null, null, null, null, true);
+		putProfileInCache(authToken, name, userMail, null, null, null, null, null, true);
 	}
 	
 	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, Long entityId, Long tenantId) {
-		putProfileInCache(authToken, name, userMail, userId, null, entityId, tenantId, true);
+		putProfileInCache(authToken, name, userMail, userId, null, null, entityId, tenantId, true);
 	}
 	
-	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, Long entityId, Long tenantId, boolean internal) {
-		putProfileInCache(authToken, name, userMail, userId, null, entityId, tenantId, internal);
+	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, Long webId, Long entityId, Long tenantId, boolean internal) {
+		putProfileInCache(authToken, name, userMail, userId, webId, null, entityId, tenantId, internal);
 	}
 	
 	public Token getCachedAccessToken(String authToken) throws AuthenticationException {
