@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.octo.tools.crud.utils.StringUtils;
@@ -106,7 +105,7 @@ public class SimpleCORSFilter implements Filter {
 			if(allowedOriginsList.contains(origin)) {
 				response.setHeader(ACCESS_CONTROL_ALLOW_ORIGIN, origin);
 			} else {
-				response.sendError(HttpStatus.UNAUTHORIZED.value(), "Access to '"+request.getRequestURL().toString()+"' from origin '"+origin+"' has been blocked by CORS policy.");
+				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Access to '"+request.getRequestURL().toString()+"' from origin '"+origin+"' has been blocked by CORS policy.");
 				return;
 			}
 		} else {			

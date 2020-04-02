@@ -32,6 +32,7 @@
 		<module>crud-generator-common</module>
 		<module>crud-generator-utils</module>
 		<module>crud-generator-cache-utils</module>
+		<module>crud-generator-web-mvc-common</module>
 		<module>crud-generator-web-mvc-utils</module>				
 		<module>crud-generator-utils-tests</module>
 		<module>crud-web-generator</module>
