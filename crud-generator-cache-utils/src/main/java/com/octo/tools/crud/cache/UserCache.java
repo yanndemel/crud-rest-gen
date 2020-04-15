@@ -85,7 +85,7 @@ public class UserCache {
 	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, Long webId, String firstName, Long entityId, 
 			Long tenantId, boolean internal) {
 		IMap<Object, Profile> profiles = hazelcast.getMap(PROFILES);
-		profiles.put(authToken.getAccessToken(), new Profile(authToken.getAccessToken(), name, userMail, userId, firstName, entityId, tenantId, internal));
+		profiles.put(authToken.getAccessToken(), new Profile(authToken.getAccessToken(), name, userMail, userId, webId, firstName, entityId, tenantId, internal));
 		storeTokenInCache(authToken);
 	}
 	
