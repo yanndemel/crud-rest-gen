@@ -2,7 +2,7 @@ package $$PACKAGE$$.audit;
 
 import javax.persistence.EntityManager;
 
-import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +21,7 @@ $$IMPORT_REVISION_CLASS$$
  * @author OCTO
  *
  */
-@RepositoryRestController
+@RestController
 @RequestMapping(com.octo.tools.audit.AbstractAuditController.HISTORY)
 public class $$ENTITY$$AuditController extends $$AUDIT_CONTROLLER$$<$$ENTITY$$$$REVISION_ENTITY$$> {
 	
