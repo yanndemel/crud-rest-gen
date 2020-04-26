@@ -25,6 +25,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -328,6 +329,9 @@ public class CrudGenerator {
             				if("text".equals(col.columnDefinition())) {
             					fi.setSizeMax(4000);
             				}
+            			}
+            			if(f.isAnnotationPresent(Lob.class)) {
+            				fi.setSizeMax(4000);
             			}
             			if(Number.class.isAssignableFrom(f.getType()) || 
             					(f.getType().isPrimitive() && (f.getType().equals(int.class) || f.getType().equals(double.class) || f.getType().equals(long.class) || f.getType().equals(short.class)))) {
