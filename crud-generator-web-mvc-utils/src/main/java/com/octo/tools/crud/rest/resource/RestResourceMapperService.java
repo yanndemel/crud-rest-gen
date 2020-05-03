@@ -10,6 +10,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.hateoas.server.EntityLinks;
 import org.springframework.hateoas.server.LinkBuilder;
@@ -35,6 +36,9 @@ public class RestResourceMapperService {
     
 	@Autowired
     private EntityLinks entityLinks;
+	
+	@Value("${proxy.publicUrl:#{null}}")
+    private String proxyUrl;
 	
 	@Autowired
 	private UserCache userCache;
@@ -81,17 +85,23 @@ public class RestResourceMapperService {
 
     public String getHATEOASURLForResource(final String restResourceURL, final Class<?> entityClass) throws MalformedURLException {
         URL resourceURL = new URL(restResourceURL);
-        //use HATEOAS LinkBuilder to get the right host and port for constructing the appropriate resource link
-        LinkBuilder linkBuilder = entityLinks.linkFor(entityClass);
-        URL hateoasURL = new URL(linkBuilder.withSelfRel().getHref());
-        
         String query = resourceURL.getQuery();
-        if(query != null)
-        	resourceURL = new URL(String.format("%s://%s:%o%s?%s", hateoasURL.getProtocol(), hateoasURL.getHost(), hateoasURL.getPort(), resourceURL.getPath(), query));
-        else
-        	resourceURL = new URL(String.format("%s://%s:%o%s", hateoasURL.getProtocol(), hateoasURL.getHost(), hateoasURL.getPort(), resourceURL.getPath()));
-        		
-        return resourceURL.toString();
+        if(proxyUrl == null) {
+        	//use HATEOAS LinkBuilder to get the right host and port for constructing the appropriate resource link
+            LinkBuilder linkBuilder = entityLinks.linkFor(entityClass);
+            URL hateoasURL = new URL(linkBuilder.withSelfRel().getHref());
+            if(query != null)
+            	resourceURL = new URL(String.format("%s://%s:%o%s?%s", hateoasURL.getProtocol(), hateoasURL.getHost(), hateoasURL.getPort(), resourceURL.getPath(), query));
+            else
+            	resourceURL = new URL(String.format("%s://%s:%o%s", hateoasURL.getProtocol(), hateoasURL.getHost(), hateoasURL.getPort(), resourceURL.getPath()));
+            return resourceURL.toString();
+        } else {
+        	if(query == null) {
+        		return proxyUrl + resourceURL.getPath();	
+        	} else {
+        		return proxyUrl + resourceURL.getPath() + "?" + query;
+        	}
+        }               	
     }    
     
     public RestRemoteResource getResolvedResource(String restResourceURL, RestResourceMapper annotation, Object resourceObjectId) throws HttpRequestException, JsonParseException, JsonMappingException, IOException {
