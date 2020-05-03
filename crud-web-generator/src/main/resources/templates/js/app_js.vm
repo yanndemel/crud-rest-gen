@@ -53,11 +53,16 @@ var getParameterByName = function(name, url) {
 }
 
 var getLinkedUrl = function(url) {
+	var toReplaceUrl = "${localApiUrl}";
+	if(!toReplaceUrl.endsWith("/"))
+		toReplaceUrl = toReplaceUrl + "/";
+	var springRestApiUrl = "${restUrl}";	
 	var i = url.indexOf("{");
+	var s = url;
 	if(i>0) {
-		return url.substring(0, i);
+		s = url.substring(0, i);		
 	}
-	return url;
+	return toReplaceUrl.length > 0 ? s.replace(toReplaceUrl, springRestApiUrl) : s;
 }
 
 

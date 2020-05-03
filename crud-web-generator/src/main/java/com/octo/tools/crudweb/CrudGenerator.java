@@ -62,6 +62,8 @@ public class CrudGenerator {
 	private VelocityEngine ve;
 
 	private String restUrl;
+	
+	private String localApiUrl;
 
 	private String logoPath;
 	
@@ -72,7 +74,8 @@ public class CrudGenerator {
 	private TreeMap<String, Map<String, String>> entitiesByPackage;
 
 	public void generate(String persistenceUnitName, String destDirRelativePath, 
-			String restUrl, String logoPath, String contextPath, String welcomeMsg) throws Exception {
+			String restUrl, String logoPath, String contextPath, String welcomeMsg, 
+			String localApiUrl) throws Exception {
 		
 		assert(persistenceUnitName != null);
 		assert(destDirRelativePath != null);
@@ -87,6 +90,8 @@ public class CrudGenerator {
         getVe();
         
         this.restUrl = restUrl;
+        
+        this.localApiUrl = localApiUrl;
         
         this.logoPath = logoPath;
         
@@ -147,6 +152,7 @@ public class CrudGenerator {
         VelocityContext context = newVelocityContext();
         context.put("entities", entities);
         context.put("restUrl", restUrl);
+        context.put("localApiUrl", localApiUrl != null ? localApiUrl : "");
         
         Template appTemplate = ve.getTemplate(getResourceFile("js/app_js.vm") );
         Path path = Paths.get(js.getPath(), "app.js");

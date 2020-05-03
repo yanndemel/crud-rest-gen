@@ -29,10 +29,16 @@ public class CrudWebGeneratorMojo
     private String outputDirectory;
     
     /**
-     * URL of the Rest API
+     * URL of the Rest API (Public URL)
      */
     @Parameter( property = "restApiUrl", required = true )
     private String restApiUrl;
+    
+    /**
+     * URL of the local API - used in case of the APIs are behind a proxy
+     */
+    @Parameter( property = "localApiUrl", required = false )
+    private String localApiUrl;
     
     /**
      * Local path of the logo image file displayed in the admin GUI
@@ -61,7 +67,7 @@ public class CrudWebGeneratorMojo
         
         
         try {
-			new CrudGenerator().generate(persistentUnitName, outputDirectory, restApiUrl, logoPath, contextPath, welcomeMsg);
+			new CrudGenerator().generate(persistentUnitName, outputDirectory, restApiUrl, logoPath, contextPath, welcomeMsg, localApiUrl);
 		} catch (Exception e) {
 			throw new MojoExecutionException("Exception during generation", e);
 		}
