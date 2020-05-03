@@ -18,7 +18,7 @@ public class Token implements Serializable {
 	private long creationTime;
 	
 	public boolean isExpired() {
-		if(token.getExpiresIn() != null)
+		if(token.getExpiresIn() != null && token.getExpiresIn() > 0)
 			return System.currentTimeMillis() >= creationTime + token.getExpiresIn() * 1000L;
 		return false;
 	}
