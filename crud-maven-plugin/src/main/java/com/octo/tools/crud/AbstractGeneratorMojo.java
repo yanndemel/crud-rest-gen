@@ -34,9 +34,9 @@ public abstract class AbstractGeneratorMojo extends AbstractMojo {
 	            }
 	        }
 	    } catch (ClassNotFoundException cnfex) {
-	        this.getLog().warn(MessageFormat.format(
-	                "Class [{0}] could not be found. Processing bindings will probably fail.",
-	                packageInfoClassName), cnfex);
+	        this.getLog().debug(MessageFormat.format(
+	                "Class [{0}] could not be found. Processing bindings may fail.",
+	                packageInfoClassName));
 	    }
 	}
 

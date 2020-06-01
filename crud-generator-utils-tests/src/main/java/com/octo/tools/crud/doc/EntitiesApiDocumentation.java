@@ -180,13 +180,13 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 		list.add(linkWithRel("self").description(
 				"Canonical link for this <<resources-" + info.getSimpleName() + "," + info.getSimpleName() + ">>"));
 		list.add(linkWithRel(info.getSimpleName())
-				.description("This <<resources-" + info.getSimpleName() + "," + info.getSimpleName() + ">>"));
+				.description("This <<resources-" + info.getSimpleName() + "," + info.getSimpleName() + ">>"));		
 		List<Field> allFields = ReflectionUtils.getAllFields(info.getEntityClass());
 		for (Field f : allFields) {
 			if (f.isAnnotationPresent(ManyToOne.class) || f.isAnnotationPresent(OneToOne.class)) {
 				String name = f.getName();
 				list.add(linkWithRel(name).description("The linked <<resources-" + name + "," + name + ">>"));
-			} else if (f.isAnnotationPresent(OneToMany.class) || f.isAnnotationPresent(ManyToMany.class)) {
+			} else if (f.isAnnotationPresent(OneToMany.class)) {
 				String name = f.getName();
 				list.add(linkWithRel(name).description("The linked list of <<resources-" + name + "," + name + ">>"));
 			}
