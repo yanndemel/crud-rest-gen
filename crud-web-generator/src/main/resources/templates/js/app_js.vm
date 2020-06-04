@@ -53,16 +53,22 @@ var getParameterByName = function(name, url) {
 }
 
 var getLinkedUrl = function(url) {
-	var toReplaceUrl = "${localApiUrl}";
-	if(!toReplaceUrl.endsWith("/"))
-		toReplaceUrl = toReplaceUrl + "/";
 	var springRestApiUrl = "${restUrl}";	
 	var i = url.indexOf("{");
 	var s = url;
 	if(i>0) {
 		s = url.substring(0, i);		
 	}
-	return toReplaceUrl.length > 0 ? s.replace(toReplaceUrl, springRestApiUrl) : s;
+	var toReplaceUrls = "${localApiUrl}".split(",");	
+	if(toReplaceUrls != null && toReplaceUrls.length > 0) {
+		for (i = 0; i < toReplaceUrls.length; i++) {
+			if(!toReplaceUrls[i].endsWith("/")) {
+				toReplaceUrls[i] = toReplaceUrls[i] + "/";
+			}
+			s = s.replace(toReplaceUrls[i], springRestApiUrl);
+		}		
+	}		
+	return s;
 }
 
 
