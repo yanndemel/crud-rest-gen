@@ -230,4 +230,14 @@ public class StringUtils {
 		}
 		return s.replace(StringUtils.SPACE, "");		
 	}
+	
+	public static boolean equals(String s1, String s2) {
+		return (s1 == null && s2 == null) || (s1 != null && s2 != null && s1.equals(s2)); 
+	}
+	
+	public static boolean notEquals(String s1, String s2) {
+		return (s1 == null && s2 != null) || 
+				(s1 != null && s2 == null) ||
+				(s1 != null && s2 != null && !s1.equals(s2)); 
+	}
 }
