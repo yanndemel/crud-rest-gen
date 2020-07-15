@@ -54,6 +54,7 @@ import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.octo.tools.common.AbstractCrudTest;
+import com.octo.tools.common.EntityHelper;
 import com.octo.tools.common.MockNotFoundException;
 import com.octo.tools.crud.rest.annotation.RestResourceMapper;
 import com.octo.tools.crud.rest.resource.util.RestResourceUtils;
@@ -180,8 +181,10 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 				"Canonical link for this <<resources-" + info.getSimpleName() + "," + info.getSimpleName() + ">>"));
 		list.add(linkWithRel(info.getSimpleName())
 				.description("This <<resources-" + info.getSimpleName() + "," + info.getSimpleName() + ">>"));		
-		List<Field> allFields = ReflectionUtils.getAllFields(info.getEntityClass());
-		for (Field f : allFields) {
+		ReflectionUtils.getAllFields(info.getEntityClass())
+		.stream()
+		.filter(f->entityHelper.isFieldExposed(f, true))
+		.forEach(f->{
 			if (f.isAnnotationPresent(ManyToOne.class) || f.isAnnotationPresent(OneToOne.class)) {
 				String name = f.getName();
 				list.add(linkWithRel(name).description("The linked <<resources-" + name + "," + name + ">>"));
@@ -189,7 +192,7 @@ public class EntitiesApiDocumentation extends AbstractCrudTest {
 				String name = f.getName();
 				list.add(linkWithRel(name).description("The linked list of <<resources-" + name + "," + name + ">>"));
 			}
-		}
+		});		
 		Collections.sort(list, (p1, p2) -> p1.getRel().compareTo(p2.getRel()));
 		return list.toArray(new LinkDescriptor[0]);
 
