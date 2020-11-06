@@ -84,10 +84,4 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	<distributionManagement>
-		<repository>
-			<id>dev-azure-com-cheuvreux-cheuvreux</id>
-			<url>https://pkgs.dev.azure.com/Cheuvreux/_packaging/Cheuvreux/maven/v1</url>
-		</repository>
-	</distributionManagement>
 </project>
