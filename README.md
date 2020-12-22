@@ -1,6 +1,6 @@
 
 # **crud-maven-plugin**
-
+ 
 *CRUD Application Generation from JPA entities*
 =============
 
