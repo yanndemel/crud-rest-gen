@@ -11,6 +11,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.3.6.RELEASE</version>
+		<relativePath/>
 	</parent>
 
 	<name>petclinic-api</name>
@@ -137,14 +138,7 @@
 							<artifactId>petclinic-model</artifactId>
 							<version>1.0.2-SNAPSHOT</version>
 						</dependency>						
-						<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
-							Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 
-							instead -->
-						<dependency>
-							<groupId>javax.el</groupId>
-							<artifactId>javax.el-api</artifactId>
-							<version>2.2.4</version>
-						</dependency>
+
 					</dependencies>
 				</plugin>
 			</plugins>

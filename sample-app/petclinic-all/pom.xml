@@ -79,6 +79,7 @@
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
+			<version>2.10.6</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -305,14 +306,7 @@
 							<artifactId>petclinic-audit-custom</artifactId>
 							<version>1.0.2-SNAPSHOT</version>
 						</dependency>
-						<!-- To avoid errors like Unable to load 'javax.el.ExpressionFactory'. 
-							Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator 
-							instead -->
-						<dependency>
-							<groupId>javax.el</groupId>
-							<artifactId>javax.el-api</artifactId>
-							<version>2.2.4</version>
-						</dependency>
+
 					</dependencies>
 				</plugin>
 			</plugins>
