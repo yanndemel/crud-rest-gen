@@ -14,6 +14,8 @@ import com.hazelcast.core.IMap;
 import com.octo.tools.crud.utils.HttpRequest;
 import com.octo.tools.crud.web.MediaType;
 
+import java.util.List;
+
 @Service
 public class UserCache {
 
@@ -83,9 +85,9 @@ public class UserCache {
 	}	
 	
 	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, Long webId, String firstName, Long entityId, 
-			Long tenantId, boolean internal) {
+			Long tenantId, boolean internal, List<Long> accountContactIds) {
 		IMap<Object, Profile> profiles = hazelcast.getMap(PROFILES);
-		profiles.put(authToken.getAccessToken(), new Profile(authToken.getAccessToken(), name, userMail, userId, webId, firstName, entityId, tenantId, internal));
+		profiles.put(authToken.getAccessToken(), new Profile(authToken.getAccessToken(), name, userMail, userId, webId, firstName, entityId, tenantId, internal, accountContactIds));
 		storeTokenInCache(authToken);
 	}
 	
@@ -95,15 +97,15 @@ public class UserCache {
 	}
 	
 	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail) {
-		putProfileInCache(authToken, name, userMail, null, null, null, null, null, true);
+		putProfileInCache(authToken, name, userMail, null, null, null, null, null, true, null);
 	}
 	
 	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, Long entityId, Long tenantId) {
-		putProfileInCache(authToken, name, userMail, userId, null, null, entityId, tenantId, true);
+		putProfileInCache(authToken, name, userMail, userId, null, null, entityId, tenantId, true, null);
 	}
 	
-	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, Long webId, Long entityId, Long tenantId, boolean internal) {
-		putProfileInCache(authToken, name, userMail, userId, webId, null, entityId, tenantId, internal);
+	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, Long webId, Long entityId, Long tenantId, boolean internal, List<Long> accountContactIds) {
+		putProfileInCache(authToken, name, userMail, userId, webId, null, entityId, tenantId, internal, accountContactIds);
 	}
 	
 	public Token getCachedAccessToken(String authToken) throws AuthenticationException {

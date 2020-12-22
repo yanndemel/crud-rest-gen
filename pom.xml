@@ -5,7 +5,7 @@
 
 	<groupId>com.octo.tools</groupId>
 	<artifactId>crud-parent</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<url>https://github.com/yanndemel/crud-rest-gen</url>
 

@@ -1,6 +1,7 @@
 package com.octo.tools.crud.cache;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -27,7 +28,8 @@ public class Profile implements Serializable {
 	private Long webId;
 	private Long entityId;
 	private Long tenantId;
-	
+	private List<Long> accountContactIds;
+
 	/**
 	 * Sent to client with profile info (not stored in cache)
 	 * */
@@ -38,9 +40,10 @@ public class Profile implements Serializable {
 	//Set to true for internal users
 	private boolean internal;
 	
-	public Profile(String token, String displayName, String email, Long userId, Long webId, String firstName, Long entityId, Long tenantId, boolean internal) {
+	public Profile(String token, String displayName, String email, Long userId, Long webId, String firstName, Long entityId, Long tenantId, boolean internal, List<Long> accountContactIds) {
 		this(token, displayName, email, userId, firstName, entityId, tenantId, internal);
 		this.webId = webId;
+		this.accountContactIds = accountContactIds;
 	}
 	
 	public Profile(String token, String displayName, String email, Long userId, String firstName, Long entityId, Long tenantId, boolean internal) {
