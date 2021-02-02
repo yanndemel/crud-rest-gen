@@ -102,7 +102,14 @@
 							<goal>report</goal>
 						</goals>
 					</execution>
-				</executions>				
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<version>3.0.0-M4-SNAPSHOT</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
