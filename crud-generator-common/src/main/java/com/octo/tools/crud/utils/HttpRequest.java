@@ -29,6 +29,8 @@ import java.io.PrintStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.HttpURLConnection;
@@ -438,13 +440,27 @@ public class HttpRequest {
 
 	private static ConnectionFactory CONNECTION_FACTORY = ConnectionFactory.DEFAULT;
 
+	private static final VarHandle MODIFIERS;
+
+	private static void makeNonFinal(Field field) {
+		int mods = field.getModifiers();
+		if (Modifier.isFinal(mods)) {
+			MODIFIERS.set(field, mods & ~Modifier.FINAL);
+		}
+	}
+
 	static {
+		try {
+			var lookup = MethodHandles.privateLookupIn(Field.class, MethodHandles.lookup());
+			MODIFIERS = lookup.findVarHandle(Field.class, "modifiers", int.class);
+		} catch (IllegalAccessException | NoSuchFieldException ex) {
+			throw new RuntimeException(ex);
+		}
+
 		try {
 			Field methodsField = HttpURLConnection.class.getDeclaredField("methods");
 
-			Field modifiersField = Field.class.getDeclaredField("modifiers");
-			modifiersField.setAccessible(true);
-			modifiersField.setInt(methodsField, methodsField.getModifiers() & ~Modifier.FINAL);
+			makeNonFinal(methodsField);
 
 			methodsField.setAccessible(true);
 
