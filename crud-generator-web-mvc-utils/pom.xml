@@ -61,5 +61,11 @@
 			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.octo.tools</groupId>
+            <artifactId>crud-generator-cache-utils</artifactId>
+            <version>1.0.2-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 </project>
