@@ -15,7 +15,6 @@
 
   <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<compile.version>15</compile.version>
 	</properties>
 
 	<build>
