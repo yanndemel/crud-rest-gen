@@ -26,10 +26,12 @@ import com.octo.tools.crud.utils.HttpRequest;
 
 @Service
 public class RestResourceMapperService {
-		    
-    private static final Logger logger = LoggerFactory.getLogger(RestResourceMapperService.class);
-    
-    private static RestRemoteResource NOT_FOUND = new RestRemoteResource(true);
+
+	private static final Logger logger = LoggerFactory.getLogger(RestResourceMapperService.class);
+
+	private static final String SLASH = "/";
+
+	private static RestRemoteResource NOT_FOUND = new RestRemoteResource(true);
     
     @Autowired
     private Environment env;
@@ -48,8 +50,12 @@ public class RestResourceMapperService {
 	
 
     public String getResourceURL(final RestResourceMapper restResourceMapper, final Object resourceId) {
-        String path = restResourceMapper.path().replaceAll(RestResourceMapper.RESOURCE_ID_PLACEHOLDER, resourceId.toString());
-        String restResourceUrl = getContext(restResourceMapper.context()) + path;
+        String path = restResourceMapper.path().replace(RestResourceMapper.RESOURCE_ID_PLACEHOLDER, resourceId.toString());
+		String context = getContext(restResourceMapper.context());
+		if(path.startsWith(SLASH) && context.endsWith(SLASH)) {
+			path = path.substring(1);
+		}
+		String restResourceUrl = context + path;
         return restResourceUrl.replaceAll(RestResourceMapper.RESOURCE_ID_PLACEHOLDER, resourceId.toString());
     }
     
