@@ -19,7 +19,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<compile.version>11</compile.version>
+		<compile.version>15</compile.version>
 		<spring-boot.version>2.3.6.RELEASE</spring-boot.version>
 		<evoinflector.version>1.2.2</evoinflector.version>
 		<scribe.version>6.5.1</scribe.version>

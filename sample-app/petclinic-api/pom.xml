@@ -18,7 +18,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<compile.version>11</compile.version>
+		<compile.version>15</compile.version>
         <!-- The package name of the generated RepositoryRestResource classes -->
 		<packageName>com.octo.tools.samples.petclinic.repository</packageName>
 	</properties>
