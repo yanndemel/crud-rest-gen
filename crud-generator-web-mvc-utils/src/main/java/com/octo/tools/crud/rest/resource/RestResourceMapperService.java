@@ -50,22 +50,27 @@ public class RestResourceMapperService {
 	
 
     public String getResourceURL(final RestResourceMapper restResourceMapper, final Object resourceId) {
-        String path = restResourceMapper.path().replace(RestResourceMapper.RESOURCE_ID_PLACEHOLDER, resourceId.toString());
+        String path = restResourceMapper.path();
 		String context = getContext(restResourceMapper.context());
+		String restResourceUrl = getResourceUrl(path, context);
+		return restResourceUrl.replace(RestResourceMapper.RESOURCE_ID_PLACEHOLDER, resourceId.toString());
+    }
+
+	private String getResourceUrl(String path, String context) {
 		if(path.startsWith(SLASH) && context.endsWith(SLASH)) {
 			path = path.substring(1);
 		}
-		String restResourceUrl = context + path;
-        return restResourceUrl.replaceAll(RestResourceMapper.RESOURCE_ID_PLACEHOLDER, resourceId.toString());
-    }
-    
-    public String getLastRevisionResourceURL(final RestResourceMapper restResourceMapper, final Object resourceId) {
+		return context + path;
+	}
+
+	public String getLastRevisionResourceURL(final RestResourceMapper restResourceMapper, final Object resourceId) {
     	if(restResourceMapper.lastRevisionPath().isEmpty()) {
     		return null;
     	}
-        String path = restResourceMapper.lastRevisionPath().replaceAll(RestResourceMapper.RESOURCE_ID_PLACEHOLDER, resourceId.toString());
-        String restResourceUrl = getContext(restResourceMapper.auditContext().isEmpty() ? restResourceMapper.context() : restResourceMapper.auditContext()) + path;
-        return restResourceUrl.replaceAll(RestResourceMapper.RESOURCE_ID_PLACEHOLDER, resourceId.toString());
+        String path = restResourceMapper.lastRevisionPath();
+        String context = getContext(restResourceMapper.auditContext().isEmpty() ? restResourceMapper.context() : restResourceMapper.auditContext()) + path;
+		String restResourceUrl = getResourceUrl(path, context);
+        return restResourceUrl.replace(RestResourceMapper.RESOURCE_ID_PLACEHOLDER, resourceId.toString());
     }
 	private String getContext(String context) {
 		return context.startsWith("${") ? env.getProperty(context.substring(2, context.length() - 1)) : context;
@@ -87,7 +92,7 @@ public class RestResourceMapperService {
         }
         return sb.toString();
     }
-    
+
 
     public String getHATEOASURLForResource(final String restResourceURL, final Class<?> entityClass) throws MalformedURLException {
         URL resourceURL = new URL(restResourceURL);
