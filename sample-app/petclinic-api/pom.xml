@@ -3,14 +3,14 @@
 
 	<groupId>com.octo.tools.samples</groupId>
 	<artifactId>petclinic-api</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<!-- WAR if you intend to deploy in an external servlet container like tomcat -->
 	<packaging>war</packaging>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.3.6.RELEASE</version>
+		<version>2.4.3</version>
 		<relativePath/>
 	</parent>
 
@@ -48,14 +48,14 @@
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-model</artifactId>
-			<version>1.0.2-SNAPSHOT</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>						
 
 		<!-- Classes used by generated controllers -->
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils</artifactId>
-			<version>1.0.2-SNAPSHOT</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 		
 	</dependencies>
@@ -116,7 +116,7 @@
 				<plugin>
 					<groupId>com.octo.tools</groupId>
 					<artifactId>crud-maven-plugin</artifactId>
-					<version>1.0.2-SNAPSHOT</version>
+					<version>1.0.3-SNAPSHOT</version>
 					<configuration>
 						<persistentUnitName>petclinic-model</persistentUnitName>
 						<packageName>${packageName}</packageName>
@@ -136,7 +136,7 @@
 						<dependency>
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-model</artifactId>
-							<version>1.0.2-SNAPSHOT</version>
+							<version>1.0.3-SNAPSHOT</version>
 						</dependency>						
 
 					</dependencies>

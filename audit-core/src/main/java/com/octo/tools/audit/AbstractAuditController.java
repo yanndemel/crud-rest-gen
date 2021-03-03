@@ -133,8 +133,7 @@ public abstract class AbstractAuditController<T, R> {
 
 
 	private AuditReader getAuditReader(EntityManager em) {
-		Session session = (Session)em.unwrap(Session.class);
-		return AuditReaderFactory.get(session);
+		return AuditReaderFactory.get(em);
 	}
 
 

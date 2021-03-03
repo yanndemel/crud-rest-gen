@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IMap;
+import com.hazelcast.map.IMap;
 import com.octo.tools.crud.utils.HttpRequest;
 import com.octo.tools.crud.web.MediaType;
 

@@ -5,13 +5,13 @@
 
 	<groupId>com.octo.tools.samples</groupId>
 	<artifactId>crud-samples-parent</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<compile.version>15</compile.version>
-		<spring-boot.version>2.3.6.RELEASE</spring-boot.version>
+		<compile.version>11</compile.version>
+		<spring-boot.version>2.4.3</spring-boot.version>
 	</properties>
 
 	<modules>

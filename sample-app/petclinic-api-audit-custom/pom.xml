@@ -5,14 +5,14 @@
 
 	<groupId>com.octo.tools.samples</groupId>
 	<artifactId>petclinic-api-audit-custom</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<!-- WAR if you intend to deploy in an external servlet container like tomcat -->
 	<packaging>war</packaging>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.3.6.RELEASE</version>
+		<version>2.4.3</version>
 	</parent>
 
 	<name>petclinic-api-audit-custom</name>
@@ -47,14 +47,14 @@
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-audit-custom</artifactId>
-			<version>1.0.2-SNAPSHOT</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 		<!-- Your JPA domain classes (must contain persistence.xml) -->
 
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-audit-model-custom</artifactId>
-			<version>1.0.2-SNAPSHOT</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 
 
@@ -62,14 +62,14 @@
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils</artifactId>
-			<version>1.0.2-SNAPSHOT</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Audit controllers test classes dependencies -->
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils-tests</artifactId>
-			<version>1.0.2-SNAPSHOT</version>
+			<version>1.0.3-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -119,7 +119,7 @@
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.2-SNAPSHOT</version>
+					<version>1.0.3-SNAPSHOT</version>
 					<configuration>
 						<lifecycleMappingMetadata>
 							<pluginExecutions>
@@ -147,7 +147,7 @@
 				<plugin>
 					<groupId>com.octo.tools</groupId>
 					<artifactId>crud-maven-plugin</artifactId>
-					<version>1.0.2-SNAPSHOT</version>
+					<version>1.0.3-SNAPSHOT</version>
 					<configuration>
 						<persistentUnitName>petclinic-model</persistentUnitName>
 						<packageName>${packageName}</packageName>
@@ -176,13 +176,13 @@
 						<dependency>
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-audit-model-custom</artifactId>
-							<version>1.0.2-SNAPSHOT</version>
+							<version>1.0.3-SNAPSHOT</version>
 						</dependency>
 						<!-- Custom AbstractAuditController and related classes -->
 						<dependency>
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-audit-custom</artifactId>
-							<version>1.0.2-SNAPSHOT</version>
+							<version>1.0.3-SNAPSHOT</version>
 						</dependency>
 
 					</dependencies>
