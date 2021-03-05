@@ -185,15 +185,13 @@ public class CrudApiGeneratorMojo extends AbstractGeneratorMojo {
 				BufferedWriter writer = Files.newBufferedWriter(path);
 				InputStream in = getClass().getClassLoader().getResourceAsStream("Excerpt.template");
 				BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-				System.out.println("projection : " + projection.toString());
 				while (reader.ready()) {
 					String s = reader.readLine();
-					System.out.println("Line : " + s);
-					s = s.replace("\\$\\$PACKAGE\\$\\$", packageName)
-							.replace("\\$\\$ENTITY\\$\\$", javaType.getSimpleName())
-							.replace("\\$\\$ENTITY_CLASS\\$\\$", javaType.getName())
-							.replace("\\$\\$PROJECTION\\$\\$", projection.toString())
-							.replace("\\$\\$ID_CLASS\\$\\$", idClass);
+					s = s.replace("$$PACKAGE$$", packageName)
+							.replace("$$ENTITY$$", javaType.getSimpleName())
+							.replace("$$ENTITY_CLASS$$", javaType.getName())
+							.replace("$$PROJECTION$$", projection.toString())
+							.replace("$$ID_CLASS$$", idClass);
 					writer.write(s + "\n");
 				}
 				l.add(exerptName);
