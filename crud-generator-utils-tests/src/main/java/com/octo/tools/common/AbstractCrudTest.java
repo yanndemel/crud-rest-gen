@@ -28,6 +28,8 @@ import javax.persistence.metamodel.EntityType;
 import javax.sql.DataSource;
 
 import org.atteo.evo.inflector.English;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 import org.junit.After;
 import org.junit.Before;
 import org.reflections.Reflections;
@@ -127,7 +129,8 @@ public abstract class AbstractCrudTest {
 			this.entityInfoList = getEntityInfoList(em);
 			if(excludedEntities != null && excludedEntities.value() != null && excludedEntities.value().length > 0) {
 				List<Class<?>> excludedClasses = Arrays.asList(excludedEntities.value());
-				this.entityInfoList = this.entityInfoList.stream().filter(info->!excludedClasses.contains(info.getEntityClass())).collect(Collectors.toList());
+				this.entityInfoList = this.entityInfoList.stream()
+						.filter(info->!excludedClasses.contains(info.getEntityClass())).collect(Collectors.toList());
 			}
 			initDataSets();
 			this.entityHelper = new EntityHelper(this);

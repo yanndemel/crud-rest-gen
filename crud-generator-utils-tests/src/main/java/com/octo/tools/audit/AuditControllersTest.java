@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.hamcrest.Matchers;
-import org.hibernate.envers.Audited;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -49,7 +48,7 @@ public class AuditControllersTest extends AbstractCrudTest {
 	public void testAudit() throws Exception {
 		for(EntityInfo info : entityInfoList) {
 			Class<?> entityClass = info.getEntityClass();
-			if(isAudited(entityClass)) {
+			if(ReflectionUtils.isAudited(entityClass)) {
 				try {
 					performAuditTest(info, entityClass);
 				} catch (MockNotFoundException e) {
@@ -61,12 +60,8 @@ public class AuditControllersTest extends AbstractCrudTest {
 		}
 	}
 
-	public boolean isAudited(Class<?> entityClass) {
-		return entityClass != null && entityClass.isAnnotationPresent(Audited.class) && ReflectionUtils.isEntityExposed(entityClass);
-	}
-	
 	public boolean isExposed(Class<?> javaType) {
-		return isAudited(javaType);
+		return ReflectionUtils.isAudited(javaType);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

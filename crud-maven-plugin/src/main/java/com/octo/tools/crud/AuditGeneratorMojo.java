@@ -125,7 +125,7 @@ public class AuditGeneratorMojo extends AbstractGeneratorMojo {
 		}
 		for (EntityType<?> type : entityList) {
 			Class<?> javaType = type.getJavaType();
-			if (ReflectionUtils.isEntityExposed(javaType) && javaType.isAnnotationPresent(Audited.class)) {
+			if (ReflectionUtils.isAudited(javaType)) {
 				String filename = javaType.getSimpleName() + "AuditController.java";
 				Path path = Paths.get(dir.getPath(), filename);
 				System.out.println("File " + path);

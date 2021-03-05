@@ -18,7 +18,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 
+import org.hibernate.envers.Audited;
 import org.hibernate.envers.DefaultRevisionEntity;
+import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.envers.RevisionEntity;
 
 /**
@@ -188,4 +190,9 @@ public class ReflectionUtils {
 		return null;
 	}
 
+    public static boolean isAudited(Class<?> entityClass) {
+        return entityClass != null && entityClass.isAnnotationPresent(Audited.class)
+                && entityClass.getAnnotation(Audited.class).targetAuditMode().equals(RelationTargetAuditMode.AUDITED)
+                && isEntityExposed(entityClass);
+    }
 }
