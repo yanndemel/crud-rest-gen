@@ -15,6 +15,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.metamodel.EntityType;
 
+import com.octo.tools.crud.audit.SkipAuditController;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -129,6 +130,8 @@ public class AuditGeneratorMojo extends AbstractGeneratorMojo {
 				String filename = javaType.getSimpleName() + "AuditController.java";
 				Path path = Paths.get(dir.getPath(), filename);
 				System.out.println("File " + path);
+				System.out.println("javaType " + javaType);
+				System.out.println("skip = " +javaType.isAnnotationPresent(SkipAuditController.class));
 				BufferedWriter writer = Files.newBufferedWriter(path);
 				InputStream in = getClass().getClassLoader().getResourceAsStream("AuditController.template");
 				BufferedReader reader = new BufferedReader(new InputStreamReader(in));

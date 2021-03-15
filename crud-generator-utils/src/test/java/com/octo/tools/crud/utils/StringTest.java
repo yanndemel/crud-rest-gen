@@ -1,9 +1,8 @@
 package com.octo.tools.crud.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class StringTest {
 
@@ -25,6 +24,12 @@ public class StringTest {
 		s = StringUtils.removeCarriageReturnsAndAccents(s);
 		System.out.println(s);
 		
+	}
+
+	@Test
+	public void testAnnotations() {
+		boolean audited = ReflectionUtils.isAudited(Mailbox.class);
+		assertFalse(audited);
 	}
 	
 	
