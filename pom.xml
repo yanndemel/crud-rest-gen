@@ -20,7 +20,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compile.version>11</compile.version>
-		<spring-boot.version>2.4.3</spring-boot.version>
+		<spring-boot.version>2.4.5</spring-boot.version>
 		<evoinflector.version>1.2.2</evoinflector.version>
 		<scribe.version>6.5.1</scribe.version>
 		<project.scm.id>github</project.scm.id>
