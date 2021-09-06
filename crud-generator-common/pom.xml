@@ -11,7 +11,7 @@
 	<parent>
 		<groupId>com.octo.tools</groupId>
 		<artifactId>crud-parent</artifactId>
-		<version>1.0.3-SNAPSHOT</version>
+		<version>1.0.4-SNAPSHOT</version>
 	</parent>
 	
 
@@ -19,6 +19,12 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.hazelcast</groupId>
+			<artifactId>hazelcast</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		
