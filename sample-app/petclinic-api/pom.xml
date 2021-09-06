@@ -3,7 +3,7 @@
 
 	<groupId>com.octo.tools.samples</groupId>
 	<artifactId>petclinic-api</artifactId>
-	<version>1.0.4-SNAPSHOT</version>
+	<version>1.0.5-SNAPSHOT</version>
 	<!-- WAR if you intend to deploy in an external servlet container like tomcat -->
 	<packaging>war</packaging>
 
@@ -48,14 +48,14 @@
 		<dependency>
 			<groupId>com.octo.tools.samples</groupId>
 			<artifactId>petclinic-model</artifactId>
-			<version>1.0.4-SNAPSHOT</version>
+			<version>1.0.5-SNAPSHOT</version>
 		</dependency>						
 
 		<!-- Classes used by generated controllers -->
 		<dependency>
 			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-utils</artifactId>
-			<version>1.0.4-SNAPSHOT</version>
+			<version>1.0.5-SNAPSHOT</version>
 		</dependency>
 		
 	</dependencies>
@@ -116,7 +116,7 @@
 				<plugin>
 					<groupId>com.octo.tools</groupId>
 					<artifactId>crud-maven-plugin</artifactId>
-					<version>1.0.4-SNAPSHOT</version>
+					<version>1.0.5-SNAPSHOT</version>
 					<configuration>
 						<persistentUnitName>petclinic-model</persistentUnitName>
 						<packageName>${packageName}</packageName>
@@ -136,7 +136,7 @@
 						<dependency>
 							<groupId>com.octo.tools.samples</groupId>
 							<artifactId>petclinic-model</artifactId>
-							<version>1.0.4-SNAPSHOT</version>
+							<version>1.0.5-SNAPSHOT</version>
 						</dependency>						
 
 					</dependencies>
