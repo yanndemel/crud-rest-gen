@@ -121,6 +121,11 @@ public class StringUtils {
 		return values;
 	}
 
+	public static String extractFirstValueThenTrim(String values) {
+		String firstValue = extractFirstValue(values);
+		return firstValue != null ? firstValue.trim() : null;
+	}
+
 	public static String doubleToString(Double price) {		
 		return price % 1 == 0 ? Integer.toString(price.intValue()) : price.toString();
 	}
