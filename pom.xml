@@ -19,11 +19,14 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<compile.version>11</compile.version>
-		<spring-boot.version>2.4.7</spring-boot.version>
+		<compile.version>16</compile.version>
+		<spring-boot.version>2.5.6</spring-boot.version>
 		<evoinflector.version>1.2.2</evoinflector.version>
 		<scribe.version>6.5.1</scribe.version>
 		<project.scm.id>github</project.scm.id>
+		<maven.compiler.source>16</maven.compiler.source>
+		<maven.compiler.target>16</maven.compiler.target>
+		<java.version>16</java.version>
 	</properties>
 
 	<modules>
@@ -45,7 +48,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
+				<version>3.8.1</version>
 				<configuration>
 					<source>${compile.version}</source>
 					<target>${compile.version}</target>
@@ -71,7 +74,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.1</version>
+				<version>2.22.2</version>
 				<configuration>
 					<argLine>
 						--illegal-access=permit
@@ -81,7 +84,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>2.22.1</version>
+				<version>2.22.2</version>
 				<configuration>
 					<argLine>
 						--illegal-access=permit
@@ -131,7 +134,7 @@
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.23.1-GA</version><!--$NO-MVN-MAN-VER$ -->
+			<version>3.28.0-GA</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
@@ -141,7 +144,7 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>2.20.0</version><!--$NO-MVN-MAN-VER$ -->
+			<version>4.0.0</version><!--$NO-MVN-MAN-VER$ -->
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -174,7 +177,7 @@
 			<dependency>
 				<groupId>org.javassist</groupId>
 				<artifactId>javassist</artifactId>
-				<version>3.23.1-GA</version>
+				<version>3.28.0-GA</version>
 			</dependency>
 			<dependency>
 				<groupId>cglib</groupId>
@@ -184,7 +187,7 @@
 			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-core</artifactId>
-				<version>2.20.0</version>
+				<version>4.0.0</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
