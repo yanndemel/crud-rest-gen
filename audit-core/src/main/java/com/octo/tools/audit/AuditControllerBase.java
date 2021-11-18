@@ -19,13 +19,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @RepositoryRestController
-@RequestMapping(AbstractAuditController.HISTORY)
 public class AuditControllerBase {
 	
 	@Autowired
 	protected EntityManagerFactory emf; 
 	
-	@RequestMapping(method = RequestMethod.GET) 
+	@RequestMapping(method = RequestMethod.GET, path = com.octo.tools.audit.AbstractAuditController.HISTORY)
 	public @ResponseBody ResponseEntity<?> ok() {
 		EntityManager em = emf.createEntityManager();
 		try {
