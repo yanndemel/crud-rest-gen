@@ -26,17 +26,17 @@
 		</dependency>
 		<dependency>
 			<groupId>com.octo.tools</groupId>
+			<artifactId>cache-utils</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.octo.tools</groupId>
 			<artifactId>crud-generator-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.github.scribejava</groupId>
-			<artifactId>scribejava-apis</artifactId>
-			<version>${scribe.version}</version>
 		</dependency>
 		<dependency>
             <groupId>org.projectlombok</groupId>

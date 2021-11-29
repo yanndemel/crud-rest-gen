@@ -17,22 +17,15 @@ import com.octo.tools.crud.web.MediaType;
 import java.util.List;
 
 @Service
-public class UserCache {
+public class UserCache implements IUserCache {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserCache.class);
 	
 	private ThreadLocal<String> authKey = new ThreadLocal<>();
 	
-	public static final String AZURE_TOKENS = "azureTokens";
-
-	public static final String BOX_TOKENS = "boxTokens";
-
-	public static final String PROFILES = "profiles";
-	
 	@Autowired
 	private HazelcastInstance hazelcast;
 
-	public static final String SESSION_TOKEN_KEY = "authToken";
 	
 	public Profile getCachedUserProfile() {
 		String token = getConnectedUserToken();
