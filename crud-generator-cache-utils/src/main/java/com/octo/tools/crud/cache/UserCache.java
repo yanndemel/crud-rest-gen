@@ -77,11 +77,13 @@ public class UserCache implements IUserCache {
 		refreshUserProfileInCache(oldToken.getToken().getAccessToken(), newToken.getAccessToken());
 	}	
 	
-	public void putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, Long webId, String firstName, Long entityId, 
+	public Profile putProfileInCache(OAuth2AccessToken authToken, String name, String userMail, Long userId, Long webId, String firstName, Long entityId,
 			Long tenantId, boolean internal, List<Long> accountContactIds) {
 		IMap<Object, Profile> profiles = hazelcast.getMap(PROFILES);
-		profiles.put(authToken.getAccessToken(), new Profile(authToken.getAccessToken(), name, userMail, userId, webId, firstName, entityId, tenantId, internal, accountContactIds));
+		Profile profile = new Profile(authToken.getAccessToken(), name, userMail, userId, webId, firstName, entityId, tenantId, internal, accountContactIds);
+		profiles.put(authToken.getAccessToken(), profile);
 		storeTokenInCache(authToken);
+		return profile;
 	}
 	
 	public void putProfileInCache(String accessToken, Profile profile) {

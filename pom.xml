@@ -5,7 +5,7 @@
 
 	<groupId>com.octo.tools</groupId>
 	<artifactId>crud-parent</artifactId>
-	<version>1.0.5-SNAPSHOT</version>
+	<version>1.0.6-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<url>https://github.com/yanndemel/crud-rest-gen</url>
 
@@ -180,7 +180,7 @@
 	<distributionManagement>
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
-			<url>http://copernic-test.cheuvreux.fr:8081/repository/maven-snapshots/</url>
+			<url>https://nexus-ci.nosactes.com/repository/maven-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
