@@ -144,7 +144,7 @@ public class UserCache implements IUserCache {
 		tokens.evict(accessToken);
 		IMap<Object, Profile> profiles = hazelcast.getMap(PROFILES);
 		profiles.evict(accessToken);
-		logger.debug("Access token evicted from caches and session has been invalidated");
+		//logger.debug("Access token evicted from caches and session has been invalidated");
 	}
 
 	
