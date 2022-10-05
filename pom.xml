@@ -22,7 +22,7 @@
 		<compile.version>16</compile.version>
 		<spring-boot.version>2.7.4</spring-boot.version>
 		<evoinflector.version>1.2.2</evoinflector.version>
-		<scribe.version>6.5.1</scribe.version>
+		<scribe.version>8.5.3</scribe.version>
 		<project.scm.id>github</project.scm.id>
 		<maven.compiler.source>16</maven.compiler.source>
 		<maven.compiler.target>16</maven.compiler.target>
@@ -135,7 +135,7 @@
 			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-core</artifactId>
-				<version>4.0.0</version><!--$NO-MVN-MAN-VER$ -->
+				<version>4.5.1</version><!--$NO-MVN-MAN-VER$ -->
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -167,7 +167,7 @@
 			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-core</artifactId>
-				<version>4.0.0</version>
+				<version>4.5.1</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
