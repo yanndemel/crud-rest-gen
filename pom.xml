@@ -5,7 +5,7 @@
 
 	<groupId>com.octo.tools</groupId>
 	<artifactId>crud-parent</artifactId>
-	<version>1.0.6-SNAPSHOT</version>
+	<version>1.0.7-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<url>https://github.com/yanndemel/crud-rest-gen</url>
 
@@ -20,7 +20,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compile.version>16</compile.version>
-		<spring-boot.version>2.5.6</spring-boot.version>
+		<spring-boot.version>2.7.4</spring-boot.version>
 		<evoinflector.version>1.2.2</evoinflector.version>
 		<scribe.version>6.5.1</scribe.version>
 		<project.scm.id>github</project.scm.id>
@@ -180,7 +180,7 @@
 	<distributionManagement>
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
-			<url>https://nexus-ci.nosactes.com/repository/maven-snapshots/</url>
+			<url>https://nexus.nosactes.com/repository/maven-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 

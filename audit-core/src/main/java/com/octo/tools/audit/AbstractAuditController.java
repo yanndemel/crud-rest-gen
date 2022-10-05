@@ -65,7 +65,7 @@ public abstract class AbstractAuditController<T, R> {
 			if(revData == null)
 				return ResponseEntity.notFound().build();
 			AuditResourceSupport<T> auditInfo = getAuditInfo(revData, em);
-			return ResponseEntity.ok(new EntityModel<>(auditInfo));
+			return ResponseEntity.ok(EntityModel.of(auditInfo));
 		} catch (NoResultException e) {
 			return ResponseEntity.notFound().build();
 		}
@@ -75,14 +75,14 @@ public abstract class AbstractAuditController<T, R> {
 	protected CollectionModel<AuditResourceSupport<T>> getAuditInfoList(List<Object[]> resultList, EntityManager em) {		
 		int size = resultList != null ? resultList.size() : 0;
 		if(size == 0)
-			return new CollectionModel<>(Collections.emptyList());
+			return CollectionModel.empty();
 		List<AuditResourceSupport<T>> auditInfoList = new ArrayList<>(size);
 		List<Link> links = new ArrayList<>(size); 
 		for(Object[] revData : resultList) {
 			AuditResourceSupport<T> auditResourceSupport = getAuditInfo(revData, em);
 			auditInfoList.add(auditResourceSupport);
 		}
-		return new CollectionModel<>(auditInfoList, links);
+		return CollectionModel.of(auditInfoList, links);
 	}
 
 

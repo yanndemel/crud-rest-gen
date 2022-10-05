@@ -197,7 +197,7 @@ public class RestResourceMapperConfig {
 	 * */
 	private void addLink(EntityModel<?> resource, FieldInfo info, RestResourceMapper annotation, String resourceURL)
 			throws MalformedURLException {
-		resource.add(new Link(info.getFieldName(),
+		resource.add(Link.of(info.getFieldName(),
 				annotation.external() ? resourceURL
 						: restResourceMapperService.getHATEOASURLForResource(resourceURL,
 								resource.getContent().getClass())));

@@ -33,7 +33,7 @@ public class AuditControllerBase {
 			for(AbstractAuditController<?, ?> controller : registerdcontrollers) {
 				links.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(controller.getClass()).getRevisions(em)).withRel(controller.getEntityClass().getSimpleName().toLowerCase()));
 			}
-			return ResponseEntity.ok(new CollectionModel<>(Collections.emptyList(), links));
+			return ResponseEntity.ok(CollectionModel.empty(links));
 		} finally {
 			em.close();
 		}
