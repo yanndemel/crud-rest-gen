@@ -2,6 +2,7 @@ package com.octo.tools.crud.cache;
 
 import javax.naming.AuthenticationException;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,9 @@ import com.octo.tools.crud.web.MediaType;
 import java.util.List;
 
 @Service
+@Slf4j
 public class UserCache implements IUserCache {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserCache.class);
 	
 	private ThreadLocal<String> authKey = new ThreadLocal<>();
 	
