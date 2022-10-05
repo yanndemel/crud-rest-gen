@@ -1,20 +1,15 @@
 package com.octo.tools.crud.cache;
 
-import javax.naming.AuthenticationException;
-
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.stereotype.Service;
-
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 import com.octo.tools.crud.utils.HttpRequest;
 import com.octo.tools.crud.web.MediaType;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.naming.AuthenticationException;
 import java.util.List;
 
 @Service

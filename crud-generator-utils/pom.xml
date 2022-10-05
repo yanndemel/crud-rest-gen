@@ -40,6 +40,11 @@
 			<version>${scribe.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.github.scribejava</groupId>
+			<artifactId>scribejava-core</artifactId>
+			<version>${scribe.version}</version>
+		</dependency>
+		<dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>

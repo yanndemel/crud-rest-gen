@@ -22,7 +22,7 @@
 		<compile.version>16</compile.version>
 		<spring-boot.version>2.7.4</spring-boot.version>
 		<evoinflector.version>1.2.2</evoinflector.version>
-		<scribe.version>8.5.3</scribe.version>
+		<scribe.version>8.3.1</scribe.version>
 		<project.scm.id>github</project.scm.id>
 		<maven.compiler.source>16</maven.compiler.source>
 		<maven.compiler.target>16</maven.compiler.target>
