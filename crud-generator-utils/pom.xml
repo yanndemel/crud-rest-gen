@@ -11,7 +11,7 @@
 	<parent>
 		<groupId>com.octo.tools</groupId>
 		<artifactId>crud-parent</artifactId>
-		<version>1.0.7-SNAPSHOT</version>
+		<version>1.0.8-SNAPSHOT</version>
 	</parent>
 	
 
@@ -37,11 +37,6 @@
 		<dependency>
 			<groupId>com.github.scribejava</groupId>
 			<artifactId>scribejava-apis</artifactId>
-			<version>${scribe.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.scribejava</groupId>
-			<artifactId>scribejava-core</artifactId>
 			<version>${scribe.version}</version>
 		</dependency>
 		<dependency>
